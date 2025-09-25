@@ -1,0 +1,519 @@
+/* ===== Special Programmes Module ===== */
+.mod--special_programmes {
+  padding: 0;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+/* Hero Section */
+.mod--special_programmes .sp-hero {
+  position: relative;
+  background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
+  color: white;
+  padding: 80px 0 100px;
+  overflow: hidden;
+  margin-bottom: 60px;
+}
+
+.mod--special_programmes .sp-hero-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
+}
+
+.mod--special_programmes .sp-hero-overlay {
+  position: absolute;
+  top: -50%;
+  right: -30%;
+  width: 150%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent 30%, rgba(201, 169, 97, 0.1) 50%, transparent 70%);
+  transform: rotate(12deg);
+  animation: sp-shimmer 8s ease-in-out infinite;
+}
+
+@keyframes sp-shimmer {
+  0%, 100% { 
+    opacity: 0.7; 
+    transform: rotate(12deg) translateX(-20%); 
+  }
+  50% { 
+    opacity: 1; 
+    transform: rotate(12deg) translateX(20%); 
+  }
+}
+
+.mod--special_programmes .sp-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.mod--special_programmes .sp-hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+.mod--special_programmes .sp-hero-title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 3.5rem;
+  font-weight: 300;
+  margin-bottom: 25px;
+  text-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3);
+  letter-spacing: -1px;
+}
+
+.mod--special_programmes .sp-hero-subtitle {
+  font-size: 1.3rem;
+  opacity: 0.9;
+  font-style: italic;
+  margin-bottom: 40px;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.mod--special_programmes .sp-welcome-card {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  padding: 25px;
+  margin: 30px auto;
+  max-width: 700px;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  backdrop-filter: blur(10px);
+}
+
+.mod--special_programmes .sp-welcome-text {
+  margin-top: 10px;
+  opacity: 0.95;
+}
+
+/* Stats Section */
+.mod--special_programmes .sp-stats {
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+  flex-wrap: wrap;
+  margin-top: 40px;
+}
+
+.mod--special_programmes .sp-stat {
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.mod--special_programmes .sp-stat:hover {
+  transform: translateY(-5px);
+}
+
+.mod--special_programmes .sp-stat-number {
+  font-size: 2.5rem;
+  font-weight: bold;
+  display: block;
+  color: #c9a961;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+.mod--special_programmes .sp-stat-label {
+  font-size: 0.95rem;
+  opacity: 0.9;
+  margin-top: 8px;
+}
+
+/* Programme Navigation */
+.mod--special_programmes .sp-nav {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 40px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 20px;
+  z-index: 100;
+}
+
+.mod--special_programmes .sp-nav-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #e91e63;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.mod--special_programmes .sp-nav-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.mod--special_programmes .sp-nav-btn {
+  padding: 8px 16px;
+  background: #f1f5f9;
+  border: none;
+  border-radius: 25px;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  font-weight: 500;
+  white-space: nowrap;
+  min-width: 60px;
+  text-align: center;
+  font-family: inherit;
+}
+
+.mod--special_programmes .sp-nav-btn:hover {
+  background: #e91e63;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.mod--special_programmes .sp-nav-btn.active {
+  background: #c9a961;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.mod--special_programmes .sp-nav-btn.priority-high {
+  background: #c9a961;
+  color: white;
+  box-shadow: 0 2px 8px rgba(201, 169, 97, 0.3);
+}
+
+/* Programme Cards Container */
+.mod--special_programmes .sp-programmes {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  margin-bottom: 80px;
+}
+
+/* Programme Cards */
+.mod--special_programmes .sp-card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transition: all 0.4s ease;
+  border-top: 4px solid #e91e63;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.mod--special_programmes .sp-card.priority-match {
+  border-top: 4px solid #c9a961;
+  background: linear-gradient(135deg, #fff 0%, #fefdf8 100%);
+}
+
+.mod--special_programmes .sp-card.hidden {
+  display: none;
+}
+
+.mod--special_programmes .sp-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+}
+
+/* Card Header */
+.mod--special_programmes .sp-card-header {
+  padding: 40px;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.mod--special_programmes .sp-card-header-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+.mod--special_programmes .sp-card-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.mod--special_programmes .sp-card-title {
+  font-size: 2.4rem;
+  font-weight: 300;
+  color: #1f2937;
+  margin-bottom: 20px;
+  letter-spacing: -0.5px;
+}
+
+.mod--special_programmes .sp-card-intro {
+  font-size: 1.1rem;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+.mod--special_programmes .sp-personalized-intro {
+  background: rgba(201, 169, 97, 0.1);
+  border-left: 4px solid #c9a961;
+  padding: 20px;
+  margin-top: 20px;
+  border-radius: 0 8px 8px 0;
+  font-style: italic;
+}
+
+/* Quote */
+.mod--special_programmes .sp-quote {
+  background: #f8fafc;
+  border-left: 4px solid #c9a961;
+  padding: 20px 25px;
+  margin: 0;
+  border-radius: 0 8px 8px 0;
+  margin-top: 20px;
+}
+
+.mod--special_programmes .sp-quote-text {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  margin-bottom: 12px;
+  color: #374151;
+  font-style: italic;
+}
+
+.mod--special_programmes .sp-quote-author {
+  font-size: 0.9rem;
+  color: #6b7280;
+  font-weight: 600;
+  font-style: normal;
+}
+
+/* Card Content */
+.mod--special_programmes .sp-card-content {
+  padding: 40px;
+}
+
+.mod--special_programmes .sp-section {
+  margin-bottom: 35px;
+  transition: all 0.3s ease;
+}
+
+.mod--special_programmes .sp-section-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #e91e63;
+  margin-bottom: 18px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #e5e7eb;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: color 0.3s ease;
+}
+
+.mod--special_programmes .sp-section-title:hover {
+  color: #c2185b;
+}
+
+.mod--special_programmes .sp-section-content {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #374151;
+}
+
+.mod--special_programmes .sp-section-content p {
+  margin-bottom: 16px;
+}
+
+.mod--special_programmes .sp-section-content p:last-child {
+  margin-bottom: 0;
+}
+
+.mod--special_programmes .sp-section-content strong {
+  color: #1f2937;
+  font-weight: 600;
+}
+
+/* Personalized Sections */
+.mod--special_programmes .sp-personalized-section {
+  background: linear-gradient(135deg, #fef7ed 0%, #fed7aa 100%);
+  border-radius: 12px;
+  padding: 30px;
+  margin: 30px 0;
+  border-left: 4px solid #c9a961;
+}
+
+.mod--special_programmes .sp-personalized-section .sp-section-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #9a3412;
+  margin-bottom: 15px;
+  border: none;
+  padding-bottom: 0;
+}
+
+.mod--special_programmes .sp-personalized-section .sp-section-content {
+  color: #78350f;
+  line-height: 1.6;
+}
+
+/* Info Grid */
+.mod--special_programmes .sp-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.mod--special_programmes .sp-info-box {
+  background: #f9fafb;
+  border-radius: 12px;
+  padding: 25px;
+  border-left: 4px solid #c9a961;
+  transition: transform 0.3s ease;
+}
+
+.mod--special_programmes .sp-info-box:hover {
+  transform: translateY(-3px);
+}
+
+.mod--special_programmes .sp-info-box h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 12px;
+}
+
+.mod--special_programmes .sp-info-box ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.mod--special_programmes .sp-info-box li {
+  color: #4b5563;
+  line-height: 1.6;
+  margin-bottom: 8px;
+  padding-left: 20px;
+  position: relative;
+}
+
+.mod--special_programmes .sp-info-box li::before {
+  content: '•';
+  color: #c9a961;
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+}
+
+/* Floreat Characteristics */
+.mod--special_programmes .sp-floreat-characteristics {
+  background: linear-gradient(135deg, #ecfdf5 0%, #a7f3d0 100%);
+  border-radius: 12px;
+  padding: 30px;
+  margin: 30px 0;
+  transition: transform 0.3s ease;
+}
+
+.mod--special_programmes .sp-floreat-characteristics:hover {
+  transform: translateY(-3px);
+}
+
+.mod--special_programmes .sp-floreat-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #14532d;
+  margin-bottom: 20px;
+}
+
+.mod--special_programmes .sp-floreat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.mod--special_programmes .sp-floreat-item {
+  background: rgba(255,255,255,0.8);
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 600;
+  color: #166534;
+}
+
+/* Call to Action Section */
+.mod--special_programmes .sp-cta {
+  background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
+  color: white;
+  padding: 60px 0;
+  text-align: center;
+  margin-top: 60px;
+}
+
+.mod--special_programmes .sp-cta-title {
+  font-size: 2.5rem;
+  font-weight: 300;
+  margin-bottom: 20px;
+  letter-spacing: -0.5px;
+}
+
+.mod--special_programmes .sp-cta-accent {
+  color: #c9a961;
+}
+
+.mod--special_programmes .sp-cta-subtitle {
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+  opacity: 0.9;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.mod--special_programmes .sp-cta-button {
+  display: inline-block;
+  background: #c9a961;
+  color: white;
+  padding: 15px 30px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.mod--special_programmes .sp-cta-button:hover {
+  background: #b8984e;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .mod--special_programmes .sp-hero-title {
+    font-size: 2.8rem;
+  }
+  
+  .mod--special_programmes .sp-stats {
+    gap: 30px;
+  }
+  
+  .mod--special_programmes .sp-info-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .mod--special_programmes .sp-card-header, 
+  .mod--special_programmes .sp-card-content {
+    padding: 30px 25px;
+  }
+
+  .mod--special_programmes .sp-nav-buttons {
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding-bottom: 10px;
+  }
+
+  .mod--special_programmes .sp-nav-btn {
+    flex-shrink: 0;
+  }
+  
+  .mod--special_programmes .sp-floreat-grid {
+    grid-template-columns: 1fr;
+  }
+}

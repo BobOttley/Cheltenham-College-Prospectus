@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cheltenham College - Your Personalised Prospectus</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header */
+        .form-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            background: white;
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .college-logo {
+            width: 150px;
+            height: auto;
+            margin-bottom: 2rem;
+        }
+
+        .form-header h1 {
+            font-family: Georgia, serif;
+            font-size: 2.5rem;
+            color: #1e3a5f;
+            margin-bottom: 1rem;
+            font-weight: 300;
+        }
+
+        .form-header .tagline {
+            font-size: 1.2rem;
+            color: #c9a961;
+            font-style: italic;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-header p {
+            font-size: 1.1rem;
+            color: #666;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            background: white;
+            border-radius: 15px;
+            padding: 1rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #c9a961;
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 4px;
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-top: 0.5rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Form */
+        .enquiry-form {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-section {
+            margin-bottom: 3rem;
+            opacity: 1;
+            transition: all 0.3s ease;
+        }
+
+        .form-section.hidden {
+            display: none;
+        }
+
+        .section-title {
+            font-family: Georgia, serif;
+            font-size: 1.6rem;
+            color: #1e3a5f;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #1e3a5f;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        /* Radio Buttons */
+        .radio-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .radio-option {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .radio-option input {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .radio-option .radio-card {
+            padding: 1.5rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.3s ease;
+            background: #f9fafb;
+        }
+
+        .radio-option input:checked + .radio-card {
+            border-color: #c9a961;
+            background: #c9a961;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(201, 169, 97, 0.3);
+        }
+
+        .radio-option .radio-card:hover {
+            border-color: #c9a961;
+            transform: translateY(-2px);
+        }
+
+        .radio-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .radio-card p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Checkboxes */
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .checkbox-option {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .checkbox-option input {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .checkbox-option .checkbox-card {
+            padding: 1rem 1.5rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            background: #f9fafb;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .checkbox-option input:checked + .checkbox-card {
+            border-color: #c9a961;
+            background: #fef3c7;
+            transform: translateY(-1px);
+        }
+
+        .checkbox-card::before {
+            content: '';
+            width: 20px;
+            height: 20px;
+            border: 2px solid #d1d5db;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .checkbox-option input:checked + .checkbox-card::before {
+            background: #c9a961;
+            border-color: #c9a961;
+        }
+
+        /* Sports selection grid */
+        .sports-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .sport-option {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .sport-option input {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .sport-card {
+            padding: 1.5rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.3s ease;
+            background: #f9fafb;
+            height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .sport-option input:checked + .sport-card {
+            border-color: #c9a961;
+            background: #c9a961;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(201, 169, 97, 0.3);
+        }
+
+        .sport-card:hover {
+            border-color: #c9a961;
+            transform: translateY(-2px);
+        }
+
+        .sport-card h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .sport-card p {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        .sports-selection-note {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            color: #92400e;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        /* Detailed checkboxes for academic interests */
+        .checkbox-detailed {
+            padding: 1.5rem;
+            text-align: left;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .checkbox-detailed::before {
+            align-self: flex-end;
+            margin-bottom: 0.5rem;
+        }
+
+        .checkbox-detailed h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: #1e3a5f;
+        }
+
+        .checkbox-detailed p {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        /* Sliders */
+        .slider-group {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .slider-item {
+            background: #f9fafb;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .slider-label h4 {
+            color: #1e3a5f;
+            font-size: 1.1rem;
+        }
+
+        .slider-value {
+            background: #c9a961;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: #d1d5db;
+            outline: none;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .slider:hover {
+            opacity: 1;
+        }
+
+        .slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #c9a961;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .slider::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #c9a961;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        /* Text inputs */
+        .text-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .text-input:focus {
+            outline: none;
+            border-color: #c9a961;
+            box-shadow: 0 0 0 3px rgba(201, 169, 97, 0.1);
+        }
+
+        /* Contact grid */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #c9a961;
+            box-shadow: 0 0 0 3px rgba(201, 169, 97, 0.1);
+        }
+
+        /* Navigation Buttons */
+        .form-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #c9a961;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #b8975a;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(201, 169, 97, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+            border: 2px solid #e5e7eb;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+
+        .btn-secondary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Error display */
+        .form-error {
+            background: #fef2f2;
+            color: #dc2626;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .form-header {
+                padding: 2rem 1rem;
+            }
+
+            .form-header h1 {
+                font-size: 2rem;
+            }
+
+            .enquiry-form {
+                padding: 2rem 1.5rem;
+            }
+
+            .radio-group {
+                grid-template-columns: 1fr;
+            }
+
+            .checkbox-group {
+                grid-template-columns: 1fr;
+            }
+
+            .sports-grid {
+                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-navigation {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="form-header">
+            <img src="https://www.cheltenhamcollege.org/wp-content/themes/cheltenham-college/assets/src/img/reskin/logo-college.png" 
+                 alt="Cheltenham College" class="college-logo">
+            <h1>Create Your Personalised Prospectus</h1>
+            <p class="tagline">Every family is unique. Every child is unique. No two children are the same.</p>
+            <p>At Cheltenham College, we go beyond your expectations as a parent, enabling your child to achieve above their own expectations.</p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">Step 1 of 8 - About Your Child</div>
+        </div>
+
+        <!-- Form -->
+        <form class="enquiry-form" id="enquiryForm">
+            <div class="form-error" id="formError"></div>
+
+            <!-- Step 1: Child Details -->
+            <div class="form-section" id="step1">
+                <h2 class="section-title">About Your Child</h2>
+                <p class="section-subtitle">Help us understand your child's current stage</p>
+                
+                <div class="form-group">
+                    <label>What is your child's current age?</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" name="stage" value="Lower" id="stageLower" required>
+                            <label for="stageLower" class="radio-card">
+                                <h3>Lower College (13–14)</h3>
+                                <p>Third Form Entry</p>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" name="stage" value="Upper" id="stageUpper" required>
+                            <label for="stageUpper" class="radio-card">
+                                <h3>Upper College (16–18)</h3>
+                                <p>Sixth Form Entry</p>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Gender</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" name="gender" value="female" id="genderFemale" required>
+                            <label for="genderFemale" class="radio-card">
+                                <h3>Girl</h3>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" name="gender" value="male" id="genderMale" required>
+                            <label for="genderMale" class="radio-card">
+                                <h3>Boy</h3>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Boarding -->
+            <div class="form-section hidden" id="step2">
+                <h2 class="section-title">School Life Preference</h2>
+                <p class="section-subtitle">How would you like your child to experience College?</p>
+                
+                <div class="form-group">
+                    <label>Boarding or Day Student?</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" name="boardingPreference" value="Full Boarding" id="boarding" required>
+                            <label for="boarding" class="radio-card">
+                                <h3>Full Boarding</h3>
+                                <p>Live on campus throughout term</p>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" name="boardingPreference" value="Day" id="day" required>
+                            <label for="day" class="radio-card">
+                                <h3>Day Student</h3>
+                                <p>Go home each evening</p>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" name="boardingPreference" value="Considering Both" id="considering" required>
+                            <label for="considering" class="radio-card">
+                                <h3>Considering Both</h3>
+                                <p>Show me both options</p>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Academic Interests -->
+            <div class="form-section hidden" id="step3">
+                <h2 class="section-title">Academic Interests</h2>
+                <p class="section-subtitle">Which subjects does your child enjoy most? (Select all that apply)</p>
+                
+                <div class="form-group">
+                    <div class="checkbox-group" id="academicInterestsContainer">
+                        <!-- Will be populated dynamically based on age selection -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4: Activities -->
+            <div class="form-section hidden" id="step4">
+                <h2 class="section-title">Activities & Interests</h2>
+                <p class="section-subtitle">What activities interest your child? (Select all that apply)</p>
+                
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <div class="checkbox-option">
+                            <input type="checkbox" name="activities" value="sports" id="sportsActivity">
+                            <label for="sportsActivity" class="checkbox-card">
+                                <h3>Sports</h3>
+                                <p>Hockey, Rugby, Cricket, Athletics</p>
+                            </label>
+                        </div>
+                        <div class="checkbox-option">
+                            <input type="checkbox" name="activities" value="music" id="musicActivity">
+                            <label for="musicActivity" class="checkbox-card">
+                                <h3>Music</h3>
+                                <p>Orchestra, Choir, Jazz, Rock</p>
+                            </label>
+                        </div>
+                        <div class="checkbox-option">
+                            <input type="checkbox" name="activities" value="drama" id="dramaActivity">
+                            <label for="dramaActivity" class="checkbox-card">
+                                <h3>Drama & Theatre</h3>
+                                <p>Productions, LAMDA, Technical Theatre</p>
+                            </label>
+                        </div>
+                        <div class="checkbox-option">
+                            <input type="checkbox" name="activities" value="leadership" id="leadership">
+                            <label for="leadership" class="checkbox-card">
+                                <h3>Leadership</h3>
+                                <p>House positions, Prefect roles</p>
+                            </label>
+                        </div>
+                        <div class="checkbox-option">
+                            <input type="checkbox" name="activities" value="ccf" id="ccf">
+                            <label for="ccf" class="checkbox-card">
+                                <h3>CCF Programme</h3>
+                                <p>Army, Navy, Air Force sections</p>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4.5: Sports Selection (conditional) -->
+            <div class="form-section hidden" id="step4_5">
+                <h2 class="section-title">Your Top Sports Interests</h2>
+                <p class="section-subtitle">Select your top 3 sports in order of preference</p>
+                
+                <div class="sports-selection-note">
+                    Choose up to 3 sports and rank them as 1st, 2nd, and 3rd choice to personalize your prospectus
+                </div>
+                
+                <div class="form-group">
+                    <div class="form-group">
+                        <label>1st Choice Sport *</label>
+                        <select id="sport1" name="sport1" class="text-input" required>
+                            <option value="">Select your top sport choice</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>2nd Choice Sport (optional)</label>
+                        <select id="sport2" name="sport2" class="text-input">
+                            <option value="">Select your second sport choice</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>3rd Choice Sport (optional)</label>
+                        <select id="sport3" name="sport3" class="text-input">
+                            <option value="">Select your third sport choice</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 5: University Aspirations -->
+            <div class="form-section hidden" id="step5">
+                <h2 class="section-title">University Aspirations</h2>
+                <p class="section-subtitle">What are your university aspirations for your child?</p>
+                
+                <div class="form-group">
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" name="universityAspirations" value="Oxford or Cambridge" id="oxbridge" required>
+                            <label for="oxbridge" class="radio-card">
+                                <h3>Oxford or Cambridge</h3>
+                                <p>Aiming for Oxbridge entry</p>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" name="universityAspirations" value="Russell Group" id="russell" required>
+                            <label for="russell" class="radio-card">
+                                <h3>Russell Group</h3>
+                                <p>Top tier UK universities</p>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" name="universityAspirations" value="International" id="international" required>
+                            <label for="international" class="radio-card">
+                                <h3>International Universities</h3>
+                                <p>USA, Canada, Europe, Asia</p>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" name="universityAspirations" value="UK Universities" id="ukUniversities" required>
+                            <label for="ukUniversities" class="radio-card">
+                                <h3>UK Universities</h3>
+                                <p>Broad range of UK options</p>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 6: Priorities -->
+            <div class="form-section hidden" id="step6">
+                <h2 class="section-title">Family Priorities</h2>
+                <p class="section-subtitle">Rate the importance of these areas for your family (1 = Low, 2 = Medium, 3 = High)</p>
+                
+                <div class="form-group">
+                    <div class="slider-group">
+                        <div class="slider-item">
+                            <div class="slider-label">
+                                <h4>Academic Excellence</h4>
+                                <span class="slider-value" id="academicValue">Medium</span>
+                            </div>
+                            <input type="range" id="academicSlider" name="academic" min="1" max="3" value="2" class="slider">
+                        </div>
+                        <div class="slider-item">
+                            <div class="slider-label">
+                                <h4>Sports & Physical Development</h4>
+                                <span class="slider-value" id="sportsValue">Medium</span>
+                            </div>
+                            <input type="range" id="sportsSlider" name="sports" min="1" max="3" value="2" class="slider">
+                        </div>
+                        <div class="slider-item">
+                            <div class="slider-label">
+                                <h4>Pastoral Care & Wellbeing</h4>
+                                <span class="slider-value" id="pastoralValue">Medium</span>
+                            </div>
+                            <input type="range" id="pastoralSlider" name="pastoral" min="1" max="3" value="2" class="slider">
+                        </div>
+                        <div class="slider-item">
+                            <div class="slider-label">
+                                <h4>Co-curricular Activities</h4>
+                                <span class="slider-value" id="activitiesValue">Medium</span>
+                            </div>
+                            <input type="range" id="activitiesSlider" name="activities" min="1" max="3" value="2" class="slider">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 7: Contact Details -->
+            <div class="form-section hidden" id="step7">
+                <h2 class="section-title">Contact Details</h2>
+                <p class="section-subtitle">Please provide your contact information</p>
+                
+                <div class="form-group">
+                    <label for="childName">Child's Name *</label>
+                    <input type="text" id="childName" name="childName" class="text-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="parentName">Parent/Guardian Name *</label>
+                    <input type="text" id="parentName" name="parentName" class="text-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="familyName">Family Surname</label>
+                    <input type="text" id="familyName" name="familyName" class="text-input" placeholder="e.g., Smith">
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" name="email" class="text-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" class="text-input">
+                </div>
+                
+                <div class="form-group">
+                    <label for="additionalInfo">Additional Information</label>
+                    <textarea id="additionalInfo" name="additionalInfo" placeholder="Is there anything else you'd like us to know about your child or family circumstances?"></textarea>
+                </div>
+            </div>
+
+            <div class="form-navigation">
+                <button type="button" id="prevBtn" class="btn btn-secondary" onclick="changeStep(-1)" disabled>
+                    Previous
+                </button>
+                <button type="button" id="nextBtn" class="btn btn-primary" onclick="changeStep(1)">
+                    Next Step
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        let totalSteps = 7; // Will be 7 if sports is selected (adding 4.5 doesn't change total)
+
+        function updateProgress() {
+            // Calculate progress considering step 4.5 as between step 4 and 5
+            let effectiveStep = currentStep;
+            let effectiveTotalSteps = 7;
+            
+            // If sports is selected, we have an extra step (4.5) so adjust the calculation
+            const sportsSelected = document.getElementById('sportsActivity')?.checked;
+            if (sportsSelected) {
+                effectiveTotalSteps = 7; // Still 7 actual completion points, just with an extra substep
+                if (currentStep > 4.5) {
+                    // After step 4.5, we need to account for the extra substep
+                    effectiveStep = currentStep;
+                } else if (currentStep === 4.5) {
+                    effectiveStep = 4.5;
+                }
+            }
+            
+            const progress = (effectiveStep / effectiveTotalSteps) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            
+            // Update step text
+            let stepText;
+            if (currentStep === 4.5) {
+                stepText = sportsSelected ? `Step 4.5 of 7 - ${getStepTitle(currentStep)}` : `Step 5 of 7 - ${getStepTitle(currentStep)}`;
+            } else {
+                stepText = `Step ${Math.ceil(currentStep)} of 7 - ${getStepTitle(currentStep)}`;
+            }
+            
+            document.getElementById('progressText').textContent = stepText;
+        }
+
+        function getStepTitle(step) {
+            const titles = {
+                1: 'About Your Child',
+                2: 'School Life Preference', 
+                3: 'Academic Interests',
+                4: 'Activities & Interests',
+                4.5: 'Sports Selection',
+                5: 'University Aspirations',
+                6: 'Family Priorities',
+                7: 'Contact Details'
+            };
+            return titles[step] || titles[Math.floor(step)];
+        }
+
+        function validateCurrentStep() {
+            const currentStepId = getCurrentStepId();
+            const currentSection = document.getElementById(currentStepId);
+            
+            // Safety check to prevent null reference error
+            if (!currentSection) {
+                console.error(`Step element not found: ${currentStepId}`);
+                showError('There was an error with the form step. Please refresh and try again.');
+                return false;
+            }
+            
+            // Special validation for sports selection
+            if (currentStep === 4.5) {
+                const sport1 = document.getElementById('sport1').value;
+                if (!sport1) {
+                    showError('Please select at least your 1st choice sport');
+                    return false;
+                }
+                
+                // Check for duplicate selections
+                const sport2 = document.getElementById('sport2').value;
+                const sport3 = document.getElementById('sport3').value;
+                const selections = [sport1, sport2, sport3].filter(Boolean);
+                const uniqueSelections = [...new Set(selections)];
+                
+                if (selections.length !== uniqueSelections.length) {
+                    showError('Please select different sports for each choice');
+                    return false;
+                }
+                
+                document.getElementById('formError').style.display = 'none';
+                return true;
+            }
+            
+            const requiredFields = currentSection.querySelectorAll('[required]');
+            
+            for (let field of requiredFields) {
+                if (field.type === 'radio') {
+                    const radioGroup = currentSection.querySelectorAll(`input[name="${field.name}"]`);
+                    const isChecked = Array.from(radioGroup).some(radio => radio.checked);
+                    if (!isChecked) {
+                        showError(`Please select an option for ${field.name}`);
+                        return false;
+                    }
+                } else if (!field.value.trim()) {
+                    showError(`Please fill in the ${field.name} field`);
+                    field.focus();
+                    return false;
+                }
+                
+                if (field.type === 'email' && !isValidEmail(field.value)) {
+                    showError('Please enter a valid email address');
+                    field.focus();
+                    return false;
+                }
+            }
+            
+            document.getElementById('formError').style.display = 'none';
+            return true;
+        }
+
+        function getCurrentStepId() {
+            if (currentStep === 4.5) {
+                return 'step4_5';
+            } else {
+                return `step${Math.floor(currentStep)}`;
+            }
+        }
+
+        function showError(message) {
+            const errorEl = document.getElementById('formError');
+            errorEl.textContent = message;
+            errorEl.style.display = 'block';
+            errorEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function isValidEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        function changeStep(direction) {
+            if (direction === 1 && !validateCurrentStep()) {
+                return;
+            }
+            
+            // Hide current step
+            const currentStepElement = document.getElementById(getCurrentStepId());
+            if (currentStepElement) {
+                currentStepElement.classList.add('hidden');
+            }
+            
+            // Calculate next step
+            let nextStep = currentStep;
+            if (currentStep === 4 && direction === 1) {
+                const sportsSelected = document.getElementById('sportsActivity').checked;
+                if (sportsSelected) {
+                    nextStep = 4.5;
+                    // totalSteps stays at 7 because we're adding step 4.5, not a new step
+                } else {
+                    nextStep = 5;
+                }
+            } else if (currentStep === 4.5 && direction === 1) {
+                nextStep = 5;
+            } else if (currentStep === 4.5 && direction === -1) {
+                nextStep = 4;
+            } else if (currentStep === 5 && direction === -1) {
+                // Check if we should go back to sports selection or activities
+                const sportsSelected = document.getElementById('sportsActivity').checked;
+                if (sportsSelected) {
+                    nextStep = 4.5;
+                } else {
+                    nextStep = 4;
+                }
+            } else {
+                nextStep = currentStep + direction;
+            }
+            
+            currentStep = nextStep;
+            
+            // Show next step
+            const nextStepElement = document.getElementById(getCurrentStepId());
+            if (nextStepElement) {
+                nextStepElement.classList.remove('hidden');
+            }
+            
+            document.getElementById('prevBtn').disabled = currentStep === 1;
+            
+            const nextBtn = document.getElementById('nextBtn');
+            if (currentStep === totalSteps) {
+                nextBtn.textContent = 'Create My Prospectus';
+                nextBtn.onclick = submitForm;
+            } else {
+                nextBtn.textContent = 'Next Step';
+                nextBtn.onclick = () => changeStep(1);
+            }
+            
+            updateProgress();
+            
+            // Populate academic interests when reaching step 3
+            if (currentStep === 3) {
+                populateAcademicInterests();
+            }
+            
+            // Populate sports when reaching step 4.5
+            if (currentStep === 4.5) {
+                populateSportsSelection();
+            }
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function populateSportsSelection() {
+            const genderSelection = document.querySelector('input[name="gender"]:checked');
+            if (!genderSelection) return;
+            
+            const gender = genderSelection.value;
+            
+            // All sports available at Cheltenham College - Complete list from sports module
+            const allSports = [
+                // Main Sports
+                { name: 'Hockey', desc: 'Elite programme, Olympic-standard pitches', mixed: true },
+                { name: 'Rugby', desc: 'International coaching, National Finals', male: true },
+                { name: 'Netball', desc: 'National recognition, 12 teams', female: true },
+                { name: 'Cricket', desc: 'Professional facilities, County players', mixed: true },
+                { name: 'Athletics', desc: '400m track, National medallists', mixed: true },
+                { name: 'Tennis', desc: '22 courts, LTA centre', mixed: true },
+                { name: 'Swimming', desc: '25m pool, Regional champions', mixed: true },
+                { name: 'Rowing', desc: 'River Severn, Henley qualifiers', mixed: true },
+                
+                // Racket Sports
+                { name: 'Squash', desc: '4 championship courts', mixed: true },
+                { name: 'Badminton', desc: 'County champions', mixed: true },
+                
+                // Team Sports
+                { name: 'Basketball', desc: 'Regional league winners', mixed: true },
+                { name: 'Football', desc: '3G pitch, ISFA regional champions', mixed: true },
+                { name: 'Volleyball', desc: 'Indoor & beach courts', mixed: true },
+                { name: 'Water Polo', desc: 'Regional league, GB coaches', mixed: true },
+                
+                // Individual Sports
+                { name: 'Golf', desc: 'PGA coaching, ISGA finals', mixed: true },
+                { name: 'Cross Country', desc: 'Countryside routes', mixed: true },
+                
+                // Specialist Sports
+                { name: 'Equestrian', desc: 'Showjumping, eventing, Hickstead', mixed: true },
+                { name: 'Clay Shooting', desc: 'CPSA qualified, Schools Challenge', mixed: true },
+                { name: 'Polo', desc: 'HPA coaching, Argentina tours', mixed: true },
+                { name: 'Ultimate Frisbee', desc: 'National tournaments', mixed: true },
+                
+                // Additional Sports
+                { name: 'Lacrosse', desc: 'Growing programme', mixed: true },
+                { name: 'Rounders', desc: 'County tournaments', female: true }
+            ];
+            
+            // Filter sports by gender
+            const availableSports = allSports.filter(sport => {
+                return sport.mixed || 
+                       (gender === 'male' && sport.male) || 
+                       (gender === 'female' && sport.female);
+            });
+            
+            // Populate all three dropdowns
+            const dropdowns = ['sport1', 'sport2', 'sport3'];
+            dropdowns.forEach(dropdownId => {
+                const dropdown = document.getElementById(dropdownId);
+                const currentValue = dropdown.value; // Preserve current selection
+                
+                // Clear and repopulate options
+                const firstOption = dropdown.querySelector('option:first-child');
+                dropdown.innerHTML = '';
+                dropdown.appendChild(firstOption); // Keep the placeholder option
+                
+                availableSports.forEach(sport => {
+                    const option = document.createElement('option');
+                    option.value = sport.name;
+                    option.textContent = `${sport.name} - ${sport.desc}`;
+                    dropdown.appendChild(option);
+                });
+                
+                // Restore selection if it was valid
+                if (currentValue && availableSports.some(s => s.name === currentValue)) {
+                    dropdown.value = currentValue;
+                }
+            });
+            
+            // Add event listeners to prevent duplicate selections
+            dropdowns.forEach(dropdownId => {
+                const dropdown = document.getElementById(dropdownId);
+                dropdown.addEventListener('change', function() {
+                    updateSportDropdowns();
+                });
+            });
+        }
+
+        function updateSportDropdowns() {
+            const sport1Value = document.getElementById('sport1').value;
+            const sport2Value = document.getElementById('sport2').value;
+            const sport3Value = document.getElementById('sport3').value;
+            
+            const selectedValues = [sport1Value, sport2Value, sport3Value].filter(Boolean);
+            
+            // Update each dropdown to disable already selected options
+            ['sport1', 'sport2', 'sport3'].forEach(dropdownId => {
+                const dropdown = document.getElementById(dropdownId);
+                const currentValue = dropdown.value;
+                
+                Array.from(dropdown.options).forEach(option => {
+                    if (option.value === '') return; // Skip placeholder
+                    
+                    // Enable/disable based on whether it's selected elsewhere
+                    const isSelectedElsewhere = selectedValues.includes(option.value) && option.value !== currentValue;
+                    option.disabled = isSelectedElsewhere;
+                    option.style.display = isSelectedElsewhere ? 'none' : 'block';
+                });
+            });
+        }
+
+        function populateAcademicInterests() {
+            const stageSelection = document.querySelector('input[name="stage"]:checked');
+            if (!stageSelection) return;
+            
+            const stage = stageSelection.value;
+            const container = document.getElementById('academicInterestsContainer');
+            
+            let academicOptions = [];
+            
+            if (stage === 'Lower') {
+                // Third Form modules
+                academicOptions = [
+                    {
+                        value: 'sciences',
+                        title: 'Third Form Sciences & Mathematics',
+                        description: 'Biology, Chemistry, Physics, Mathematics - building scientific understanding and problem-solving skills'
+                    },
+                    {
+                        value: 'humanities',
+                        title: 'Third Form Humanities',
+                        description: 'English, History, Geography, Religious Studies - developing critical thinking and communication'
+                    },
+                    {
+                        value: 'languages',
+                        title: 'Third Form Languages',
+                        description: 'French, Spanish, German, and other modern languages opening global opportunities'
+                    },
+                    {
+                        value: 'arts',
+                        title: 'Third Form Creative Arts',
+                        description: 'Art, Music, Drama, Design Technology - fostering creativity and self-expression'
+                    },
+                    {
+                        value: 'special_programmes',
+                        title: 'Special Programmes',
+                        description: 'Enrichment through Music, Computing, FPQ, Skills Programme, Third Form Challenge, and Floreat'
+                    }
+                ];
+            } else if (stage === 'Upper') {
+                // Upper School A-Level modules
+                academicOptions = [
+                    {
+                        value: 'sciences',
+                        title: 'Sciences & Mathematics',
+                        description: 'Biology, Chemistry, Physics, Mathematics A-Levels - developing logical thinking and scientific understanding'
+                    },
+                    {
+                        value: 'languages',
+                        title: 'Languages & Classical Studies',
+                        description: 'Modern languages and Latin/Greek - opening global opportunities and developing cultural awareness'
+                    },
+                    {
+                        value: 'humanities',
+                        title: 'Humanities & Social Sciences',
+                        description: 'History, Geography, Politics, Philosophy, Economics - building critical analysis and essay-writing skills'
+                    },
+                    {
+                        value: 'arts',
+                        title: 'Creative Arts',
+                        description: 'Art, Music, Drama, Design Technology A-Levels for creative and technical career paths'
+                    },
+                    {
+                        value: 'applied_vocational',
+                        title: 'Applied & Vocational Studies',
+                        description: 'Business Studies, Computer Science, Psychology, Sports Science - practical career-focused learning'
+                    }
+                ];
+            }
+            
+            container.innerHTML = academicOptions.map(option => `
+                <div class="checkbox-option">
+                    <input type="checkbox" name="academicInterests" value="${option.value}" id="${option.value}">
+                    <label for="${option.value}" class="checkbox-card checkbox-detailed">
+                        <h3>${option.title}</h3>
+                        <p>${option.description}</p>
+                    </label>
+                </div>
+            `).join('');
+        }
+
+        // Initialize sliders
+        ['academic', 'sports', 'pastoral', 'activities'].forEach(slider => {
+            const sliderEl = document.getElementById(`${slider}Slider`);
+            const valueEl = document.getElementById(`${slider}Value`);
+            const labels = ['Low', 'Medium', 'High'];
+            
+            sliderEl.addEventListener('input', function() {
+                valueEl.textContent = labels[this.value - 1];
+            });
+        });
+
+        // Form submission with canonical values matching server.js expectations
+        document.getElementById('enquiryForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const fd = new FormData(e.target);
+
+            // Collect multi-select checkboxes as arrays
+            const academicInterests = Array.from(document.querySelectorAll('input[name="academicInterests"]:checked')).map(i => i.value);
+            const activities = Array.from(document.querySelectorAll('input[name="activities"]:checked')).map(i => i.value);
+            
+            // Collect sports choices in order of preference
+            const specificSports = [];
+            const sport1 = fd.get('sport1');
+            const sport2 = fd.get('sport2');
+            const sport3 = fd.get('sport3');
+            
+            if (sport1) specificSports.push(sport1);
+            if (sport2) specificSports.push(sport2);
+            if (sport3) specificSports.push(sport3);
+
+            // Build priorities object matching server expectations
+            const priorities = {
+                academic: parseInt(fd.get('academic'), 10) || 2,
+                sports: parseInt(fd.get('sports'), 10) || 2,
+                pastoral: parseInt(fd.get('pastoral'), 10) || 2,
+                activities: parseInt(fd.get('activities'), 10) || 2
+            };
+
+            const payload = {
+                childName: fd.get('childName') || '',
+                parentName: fd.get('parentName') || '',
+                familyName: fd.get('familyName') ? `the ${fd.get('familyName')} Family` : '',
+                email: fd.get('email') || '',
+                phone: fd.get('phone') || '',
+                stage: fd.get('stage') || '', // Lower or Upper
+                gender: fd.get('gender') || '',
+                boardingPreference: fd.get('boardingPreference') || '',
+                academicInterests,
+                activities,
+                specificSports, // Add the sports selection
+                universityAspirations: fd.get('universityAspirations') || '',
+                priorities,
+                additionalInfo: fd.get('additionalInfo') || ''
+            };
+            // *** ADD THIS LINE ***
+            localStorage.setItem('enquiryFormData', JSON.stringify(payload));
+            console.log('Submitting payload:', payload);
+
+            try {
+                const res = await fetch('/api/submit-enquiry', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                const json = await res.json();
+                
+                if (json?.success && json.prospectusURL) {
+                    window.location.href = json.prospectusURL;
+                } else {
+                    throw new Error(json?.error || 'Submission failed');
+                }
+            } catch (error) {
+                console.error('Submission error:', error);
+                showError('Sorry, there was an error creating your prospectus. Please try again.');
+                throw error;
+            }
+        });
+
+        async function submitForm() {
+            if (!validateCurrentStep()) return;
+            
+            const nextBtn = document.getElementById('nextBtn');
+            const originalText = nextBtn.textContent;
+            
+            nextBtn.disabled = true;
+            nextBtn.textContent = 'Creating...';
+            
+            try {
+                // Trigger form submission
+                document.getElementById('enquiryForm').dispatchEvent(new Event('submit'));
+            } catch (error) {
+                console.error('Submission error:', error);
+                showError('Sorry, there was an error creating your prospectus. Please try again.');
+                
+                nextBtn.disabled = false;
+                nextBtn.textContent = originalText;
+            }
+        }
+
+        // Initialize
+        updateProgress();
+    </script>
+</body>
+</html>

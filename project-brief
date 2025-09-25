@@ -1,0 +1,135 @@
+Project Brief: Cheltenham College Personalised Prospectus
+Aim
+
+Deliver a world-class, personalised digital prospectus for Cheltenham College. This should feel premium, modular, and tailored to each family’s enquiry form responses.
+
+Current Codebase
+index.html
+
+index
+
+Defines the shell structure.
+
+Uses <section class="placeholder" data-mod="..."> blocks to load modules lazily.
+
+Currently includes three active modules:
+
+hero (priority 1, required)
+
+key_statistics (priority 3)
+
+house_system (priority 30)
+
+Other modules are commented out and can be added gradually.
+
+Test personalisation context (window.PROSPECTUS_CTX) is injected inline for now.
+
+app.js
+
+app
+
+Handles:
+
+Reading personalisation context (window.PROSPECTUS_CTX, or enquiry form data in parent/localStorage).
+
+Utilities for querying DOM, applying data-visible-when rules.
+
+Lazy asset hydration (data-src images/videos).
+
+Loader: fetches /modules/<key>.html and mounts it when the placeholder intersects viewport.
+
+Module initialisers in MODULES[...] for:
+
+hero (full personalisation, video/audio handling, overlay movement).
+
+key_statistics (title/subtitle personalised with child name).
+
+house_system (filters houses by gender and boarding/day, adds expand/collapse/mute behaviours).
+
+styles.css
+
+styles
+
+Defines global brand tokens (--cc-navy, --cc-gold).
+
+Complete styling for:
+
+Hero section (video background, overlay, scroll indicator, CTA).
+
+Welcome letter section.
+
+Key statistics grid and university showcase.
+
+House system grid, cards, expand/collapse, and responsive rules.
+
+Integration with Enquiry Form
+
+The enquiry form (separate file) outputs data like:
+
+{
+  childName: "Emma",
+  parentName: "Mr & Mrs Thomson",
+  familyName: "the Thomson family",
+  stage: "Senior",
+  boardingPreference: "Full Boarding",
+  academicInterests: ["sciences","mathematics"],
+  activities: ["sports"],
+  priorities: { academic:3, sports:2, pastoral:3, activities:2 }
+}
+
+
+This becomes window.PROSPECTUS_CTX, which the modules consume.
+
+Examples:
+
+.child-name → Emma.
+
+hero shows extra science/sport/pastoral notes if relevant.
+
+house_system filters by gender + boarding preference.
+
+key_statistics personalises titles with child name.
+
+Workflow (Module-by-Module Build)
+
+Add a placeholder in index.html:
+
+<section class="placeholder" data-mod="welcome" data-priority="5"></section>
+
+
+Create modules/welcome.html (wrapped in <section class="mod mod--welcome" …>).
+
+Add MODULES['welcome'] = (root, ctx) => { … } to app.js if behaviour is needed.
+
+Add styles (if needed) in styles.css.
+
+Test locally via:
+
+cd ~/prospectus
+python3 -m http.server 5500
+open http://localhost:5500/
+
+
+Verify personalisation appears using window.PROSPECTUS_CTX.
+
+Completed Modules
+
+Hero (fully dynamic, video, overlays, Head’s welcome, notes).
+
+Key Statistics (academic/sport/community highlights, Oxbridge/Russell Group, child name in titles).
+
+House System (filters houses, expand/collapse with videos, pastoral note).
+
+Deliverables for Claude
+
+Keep adding modules one by one (20 in total).
+
+Ensure each uses the shared wrappers, CSS tokens, lazy asset loading, and personalisation context.
+
+Only extend app.js if the module needs behaviour (otherwise static HTML is fine).
+
+Match enquiry form outputs directly to module conditions.
+
+Always test each module in isolation before moving on.
+
+👉 With these three files, the system is already working: modules lazy-load, personalise themselves, and use Cheltenham branding. From here, it’s just about building out the remaining modules in the same structured way.

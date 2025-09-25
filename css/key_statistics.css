@@ -1,0 +1,268 @@
+/* ===== KEY STATISTICS MODULE ===== */
+
+.mod--key_statistics {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.statistics-section {
+  background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
+  padding: 5rem 1rem;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+
+.statistics-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--cc-gold), transparent);
+}
+
+.stats-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 4rem;
+  position: relative;
+}
+
+.section-title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(2.2rem, 5vw, 3.5rem);
+  font-weight: 300;
+  color: var(--cc-navy);
+  margin-bottom: 1rem;
+}
+
+.section-title .highlight {
+  color: var(--cc-gold);
+  font-style: italic;
+}
+
+.section-subtitle {
+  font-size: clamp(1rem, 2.2vw, 1.2rem);
+  color: #666;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.golden-bracket-center {
+  width: 80px;
+  height: auto;
+  margin: 2rem auto 0;
+  opacity: .85;
+  display: block;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 3rem;
+  margin-bottom: 4rem;
+}
+
+.stat-category {
+  background: #fff;
+  border-radius: 16px;
+  padding: 2.5rem 2rem;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  overflow: hidden;
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.stat-category::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--cc-gold), #d4b76a);
+}
+
+.stat-category:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 48px rgba(0,0,0,.12);
+}
+
+.category-title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.6rem;
+  font-weight: 400;
+  color: var(--cc-navy);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.stats-list {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+  transition: transform .2s ease, background .2s ease;
+}
+
+.stat-item:hover {
+  background: #f0f2f5;
+  transform: translateX(5px);
+}
+
+.stat-number {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: var(--cc-gold);
+  min-width: 80px;
+  text-align: center;
+}
+
+.stat-label {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.4;
+}
+
+.highlight-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 2rem;
+  margin-top: 4rem;
+  padding: 3rem;
+  background: var(--cc-navy);
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.highlight-stats::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--cc-navy) 0%, var(--cc-navy-2) 100%);
+  opacity: .9;
+}
+
+.highlight-stat {
+  position: relative;
+  text-align: center;
+  color: #fff;
+}
+
+.highlight-number {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 3.2rem;
+  font-weight: 700;
+  color: var(--cc-gold);
+  display: block;
+  margin-bottom: .5rem;
+}
+
+.highlight-label {
+  font-size: 1.05rem;
+  opacity: .9;
+  font-weight: 500;
+}
+
+.universities-showcase {
+  margin-top: 4rem;
+  text-align: center;
+}
+
+.universities-title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 2rem;
+  color: var(--cc-navy);
+  margin-bottom: 2rem;
+}
+
+.universities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.25rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.university-badge {
+  background: #fff;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  padding: 1rem;
+  font-weight: 600;
+  color: var(--cc-navy);
+  transition: transform .2s ease, background .2s ease, border-color .2s ease;
+  position: relative;
+}
+
+.university-badge:hover {
+  border-color: var(--cc-gold);
+  background: var(--cc-gold);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.russell-group {
+  border-color: var(--cc-gold);
+  background: #faf8f3;
+}
+
+.oxbridge {
+  border-color: var(--cc-navy);
+  background: #f0f3f7;
+  font-weight: 700;
+}
+
+.oxbridge::after {
+  content: '★';
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  color: var(--cc-gold);
+  font-size: 1.1rem;
+}
+
+@media (max-width: 900px) {
+  .statistics-section {
+    padding: 3rem .75rem;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .stat-category {
+    padding: 2rem 1.25rem;
+  }
+  
+  .stat-number {
+    font-size: 2rem;
+    min-width: 60px;
+  }
+  
+  .highlight-stats {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    padding: 2rem;
+  }
+  
+  .highlight-number {
+    font-size: 2.4rem;
+  }
+}

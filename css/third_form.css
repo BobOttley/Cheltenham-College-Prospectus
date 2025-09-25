@@ -1,0 +1,736 @@
+/* ===== Third Form Module ===== */
+.mod--third_form {
+    padding: 0;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  }
+  
+  /* Header Section - FULL WIDTH - MATCHING OTHER MODULES */
+  .mod--third_form .header {
+    background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
+    color: white;
+    padding: 80px 0 100px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 60px;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+  }
+  
+  .mod--third_form .header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -30%;
+    width: 150%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent 30%, rgba(201, 169, 97, 0.1) 50%, transparent 70%);
+    transform: rotate(12deg);
+    animation: third-form-shimmer 8s ease-in-out infinite;
+  }
+  
+  @keyframes third-form-shimmer {
+    0%, 100% { opacity: 0.7; transform: rotate(12deg) translateX(-20%); }
+    50% { opacity: 1; transform: rotate(12deg) translateX(20%); }
+  }
+  
+  .mod--third_form .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  .mod--third_form .header-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  .mod--third_form .main-title {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 3.8rem;
+    font-weight: 300;
+    margin-bottom: 25px;
+    text-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3);
+    letter-spacing: -1px;
+  }
+  
+  .mod--third_form .main-subtitle {
+    font-size: 1.4rem;
+    opacity: 0.9;
+    font-style: italic;
+    margin-bottom: 40px;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+  }
+  
+  .mod--third_form .personalized-welcome {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    padding: 25px;
+    margin: 30px auto;
+    max-width: 800px;
+    backdrop-filter: blur(10px);
+  }
+  
+  .mod--third_form .personalized-title {
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    color: #c9a961;
+    font-weight: 600;
+  }
+  
+  .mod--third_form .personalized-message {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    opacity: 0.95;
+  }
+  
+  .mod--third_form .stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    flex-wrap: wrap;
+    margin-top: 40px;
+  }
+  
+  .mod--third_form .stat {
+    text-align: center;
+    transition: transform 0.3s ease;
+  }
+  
+  .mod--third_form .stat:hover {
+    transform: translateY(-5px);
+  }
+  
+  .mod--third_form .stat-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    display: block;
+    color: #c9a961;
+    text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  .mod--third_form .stat-label {
+    font-size: 0.95rem;
+    opacity: 0.9;
+    margin-top: 8px;
+    display: block;
+  }
+  
+  /* Hero Images */
+  .mod--third_form .hero-images {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin: 60px 0;
+  }
+  
+  .mod--third_form .hero-image {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease;
+  }
+  
+  .mod--third_form .hero-image:hover {
+    transform: translateY(-5px);
+  }
+  
+  .mod--third_form .hero-image img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+  }
+  
+  /* Aims Section */
+  .mod--third_form .aims-section {
+    padding: 60px 0;
+  }
+  
+  .mod--third_form .aims-section h2 {
+    font-size: 2.2rem;
+    text-align: center;
+    margin-bottom: 50px;
+    color: #1f2937;
+  }
+  
+  .mod--third_form .aims-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+  }
+  
+  .mod--third_form .aim-item {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-top: 4px solid #e91e63;
+  }
+  
+  .mod--third_form .aim-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  }
+  
+  .mod--third_form .aim-item h3 {
+    font-size: 1.3rem;
+    color: #e91e63;
+    margin-bottom: 15px;
+    font-weight: 600;
+  }
+  
+  .mod--third_form .aim-item p {
+    color: #4b5563;
+    line-height: 1.6;
+  }
+  
+  /* Timetable Section */
+  .mod--third_form .timetable-section {
+    background: white;
+    padding: 50px;
+    border-radius: 16px;
+    margin: 40px 0;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  }
+  
+  .mod--third_form .timetable-title {
+    font-size: 1.8rem;
+    margin-bottom: 30px;
+    color: #1f2937;
+    text-align: center;
+  }
+  
+  .mod--third_form .timetable-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+  }
+  
+  .mod--third_form .timetable-table th {
+    background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
+    color: white;
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+  }
+  
+  .mod--third_form .timetable-table td {
+    padding: 12px;
+    border: 1px solid #e5e7eb;
+    background: white;
+  }
+  
+  .mod--third_form .timetable-table tr:hover td {
+    background: #f9fafb;
+  }
+  
+  .mod--third_form .time-col {
+    background: #f3f4f6;
+    font-weight: 600;
+    width: 120px;
+  }
+  
+  /* Section Navigation */
+  .mod--third_form .section-nav {
+    background: white;
+    border-radius: 16px;
+    padding: 25px;
+    margin: 40px 0;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    position: sticky;
+    top: 20px;
+    z-index: 100;
+  }
+  
+  .mod--third_form .nav-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .mod--third_form .nav-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+  }
+  
+  .mod--third_form .nav-btn {
+    padding: 10px 20px;
+    border: 2px solid #e5e7eb;
+    background: white;
+    border-radius: 25px;
+    color: #4b5563;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+  }
+  
+  .mod--third_form .nav-btn:hover {
+    background: #f3f4f6;
+    transform: translateY(-2px);
+  }
+  
+  .mod--third_form .nav-btn.active {
+    background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
+    color: white;
+    border-color: #e91e63;
+  }
+  
+  /* Section Cards */
+  .mod--third_form .sections-container {
+    margin: 40px 0;
+  }
+  
+  .mod--third_form .section-card {
+    background: white;
+    border-radius: 16px;
+    margin-bottom: 30px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    border-top: 5px solid #e91e63;
+  }
+  
+  .mod--third_form .section-card.hidden {
+    display: none;
+  }
+  
+  .mod--third_form .section-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  }
+  
+  .mod--third_form .section-card[data-section="academic"] {
+    border-top-color: #2196f3;
+  }
+  
+  .mod--third_form .section-card[data-section="pastoral"] {
+    border-top-color: #4caf50;
+  }
+  
+  .mod--third_form .section-card[data-section="challenge"] {
+    border-top-color: #ff9800;
+  }
+  
+  .mod--third_form .section-card[data-section="support"] {
+    border-top-color: #9c27b0;
+  }
+  
+  .mod--third_form .section-card[data-section="preparation"] {
+    border-top-color: #00bcd4;
+  }
+  
+  /* Section Headers */
+  .mod--third_form .section-header {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 40px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  .mod--third_form .section-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .mod--third_form .section-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 15px;
+  }
+  
+  .mod--third_form .section-intro {
+    font-size: 1.1rem;
+    color: #6b7280;
+    line-height: 1.6;
+  }
+  
+  /* Personalized Content */
+  .mod--third_form .personalized-intro {
+    background: rgba(233, 30, 99, 0.08);
+    border-left: 4px solid #e91e63;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 8px;
+  }
+  
+  .mod--third_form .personalized-section-title {
+    color: #e91e63;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+  
+  .mod--third_form .personalized-section-message {
+    color: #1f2937;
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+  
+  /* Section Content */
+  .mod--third_form .section-content {
+    padding: 40px;
+  }
+  
+  .mod--third_form .subsection {
+    margin-bottom: 40px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  .mod--third_form .subsection:last-child {
+    border-bottom: none;
+  }
+  
+  .mod--third_form .subsection-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: color 0.3s ease;
+  }
+  
+  .mod--third_form .subsection-title:hover {
+    color: #e91e63;
+  }
+  
+  .mod--third_form .subsection-title::after {
+    content: '▼';
+    font-size: 0.8rem;
+    transition: transform 0.3s ease;
+  }
+  
+  .mod--third_form .subsection.collapsed .subsection-title::after {
+    transform: rotate(-90deg);
+  }
+  
+  .mod--third_form .subsection-content {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #374151;
+    transition: all 0.3s ease;
+    overflow: hidden;
+  }
+  
+  .mod--third_form .subsection.collapsed .subsection-content {
+    max-height: 0;
+    opacity: 0;
+    margin-top: 0;
+    padding: 0;
+  }
+  
+  .mod--third_form .subsection-content p {
+    margin-bottom: 16px;
+  }
+  
+  .mod--third_form .subsection-content strong {
+    color: #1f2937;
+    font-weight: 600;
+  }
+  
+  /* Personalized Pathways */
+  .mod--third_form .personalized-pathway {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border-radius: 12px;
+    padding: 30px;
+    margin: 30px 0;
+    border: 2px solid #fbbf24;
+  }
+  
+  .mod--third_form .pathway-title {
+    font-size: 1.3rem;
+    color: #92400e;
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+  
+  .mod--third_form .pathway-content {
+    color: #78350f;
+    line-height: 1.7;
+  }
+  
+  .mod--third_form .pathway-content h5 {
+    font-size: 1.1rem;
+    color: #92400e;
+    margin: 20px 0 10px;
+    font-weight: 600;
+  }
+  
+  .mod--third_form .pathway-benefits {
+    margin: 15px 0;
+    padding-left: 20px;
+  }
+  
+  .mod--third_form .pathway-benefits li {
+    margin-bottom: 10px;
+    line-height: 1.6;
+  }
+  
+  .mod--third_form .math-timeline {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 15px 0;
+  }
+  
+  .mod--third_form .math-timeline p {
+    margin-bottom: 10px;
+    padding-left: 15px;
+    border-left: 3px solid #fbbf24;
+  }
+  
+  /* Personalized Form Experience */
+  .mod--third_form .personalized-form-experience {
+    background: rgba(147, 51, 234, 0.08);
+    border-left: 4px solid #9333ea;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 8px;
+  }
+  
+  .mod--third_form .personalized-form-experience h5 {
+    color: #7c3aed;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+  
+  .mod--third_form .personalized-form-experience p {
+    color: #4c1d95;
+    line-height: 1.6;
+  }
+  
+  /* Key Points */
+  .mod--third_form .key-points {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    margin: 30px 0;
+  }
+  
+  .mod--third_form .key-point {
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    border-radius: 12px;
+    padding: 25px;
+    border: 1px solid #bfdbfe;
+    transition: transform 0.3s ease;
+  }
+  
+  .mod--third_form .key-point:hover {
+    transform: translateY(-3px);
+  }
+  
+  .mod--third_form .key-point h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1e40af;
+    margin-bottom: 12px;
+  }
+  
+  .mod--third_form .key-point-content {
+    color: #1e3a8a;
+    line-height: 1.6;
+    font-size: 0.95rem;
+  }
+  
+  /* Interest Highlights */
+  .mod--third_form .interest-highlight {
+    background: rgba(201, 169, 97, 0.1);
+    border-left: 4px solid #c9a961;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 8px;
+  }
+  
+  .mod--third_form .interest-highlight h5 {
+    color: #92400e;
+    margin-bottom: 10px;
+    font-weight: 600;
+    font-size: 1.1rem;
+  }
+  
+  .mod--third_form .interest-highlight p {
+    color: #78350f;
+    line-height: 1.6;
+  }
+  
+  /* Quote Section */
+  .mod--third_form .quote-section {
+    background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+    border-radius: 16px;
+    padding: 50px;
+    margin: 60px 0 40px;
+    text-align: center;
+    transition: transform 0.3s ease;
+    position: relative;
+  }
+  
+  .mod--third_form .quote-section::before {
+    content: '"';
+    font-size: 80px;
+    position: absolute;
+    top: 10px;
+    left: 30px;
+    color: rgba(34, 197, 94, 0.2);
+    font-family: Georgia, serif;
+  }
+  
+  .mod--third_form .quote-section:hover {
+    transform: translateY(-3px);
+  }
+  
+  .mod--third_form .quote-text {
+    font-size: 1.4rem;
+    font-style: italic;
+    color: #065f46;
+    margin-bottom: 20px;
+    line-height: 1.6;
+    position: relative;
+    z-index: 1;
+  }
+  
+  .mod--third_form .quote-author {
+    font-weight: 600;
+    color: #15803d;
+    font-size: 1.1rem;
+  }
+  
+  /* Specific Interest Highlights */
+  .mod--third_form .mathematics-highlight {
+    background: rgba(59, 130, 246, 0.1);
+    border-left-color: #3b82f6;
+  }
+  
+  .mod--third_form .mathematics-highlight h5 {
+    color: #1e40af;
+  }
+  
+  .mod--third_form .languages-highlight {
+    background: rgba(168, 85, 247, 0.1);
+    border-left-color: #a855f7;
+  }
+  
+  .mod--third_form .languages-highlight h5 {
+    color: #7c3aed;
+  }
+  
+  .mod--third_form .sports-highlight {
+    background: rgba(34, 197, 94, 0.1);
+    border-left-color: #22c55e;
+  }
+  
+  .mod--third_form .sports-highlight h5 {
+    color: #15803d;
+  }
+  
+  .mod--third_form .leadership-highlight {
+    background: rgba(251, 146, 60, 0.1);
+    border-left-color: #fb923c;
+  }
+  
+  .mod--third_form .leadership-highlight h5 {
+    color: #c2410c;
+  }
+  
+  .mod--third_form .business-highlight {
+    background: rgba(99, 102, 241, 0.1);
+    border-left-color: #6366f1;
+  }
+  
+  .mod--third_form .business-highlight h5 {
+    color: #4c1d95;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 1024px) {
+    .mod--third_form .hero-images {
+      grid-template-columns: 1fr;
+    }
+    
+    .mod--third_form .aims-grid {
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .mod--third_form .main-title {
+      font-size: 2.5rem;
+    }
+    
+    .mod--third_form .stats-bar {
+      gap: 30px;
+    }
+    
+    .mod--third_form .stat-number {
+      font-size: 2rem;
+    }
+    
+    .mod--third_form .section-header-content {
+      flex-direction: column;
+      text-align: center;
+    }
+    
+    .mod--third_form .key-points {
+      grid-template-columns: 1fr;
+    }
+    
+    .mod--third_form .nav-buttons {
+      justify-content: flex-start;
+      overflow-x: auto;
+      padding-bottom: 10px;
+    }
+    
+    .mod--third_form .nav-btn {
+      flex-shrink: 0;
+    }
+    
+    .mod--third_form .timetable-table {
+      font-size: 0.85rem;
+    }
+    
+    .mod--third_form .timetable-table th,
+    .mod--third_form .timetable-table td {
+      padding: 8px 6px;
+    }
+    
+    .mod--third_form .section-title {
+      font-size: 1.6rem;
+    }
+    
+    .mod--third_form .subsection-title {
+      font-size: 1.2rem;
+    }
+    
+    .mod--third_form .section-content,
+    .mod--third_form .section-header {
+      padding: 25px;
+    }
+    
+    .mod--third_form .timetable-section {
+      padding: 30px 20px;
+    }
+    
+    .mod--third_form .quote-section {
+      padding: 30px;
+    }
+    
+    .mod--third_form .quote-text {
+      font-size: 1.2rem;
+    }
+  }

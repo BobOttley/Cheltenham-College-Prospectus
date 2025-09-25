@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Cheltenham College – Personalised Prospectus</title>
+  <link rel="stylesheet" href="/css/site.css">
+  
+  <script>
+    // Load the normalised enquiry (single source of truth is server.js)
+    async function loadProspectusContext() {
+      const params = new URLSearchParams(location.search);
+      const id = params.get('id');
+      if (!id) return null;
+
+      const res = await fetch(`/api/enquiry/${id}`, { headers: { 'Accept': 'application/json' } });
+      if (!res.ok) return null;
+
+      const json = await res.json();
+      if (!json || !json.success) return null;
+
+      const ctx = json.data || {};
+      window.PROSPECTUS_CTX = ctx;
+      try { localStorage.setItem('enquiryFormData', JSON.stringify(ctx)); } catch (_) {}
+      return ctx;
+    }
+
+    // Minimal global personalisation for shared tokens (no placeholders)
+    function personaliseGlobals(ctx) {
+      if (!ctx) return;
+      document.querySelectorAll('.child-name').forEach(el => {
+        const name = (ctx.childName || '').trim();
+        if (name && name !== '[Child\'s Name]') el.textContent = name;
+      });
+    }
+
+    // Initialise JS modules that declare [data-mod] (from app.js MODULES)
+    function initModules(ctx) {
+      const reg = window.MODULES || {};
+      document.querySelectorAll('[data-mod]').forEach(section => {
+        const key = section.getAttribute('data-mod');
+        const init = reg[key];
+        if (typeof init === 'function') {
+          try { init(section, ctx); } catch (e) { console.error(`Init failed for ${key}`, e); }
+        }
+      });
+    }
+
+    (async () => {
+      const ctx = await loadProspectusContext();
+      personaliseGlobals(ctx);
+
+      // If app.js still loading (defer), wait for onload; otherwise run now
+      if (!window.MODULES) {
+        window.addEventListener('load', () => initModules(ctx), { once: true });
+      } else {
+        initModules(ctx);
+      }
+    })();
+  </script>
+
+  <style>
+    /* Minimal base so content renders cleanly even without full CSS */
+    body { margin:0; background:#fff; color:#0f172a; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+    .page { max-width: 1280px; margin: 0 auto; padding: 16px; }
+  </style>
+</head>
+<body>
+  <main id="prospectus-root" class="prospectus">
+    <!-- CORE MODULES - Always show -->
+    <section class="placeholder" data-mod="hero" data-required="true" data-priority="1"></section>
+    <section class="placeholder" data-mod="key_statistics" data-priority="3"></section>
+    
+    <!-- GENERAL SCHOOL LIFE MODULES - Core school experience -->
+    <div class="placeholder" data-mod="house_system" data-priority="10"></div>
+    
+    <div class="placeholder" data-mod="pastoral_care" data-priority="15"></div>
+    
+    <div class="placeholder" data-mod="student_gallery" data-priority="20"></div>
+    
+    <section class="placeholder" data-mod="sports" data-priority="25"></section>
+    
+    <section class="placeholder" data-mod="ccf" data-priority="30"
+             data-visible-when='{"activities":["ccf"]}'></section>
+    
+    <!-- LOWER SCHOOL MODULES - Only show for Lower/Middle School students -->
+    <section class="placeholder" data-mod="third_form" data-priority="35"
+             data-visible-when='{"stage":["Lower","Middle","Third Form"]}'></section>
+    
+    <!-- Third Form Subject Modules - Show based on academic interests -->
+    <section class="placeholder" data-mod="third_form_sciences" data-priority="40"
+             data-visible-when='{"stage":["Lower","Middle","Third Form"],"academicInterests":["sciences","mathematics"]}'></section>
+    
+    <section class="placeholder" data-mod="third_form_creative_arts" data-priority="45"
+             data-visible-when='{"stage":["Lower","Middle","Third Form"],"academicInterests":["arts"]}'></section>
+    
+    <section class="placeholder" data-mod="third_form_languages" data-priority="50"
+             data-visible-when='{"stage":["Lower","Middle","Third Form"],"academicInterests":["languages"]}'></section>
+    
+    <section class="placeholder" data-mod="third_form_humanities" data-priority="55"
+             data-visible-when='{"stage":["Lower","Middle","Third Form"],"academicInterests":["humanities"]}'></section>
+    
+    <section class="placeholder" data-mod="special_programmes" data-priority="60"
+             data-visible-when='{"stage":["Lower","Middle","Third Form"],"priorities":{"activities":[2,3]}}'></section>
+    
+    <!-- UPPER SCHOOL MODULES - Only show for Upper/Sixth Form students -->
+    <section class="placeholder" data-mod="upper_school" data-priority="65"
+             data-visible-when='{"stage":["Upper","Sixth Form","Upper School"]}'></section>
+    
+    <!-- A Level Subject Modules - Show based on academic interests -->
+    <section class="placeholder" data-mod="sciences_mathematics" data-priority="70"
+             data-visible-when='{"stage":["Upper","Sixth Form","Upper School"],"academicInterests":["sciences","mathematics"]}'></section>
+    
+    <section class="placeholder" data-mod="humanities_social" data-priority="75"
+             data-visible-when='{"stage":["Upper","Sixth Form","Upper School"],"academicInterests":["humanities","social-sciences"]}'></section>
+    
+    <section class="placeholder" data-mod="languages_classics" data-priority="80"
+             data-visible-when='{"stage":["Upper","Sixth Form","Upper School"],"academicInterests":["languages","classics"]}'></section>
+    
+    <section class="placeholder" data-mod="creative_arts" data-priority="85"
+             data-visible-when='{"stage":["Upper","Sixth Form","Upper School"],"academicInterests":["arts"]}'></section>
+    
+    <section class="placeholder" data-mod="applied_vocational" data-priority="90"
+             data-visible-when='{"stage":["Upper","Sixth Form","Upper School"],"academicInterests":["business","technology","psychology"]}'></section>
+    
+    <!-- FINAL MODULE - Always show -->
+    <section class="placeholder" data-mod="final_hero" data-priority="999" data-required="true"></section>
+  </main>
+
+  <script defer src="/js/app.js"></script>
+</body>
+</html>

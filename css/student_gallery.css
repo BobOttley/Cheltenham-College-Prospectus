@@ -1,0 +1,234 @@
+/* ===== STUDENT GALLERY MODULE ===== */
+
+.mod--student_gallery {
+  background: #ffffff;
+  padding: 5rem 1rem;
+  position: relative;
+}
+
+.mod--student_gallery::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #c9a961, transparent);
+}
+
+.mod--student_gallery .gallery-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Personal Introduction - Full Width */
+.mod--student_gallery .personal-intro {
+  background: linear-gradient(135deg, #1e3a5f 0%, #2a4a6b 100%);
+  padding: 4rem 2rem;
+  border-radius: 0;
+  margin: 0 0 4rem 0;
+  color: white;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+}
+
+.mod--student_gallery .personal-intro::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(201, 169, 97, 0.1) 0%, transparent 50%);
+  animation: mod-gallery-rotate 20s linear infinite;
+}
+
+.mod--student_gallery .personal-intro-content {
+  position: relative;
+  z-index: 2;
+}
+
+.mod--student_gallery .personal-title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 300;
+  margin-bottom: 1rem;
+}
+
+.mod--student_gallery .personal-title .highlight {
+  color: #c9a961;
+  font-style: italic;
+}
+
+.mod--student_gallery .personal-subtitle {
+  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+  opacity: 0.9;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+@keyframes mod-gallery-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Section Header */
+.mod--student_gallery .section-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.mod--student_gallery .section-title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 300;
+  color: #1e3a5f;
+  margin-bottom: 1rem;
+}
+
+.mod--student_gallery .section-title .highlight {
+  color: #c9a961;
+  font-style: italic;
+}
+
+.mod--student_gallery .section-subtitle {
+  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+  color: #666;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* Category Tabs */
+.mod--student_gallery .category-tabs {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 3rem;
+}
+
+.mod--student_gallery .category-tab {
+  padding: 1rem 2rem;
+  border: 2px solid #e9ecef;
+  border-radius: 50px;
+  background: white;
+  color: #666;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.mod--student_gallery .category-tab:hover {
+  border-color: #c9a961;
+  color: white;
+  background: #c9a961;
+  transform: translateY(-2px);
+}
+
+.mod--student_gallery .category-tab.active {
+  border-color: #c9a961;
+  color: white;
+  background: #c9a961;
+  transform: translateY(-2px);
+}
+
+.mod--student_gallery .category-tab.high-priority {
+  border-color: #c9a961;
+  font-weight: 700;
+}
+
+/* Gallery Grid */
+.mod--student_gallery .gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 4rem;
+}
+
+.mod--student_gallery .gallery-item {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.mod--student_gallery .gallery-item:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+}
+
+.mod--student_gallery .gallery-image {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.mod--student_gallery .gallery-item:hover .gallery-image {
+  transform: scale(1.05);
+}
+
+.mod--student_gallery .gallery-content {
+  padding: 1.5rem;
+}
+
+.mod--student_gallery .gallery-title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.4rem;
+  color: #1e3a5f;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.mod--student_gallery .gallery-description {
+  color: #666;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.mod--student_gallery .gallery-tag {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(201, 169, 97, 0.9);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  backdrop-filter: blur(10px);
+}
+
+/* Personalized Notes */
+.mod--student_gallery .academic-support-note,
+.mod--student_gallery .sport-interest-note,
+.mod--student_gallery .pastoral-priority-note,
+.mod--student_gallery .personal-journey-note,
+.mod--student_gallery .community-note,
+.mod--student_gallery .testimonial-connection {
+  display: inline;
+  font-style: italic;
+}
+
+.mod--student_gallery .academic-support-note:empty,
+.mod--student_gallery .sport-interest-note:empty,
+.mod--student_gallery .pastoral-priority-note:empty,
+.mod--student_gallery .personal-journey-note:empty,
+.mod--student_gallery .community-note:empty,
+.mod--student_gallery .testimonial-connection:empty {
+  display: none;
+}
+
+/* Featured Testimonial */
+.mod--student_gallery .testimonial-section {
+  background: #f8f9fa;
+  padding: 3rem 2rem;
+  border-radius: 20px;
+  margin-top: 4

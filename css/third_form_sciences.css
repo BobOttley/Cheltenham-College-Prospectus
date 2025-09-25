@@ -1,0 +1,539 @@
+/* ===== THIRD FORM SCIENCES MODULE CSS ===== */
+
+.mod--third_form_sciences * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.mod--third_form_sciences {
+    font-family: Georgia, 'Times New Roman', serif;
+    line-height: 1.7;
+    color: #1a1a1a;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 0;
+}
+
+.mod--third_form_sciences .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Header Section */
+.mod--third_form_sciences .header {
+    background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
+    color: white;
+    padding: 80px 0 100px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 60px;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+}
+
+.mod--third_form_sciences .header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -30%;
+    width: 150%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent 30%, rgba(201, 169, 97, 0.1) 50%, transparent 70%);
+    transform: rotate(12deg);
+    animation: third-form-sciences-shimmer 8s ease-in-out infinite;
+}
+
+@keyframes third-form-sciences-shimmer {
+    0%, 100% { opacity: 0.7; transform: rotate(12deg) translateX(-20%); }
+    50% { opacity: 1; transform: rotate(12deg) translateX(20%); }
+}
+
+.mod--third_form_sciences .header-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+}
+
+.mod--third_form_sciences .header h1 {
+    font-size: 3.8rem;
+    font-weight: 300;
+    margin-bottom: 25px;
+    text-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3);
+    letter-spacing: -1px;
+}
+
+.mod--third_form_sciences .subtitle {
+    font-size: 1.4rem;
+    opacity: 0.9;
+    font-style: italic;
+    margin-bottom: 40px;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.mod--third_form_sciences .personalized-welcome {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    padding: 25px;
+    margin: 30px auto;
+    max-width: 700px;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    backdrop-filter: blur(10px);
+}
+
+.mod--third_form_sciences .stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    flex-wrap: wrap;
+}
+
+.mod--third_form_sciences .stat {
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.mod--third_form_sciences .stat:hover {
+    transform: translateY(-5px);
+}
+
+.mod--third_form_sciences .stat-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    display: block;
+    color: #c9a961;
+}
+
+.mod--third_form_sciences .stat-label {
+    font-size: 0.95rem;
+    opacity: 0.9;
+    margin-top: 8px;
+}
+
+/* Subject Navigation */
+.mod--third_form_sciences .subject-nav {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 40px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 20px;
+    z-index: 100;
+    transition: none;
+}
+
+.mod--third_form_sciences .nav-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #e91e63;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.mod--third_form_sciences .nav-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.mod--third_form_sciences .nav-btn {
+    padding: 8px 16px;
+    background: #f1f5f9;
+    border: none;
+    border-radius: 25px;
+    color: #475569;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    font-weight: 500;
+    white-space: nowrap;
+    min-width: 60px;
+    text-align: center;
+}
+
+.mod--third_form_sciences .nav-btn:hover {
+    background: #e91e63;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.mod--third_form_sciences .nav-btn.active {
+    background: #c9a961;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.mod--third_form_sciences .nav-btn.priority-high {
+    background: #c9a961;
+    color: white;
+    box-shadow: 0 2px 8px rgba(201, 169, 97, 0.3);
+}
+
+.mod--third_form_sciences .nav-btn.priority-high:hover {
+    background: #e91e63;
+    color: white;
+    border-color: #e91e63;
+}
+
+/* Single Column Subject Layout */
+.mod--third_form_sciences .subjects-container {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    margin-bottom: 80px;
+}
+
+.mod--third_form_sciences .subject-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    transition: all 0.4s ease;
+    border-top: 4px solid transparent;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.mod--third_form_sciences .subject-card.hidden {
+    display: none;
+}
+
+.mod--third_form_sciences .subject-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+}
+
+.mod--third_form_sciences .subject-card.priority-match {
+    border-top: 4px solid #c9a961;
+    background: linear-gradient(135deg, #fff 0%, #fefdf8 100%);
+}
+
+.mod--third_form_sciences .subject-card.mathematics { border-top-color: #2563eb; }
+.mod--third_form_sciences .subject-card.physics { border-top-color: #7c3aed; }
+.mod--third_form_sciences .subject-card.chemistry { border-top-color: #dc2626; }
+.mod--third_form_sciences .subject-card.biology { border-top-color: #059669; }
+
+.mod--third_form_sciences .subject-header {
+    padding: 40px;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.mod--third_form_sciences .subject-header-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.mod--third_form_sciences .subject-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.mod--third_form_sciences .subject-title {
+    font-size: 2.4rem;
+    font-weight: 300;
+    color: #1f2937;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+.mod--third_form_sciences .subject-intro {
+    font-size: 1.1rem;
+    color: #4b5563;
+    line-height: 1.6;
+}
+
+.mod--third_form_sciences .personalized-intro {
+    background: rgba(201, 169, 97, 0.1);
+    border-left: 4px solid #c9a961;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 0 8px 8px 0;
+    font-style: italic;
+}
+
+.mod--third_form_sciences .subject-image {
+    border-radius: 12px;
+    overflow: hidden;
+    height: 220px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+}
+
+.mod--third_form_sciences .subject-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.mod--third_form_sciences .subject-image:hover img {
+    transform: scale(1.05);
+}
+
+.mod--third_form_sciences .head-quote {
+    background: #f8fafc;
+    border-left: 4px solid #c9a961;
+    padding: 20px 25px;
+    font-style: italic;
+    color: #374151;
+    border-radius: 0 8px 8px 0;
+    margin-top: 20px;
+}
+
+.mod--third_form_sciences .quote-text {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    margin-bottom: 12px;
+}
+
+.mod--third_form_sciences .quote-author {
+    font-size: 0.9rem;
+    color: #6b7280;
+    font-weight: 600;
+}
+
+.mod--third_form_sciences .subject-content {
+    padding: 40px;
+}
+
+.mod--third_form_sciences .section {
+    margin-bottom: 35px;
+}
+
+.mod--third_form_sciences .section-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #e91e63;
+    margin-bottom: 18px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #e5e7eb;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: color 0.3s ease;
+}
+
+.mod--third_form_sciences .section-title:hover {
+    color: #2563eb;
+}
+
+.mod--third_form_sciences .section-title::after {
+    content: '▼';
+    font-size: 0.8rem;
+    transition: transform 0.3s ease;
+}
+
+.mod--third_form_sciences .section.collapsed .section-title::after {
+    transform: rotate(-90deg);
+}
+
+.mod--third_form_sciences .section-content {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #374151;
+    transition: all 0.3s ease;
+    max-height: 1000px;
+    overflow: hidden;
+}
+
+.mod--third_form_sciences .section.collapsed .section-content {
+    max-height: 0;
+    margin-top: 0;
+}
+
+.mod--third_form_sciences .section-content p {
+    margin-bottom: 16px;
+}
+
+.mod--third_form_sciences .section-content strong {
+    color: #1f2937;
+    font-weight: 600;
+}
+
+.mod--third_form_sciences .personalized-section {
+    background: linear-gradient(135deg, #fef7ed 0%, #fed7aa 100%);
+    border-radius: 12px;
+    padding: 30px;
+    margin: 30px 0;
+    border-left: 4px solid #c9a961;
+}
+
+.mod--third_form_sciences .personalized-section-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #9a3412;
+    margin-bottom: 15px;
+}
+
+.mod--third_form_sciences .personalized-section-content {
+    color: #78350f;
+    line-height: 1.6;
+}
+
+.mod--third_form_sciences .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.mod--third_form_sciences .info-box {
+    background: #f9fafb;
+    border-radius: 12px;
+    padding: 25px;
+    border-left: 4px solid #c9a961;
+    transition: transform 0.3s ease;
+}
+
+.mod--third_form_sciences .info-box:hover {
+    transform: translateY(-3px);
+}
+
+.mod--third_form_sciences .info-box h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 12px;
+}
+
+.mod--third_form_sciences .info-box ul {
+    list-style: none;
+    padding: 0;
+}
+
+.mod--third_form_sciences .info-box li {
+    padding: 6px 0;
+    color: #4b5563;
+    position: relative;
+    padding-left: 20px;
+}
+
+.mod--third_form_sciences .info-box li:before {
+    content: '•';
+    color: #c9a961;
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+}
+
+.mod--third_form_sciences .pathways-section {
+    border-radius: 12px;
+    padding: 30px;
+    margin: 30px 0;
+    transition: transform 0.3s ease;
+    background: linear-gradient(135deg, #f0fdf4 0%, #bbf7d0 100%);
+}
+
+.mod--third_form_sciences .pathways-section:hover {
+    transform: translateY(-3px);
+}
+
+.mod--third_form_sciences .pathways-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #15803d;
+}
+
+.mod--third_form_sciences .pathway-content {
+    color: #166534;
+    line-height: 1.6;
+}
+
+/* Call to Action Section */
+.mod--third_form_sciences .cta-section {
+    background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
+    color: white;
+    padding: 60px 0;
+    text-align: center;
+    margin-top: 60px;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+}
+
+.mod--third_form_sciences .cta-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.mod--third_form_sciences .cta-title {
+    font-size: 2.5rem;
+    font-weight: 300;
+    margin-bottom: 20px;
+}
+
+.mod--third_form_sciences .gold-accent {
+    color: #c9a961;
+}
+
+.mod--third_form_sciences .cta-subtitle {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    opacity: 0.9;
+}
+
+.mod--third_form_sciences .cta-button {
+    display: inline-block;
+    background: #c9a961;
+    color: white;
+    padding: 15px 30px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.mod--third_form_sciences .cta-button:hover {
+    background: #b8984e;
+    transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .mod--third_form_sciences .header h1 {
+        font-size: 2.8rem;
+    }
+    
+    .mod--third_form_sciences .stats-bar {
+        gap: 30px;
+    }
+    
+    .mod--third_form_sciences .subject-header-content {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .mod--third_form_sciences .subject-image {
+        height: 150px;
+    }
+    
+    .mod--third_form_sciences .info-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .mod--third_form_sciences .subject-header, 
+    .mod--third_form_sciences .subject-content {
+        padding: 30px 25px;
+    }
+
+    .mod--third_form_sciences .nav-buttons {
+        justify-content: flex-start;
+        overflow-x: auto;
+        padding-bottom: 10px;
+    }
+
+    .mod--third_form_sciences .nav-btn {
+        flex-shrink: 0;
+    }
+}
