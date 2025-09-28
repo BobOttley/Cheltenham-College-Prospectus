@@ -654,3 +654,42 @@
     padding: .5rem .8rem; font-size: .9rem;
   }
 }
+/* ===== Sports nav: make it STATIC (no sticky behaviour) ===== */
+.mod--sports .sports-nav{
+  position: static !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  z-index: auto !important;
+  backdrop-filter: none; /* no blur needed when not floating */
+}
+
+/* Optional: avoid sideways drag on phones when nav/hero were 100vw */
+@media (max-width: 768px){
+  .mod--sports .sports-nav{
+    width: 100% !important;
+    margin-left: 0 !important;
+    padding: .5rem 0;          /* slimmer on mobile */
+  }
+  .mod--sports .nav-content{
+    height: 48px;              /* was 60px */
+    padding: 0 1rem;
+  }
+}
+/* ===== Sports nav: STATIC for all devices ===== */
+.mod--sports .sports-nav{
+  position: static !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  z-index: auto !important;
+  backdrop-filter: none;
+  width: 100% !important;
+  margin-left: 0 !important;
+  padding: 1rem 0;            /* slimmer default */
+}
+
+/* Hero sizing adjusted so nav + hero = full screen */
+.mod--sports .sport-hero{
+  height: calc(100vh - 60px);  /* assume nav ~60px tall */
+}
