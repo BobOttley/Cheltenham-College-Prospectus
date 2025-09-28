@@ -839,8 +839,13 @@ MODULES['sports'] = (root, ctx) => {
   };
 
   const loadVideo = (video) => {
-    if (!video) return;
+    if (!video) {
+      console.error('No video element provided to loadVideo');
+      return;
+    }
+    
     console.log('Loading MP4 video:', video.className);
+    console.log('Video element:', video);
     
     // Stop any currently playing video
     if (currentVideo && currentVideo !== video) {
@@ -857,15 +862,29 @@ MODULES['sports'] = (root, ctx) => {
         video.setAttribute('src', videoSrc);
         video.load();
         video.play().catch(e => console.log('Video autoplay prevented:', e));
+      } else {
+        console.error('No video source found for gender video');
       }
     } else if (video.classList.contains('hero-video')) {
       const videoSrc = video.getAttribute('data-src');
-      console.log('Hero video source:', videoSrc);
+      console.log('Hero video data-src:', videoSrc);
       if (videoSrc) {
+        console.log('Setting video src to:', videoSrc);
         video.setAttribute('src', videoSrc);
         video.removeAttribute('data-src');
         video.load();
-        video.play().catch(e => console.log('Video autoplay prevented:', e));
+        // Add event listeners to debug loading
+        video.addEventListener('loadstart', () => console.log('Video load started'));
+        video.addEventListener('loadedmetadata', () => console.log('Video metadata loaded'));
+        video.addEventListener('canplay', () => console.log('Video can play'));
+        video.addEventListener('error', (e) => console.error('Video error:', e));
+        video.play().then(() => {
+          console.log('Video playing successfully');
+        }).catch(e => {
+          console.error('Video play failed:', e);
+        });
+      } else {
+        console.error('No data-src attribute found on hero video');
       }
     }
     
@@ -932,7 +951,11 @@ MODULES['sports'] = (root, ctx) => {
 
   // LAZY VIDEO LOADING - When sports module scrolls into view
   const setupVideoLazyLoading = () => {
-    const heroSection = root.querySelector('.sport-hero');
+    // Find the first hero section in the active tab
+    const activeSection = root.querySelector('.sport-section.active');
+    if (!activeSection) return;
+    
+    const heroSection = activeSection.querySelector('.sport-hero');
     if (!heroSection) return;
 
     const observer = new IntersectionObserver((entries) => {
@@ -940,20 +963,23 @@ MODULES['sports'] = (root, ctx) => {
         if (entry.isIntersecting) {
           console.log('Sports module hero entered viewport - loading initial video');
           
-          // Load the video in the currently active section
-          const activeSection = root.querySelector('.sport-section.active');
-          if (activeSection) {
-            const video = activeSection.querySelector('video.hero-video, video.gender-video');
-            if (video) {
-              loadVideo(video);
-            }
+          // Find video in the active section specifically
+          const video = activeSection.querySelector('video.hero-video') || 
+                       activeSection.querySelector('video.gender-video');
+          
+          if (video) {
+            console.log('Found video to load:', video.className);
+            console.log('Video data-src:', video.getAttribute('data-src'));
+            loadVideo(video);
+          } else {
+            console.error('No video element found in active section!');
           }
           
           observer.unobserve(heroSection);
         }
       });
     }, {
-      threshold: 0.2,
+      threshold: 0.1,  // Lower threshold to trigger earlier
       rootMargin: '0px 0px -10% 0px'
     });
 
@@ -1070,7 +1096,7 @@ MODULES['sports'] = (root, ctx) => {
       }
     }
 
-    // Sport details mapping
+    // Sport details mapping - COMPLETE LIST
     const sportDetails = {
       'Hockey': {
         title: 'Hockey Excellence',
@@ -1111,6 +1137,76 @@ MODULES['sports'] = (root, ctx) => {
         title: 'Rowing Excellence',
         details: `${childName}, our state-of-the-art boathouse on River Severn houses a fleet of 50+ boats. Compete at Henley Royal Regatta and National Schools' Regatta.`,
         highlight: `Henley Qualifiers • GB Juniors Pipeline`
+      },
+      'Squash': {
+        title: 'Squash Excellence',
+        details: `${childName}, you'll train on four glass-backed championship courts in our dedicated squash centre. Professional coaching from former PSA tour players provides individual support.`,
+        highlight: `Top 10 UK School • County Training Venue`
+      },
+      'Badminton': {
+        title: 'Badminton Excellence',
+        details: `${childName}, you'll compete in our four-court sports hall with specialist badminton flooring. Teams compete in National Schools Championships and county leagues.`,
+        highlight: `County Champions • Regional Finals`
+      },
+      'Basketball': {
+        title: 'Basketball Excellence',
+        details: `${childName}, you'll play on indoor courts with professional hoops and electronic scoreboards. Boys' and girls' teams compete in regional leagues with American-style coaching methods.`,
+        highlight: `Regional League Winners • National Schools Qualifiers`
+      },
+      'Football': {
+        title: 'Football Excellence',
+        details: `${childName}, you'll train on our 3G all-weather pitch and multiple grass pitches. FA qualified coaches including UEFA B license holders provide expert guidance.`,
+        highlight: `ISFA Regional Champions • County Cup Semi-Finals`
+      },
+      'Cross Country': {
+        title: 'Cross Country Excellence',
+        details: `${childName}, you'll train across beautiful countryside routes with specialist distance coaching. Our winter programme builds endurance and mental toughness.`,
+        highlight: `County Champions • Regional Competitors`
+      },
+      'Golf': {
+        title: 'Golf Excellence',
+        details: `${childName}, you'll benefit from partnerships with Cotswold Hills and Lilley Brook Golf Clubs. PGA professional coaching with video analysis and Trackman technology.`,
+        highlight: `ISGA Finals • 3 County Players`
+      },
+      'Equestrian': {
+        title: 'Equestrian Excellence',
+        details: `${childName}, comprehensive programme covering showjumping, eventing, dressage, and polo. Partnership with local BHS approved centres. NSEA competitions including Schools Championships at Hickstead.`,
+        highlight: `NSEA National Qualifiers • Hickstead Competitors`
+      },
+      'Clay Shooting': {
+        title: 'Clay Shooting Excellence',
+        details: `${childName}, partnership with premier local shooting grounds. CPSA qualified instruction in all disciplines. Compete in Schools Challenge and NSRA championships.`,
+        highlight: `Schools Challenge Finalists • CPSA Registered`
+      },
+      'Polo': {
+        title: 'Polo Excellence',
+        details: `${childName}, introduction to polo at Edgeworth Polo Club. HPA coaching with horses provided. Compete in SUPA schools tournaments.`,
+        highlight: `SUPA Tournament Players • HPA Affiliated`
+      },
+      'Water Polo': {
+        title: 'Water Polo Excellence',
+        details: `${childName}, train in our 25m pool with dedicated equipment. Boys' and girls' teams competing in regional leagues.`,
+        highlight: `Regional League • National Schools Competition`
+      },
+      'Volleyball': {
+        title: 'Volleyball Excellence',
+        details: `${childName}, indoor volleyball in sports hall with competition-standard nets. Teams compete in National Schools competitions.`,
+        highlight: `Regional Competitors • Fastest Growing Sport`
+      },
+      'Ultimate Frisbee': {
+        title: 'Ultimate Frisbee Excellence',
+        details: `${childName}, mixed teams competing in school tournaments. Participate in UK Ultimate Junior tournaments.`,
+        highlight: `National Schools Tournament • Inclusive Sport Award`
+      },
+      'Lacrosse': {
+        title: 'Lacrosse Excellence',
+        details: `${childName}, you'll join our growing lacrosse programme with specialist coaching and competitive fixtures against other schools.`,
+        highlight: `Growing Programme • Competitive Fixtures`
+      },
+      'Rounders': {
+        title: 'Rounders Excellence',
+        details: `${childName}, summer term sport with teams from U13 to 1st IX. County tournament participation including Lady Taverners competitions.`,
+        highlight: `County Tournament Winners • Regional Finals`
       }
     };
 
