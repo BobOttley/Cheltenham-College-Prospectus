@@ -4322,12 +4322,19 @@ MODULES['final_hero'] = (root, ctx) => {
     }
   }
   
-  // VIDEO LOADING - Updated for direct video element
+  // VIDEO LOADING - Updated for direct video element with lazy loading
   const video = $('.fh-hero-video', root);
   if (video) {
+    // Initially pause the video to prevent autoplay
+    video.pause();
+    
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) {
-        console.log('Final Hero module entered view - video ready');
+        console.log('Final Hero module entered view - starting video');
+        
+        // Start the video when the module comes into view
+        video.play().catch(e => console.log('Video play failed:', e));
+        
         observer.unobserve(root);
         
         // Setup sound control for video element
