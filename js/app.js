@@ -895,6 +895,41 @@ MODULES['sports'] = (root, ctx) => {
 
     currentVideo = video;
   };
+  // --- Tile collapse helpers (phones) ---
+const phone = window.matchMedia('(max-width: 768px)');
+const tileSections = () => ([
+  root.querySelector('.top-sports-grid')?.closest('.student-sports-section'),
+  root.querySelector('.all-sports-content')?.closest('.all-sports-section'),
+  root.querySelector('.facilities-grid')
+].filter(Boolean));
+
+const collapseTiles = () => {
+  if (!phone.matches) return; // only on phones
+  tileSections().forEach(el => el.classList.add('is-collapsed'));
+};
+
+const expandTiles = () => {
+  tileSections().forEach(el => el.classList.remove('is-collapsed'));
+};
+
+const ensureToggleButton = () => {
+  if (!phone.matches) return;
+  let toggle = root.querySelector('.tile-toggle');
+  if (!toggle) {
+    toggle = document.createElement('button');
+    toggle.className = 'tile-toggle';
+    toggle.type = 'button';
+    toggle.textContent = 'Show details';
+    // place after hero section
+    const anchor = root.querySelector('.personal-sports-message') || root.querySelector('.sport-hero');
+    anchor?.after(toggle);
+    toggle.addEventListener('click', () => {
+      const collapsed = tileSections().every(el => el.classList.contains('is-collapsed'));
+      if (collapsed) { expandTiles(); toggle.textContent = 'Hide details'; }
+      else { collapseTiles(); toggle.textContent = 'Show details'; }
+    });
+  }
+};
 
   // Setup tab switching with proper video handling
   const setupTabs = () => {
