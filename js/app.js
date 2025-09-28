@@ -1240,13 +1240,34 @@ const setupVideoLazyLoading = () => {
     }
   };
 
-  // Hide hero content after delay
-  const setupHeroContentHiding = () => {
-    const heroContents = root.querySelectorAll('.hero-content');
-    setTimeout(() => {
-      heroContents.forEach(content => content.classList.add('hide'));
-    }, 20000); // Hide after 20 seconds
-  };
+  // Hide hero content 20s after user clicks a tab and video starts
+const setupHeroContentHiding = () => {
+  const tabs = root.querySelectorAll('.sport-tab');
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const activeSection = root.querySelector('.sport-section.active');
+      if (!activeSection) return;
+
+      const heroContent = activeSection.querySelector('.hero-content');
+      if (!heroContent) return;
+
+      // Reset any previous hide state
+      heroContent.classList.remove('hide');
+
+      // Clear any old timer
+      if (heroContent._hideTimer) {
+        clearTimeout(heroContent._hideTimer);
+      }
+
+      // Start fresh 20s timer
+      heroContent._hideTimer = setTimeout(() => {
+        heroContent.classList.add('hide');
+      }, 20000);
+    });
+  });
+};
+
 
   // Initialise in correct order
   console.log('Initializing sports module components...');
