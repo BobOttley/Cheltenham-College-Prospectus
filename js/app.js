@@ -946,38 +946,41 @@ MODULES['sports'] = (root, ctx) => {
   };
 
   // LAZY VIDEO LOADING - When sports module scrolls into view
-  const setupVideoLazyLoading = () => {
-    const activeSection = root.querySelector('.sport-section.active');
-    if (!activeSection) return;
+  // LAZY VIDEO LOADING - Start active section video only when module scrolls into view
+const setupVideoLazyLoading = () => {
+  const activeSection = root.querySelector('.sport-section.active');
+  if (!activeSection) return;
 
-    const heroSection = activeSection.querySelector('.sport-hero');
-    if (!heroSection) return;
+  const heroSection = activeSection.querySelector('.sport-hero');
+  if (!heroSection) return;
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          console.log('Sports module hero entered viewport - loading initial video');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        console.log('Sports module hero entered viewport - starting active video');
 
-          const video = activeSection.querySelector('video.hero-video') ||
-                        activeSection.querySelector('video.gender-video');
+        const video = activeSection.querySelector('video.hero-video') ||
+                      activeSection.querySelector('video.gender-video');
 
-          if (video) {
-            console.log('Found video to load:', video.className);
-            loadVideo(video);
-          } else {
-            console.error('No video element found in active section!');
-          }
-
-          observer.unobserve(heroSection);
+        if (video) {
+          console.log('Found video to load:', video.className);
+          loadVideo(video);   // use your existing loadVideo() to play it
+        } else {
+          console.error('No video element found in active section!');
         }
-      });
-    }, {
-      threshold: 0.1,
-      rootMargin: '0px 0px -10% 0px'
-    });
 
-    observer.observe(heroSection);
-  };
+        // Unobserve so it only fires once
+        observer.unobserve(heroSection);
+      }
+    });
+  }, {
+    threshold: 0.4,              // trigger when 40% of hero is visible
+    rootMargin: '0px 0px -10% 0px'
+  });
+
+  observer.observe(heroSection);
+};
+
 
   // Setup unmute buttons for MP4 videos
   const setupUnmute = () => {
