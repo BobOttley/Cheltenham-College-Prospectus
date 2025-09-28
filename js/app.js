@@ -4322,47 +4322,23 @@ MODULES['final_hero'] = (root, ctx) => {
     }
   }
   
-  // VIDEO LOADING - Updated for direct video element with lazy loading
-  const video = $('.fh-hero-video', root);
-  if (video) {
-    // Initially pause the video to prevent autoplay
-    video.pause();
-    
-    const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) {
-        console.log('Final Hero module entered view - starting video');
-        
-        // Start the video when the module comes into view
-        video.play().catch(e => console.log('Video play failed:', e));
-        
-        observer.unobserve(root);
-        
-        // Setup sound control for video element
-        setupSoundControl();
-        
-        // Text timer - 20 seconds after module loads
-        setTimeout(() => {
-          const overlay = $('.fh-overlay-content', root);
-          const below = $('.fh-text-below-video', root);
-          if (overlay && below) {
-            overlay.style.opacity = '0';
-            below.classList.add('visible');
-            console.log('Final Hero: Text moved down after 20 seconds');
-          }
-        }, 20000);
-      }
-    }, { 
-      threshold: 0.3, // 30% of module visible
-      rootMargin: '0px 0px -20% 0px' 
-    });
-    
-    observer.observe(root);
-  }
+  // Simple setup like hero module - no complex lazy loading
+  setupSoundControl();
+  
+  // Text timer - 20 seconds after module loads
+  setTimeout(() => {
+    const overlay = $('.fh-overlay-content', root);
+    const below = $('.fh-text-below-video', root);
+    if (overlay && below) {
+      overlay.style.opacity = '0';
+      below.classList.add('visible');
+      console.log('Final Hero: Text moved down after 20 seconds');
+    }
+  }, 20000);
   
   function setupSoundControl() {
     const video = root.querySelector('.fh-hero-video');
     const audioToggle = root.querySelector('#audioToggle');
-    const heroSection = $('.fh-hero-video-section', root);
     
     if (audioToggle && video) {
       audioToggle.addEventListener('click', () => {
@@ -4374,19 +4350,6 @@ MODULES['final_hero'] = (root, ctx) => {
           audioToggle.textContent = '🔊 Sound';
         }
       });
-    }
-    
-    // Auto-mute when scrolled away
-    if (heroSection && video) {
-      const checkVisibility = () => {
-        const rect = heroSection.getBoundingClientRect();
-        const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
-        if (!isVisible && !video.muted) {
-          video.muted = true;
-          if (audioToggle) audioToggle.textContent = '🔊 Sound';
-        }
-      };
-      window.addEventListener('scroll', checkVisibility, { passive: true });
     }
   }
   
