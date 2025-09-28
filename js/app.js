@@ -1294,7 +1294,7 @@ MODULES['ccf'] = (root, ctx) => {
       }
     }
 
-    // CCF interest note based on activities
+    // CCF interest note based on activities// CCF interest note based on activities
     const ccfNote = root.querySelector('.ccf-interest-note');
     if (ccfNote) {
       let note = '';

@@ -264,6 +264,7 @@
   }
   
   /* ---------- Simple stats row (optional) ---------- */
+  /* ---------- Simple stats row (optional) ---------- */
   .mod--sports .sport-stats{
     display:flex; justify-content:center; gap:3rem;
     margin-top:2rem;
