@@ -601,3 +601,56 @@
     gap: 1rem;
   }
 }
+/* ===== Mobile trim for Sports nav + easier scrolling ===== */
+@media (max-width: 768px){
+
+  /* Make the sticky nav slimmer */
+  .mod--sports .sports-nav{
+    padding: .5rem 0;        /* was 2rem 0 */
+  }
+  .mod--sports .nav-content{
+    height: 48px;            /* was 60px */
+    padding: 0 1rem;         /* tighter */
+    gap: .5rem;
+  }
+  .mod--sports .nav-title{
+    font-size: 1rem;         /* smaller title */
+    letter-spacing: .03em;
+  }
+  .mod--sports .sport-tabs{
+    gap: .5rem;              /* tighter tabs */
+    flex-wrap: wrap;
+  }
+  .mod--sports .sport-tab{
+    padding: .35rem .6rem;
+    font-size: .8rem;
+    letter-spacing: .08em;
+  }
+
+  /* Kill the 100vw “edge-to-edge” hack on mobile to stop sideways drag */
+  .mod--sports .sports-nav,
+  .mod--sports .sport-hero,
+  .mod--sports .personal-sports-message,
+  .mod--sports .cta-section{
+    width: 100%;             /* was 100vw */
+    margin-left: 0;          /* remove negative centring */
+  }
+
+  /* Make the hero easier to scroll */
+  .mod--sports .sport-hero{
+    height: 68vh;            /* slightly shorter than 70vh for more below-the-fold */
+    touch-action: pan-y;     /* ensure vertical scroll gestures */
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Keep overlay text readable but not huge */
+  .mod--sports .hero-title{   font-size: 2.1rem; }
+  .mod--sports .hero-subtitle{font-size: 1.05rem; }
+  .mod--sports .student-name{ font-size: 2rem; letter-spacing: .22em; }
+
+  /* Keep the unmute button finger-friendly but compact */
+  .mod--sports .unmute-btn{
+    right: .75rem; bottom: .75rem;
+    padding: .5rem .8rem; font-size: .9rem;
+  }
+}
