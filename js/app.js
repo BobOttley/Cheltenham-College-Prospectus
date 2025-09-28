@@ -4259,36 +4259,36 @@ MODULES['final_hero'] = (root, ctx) => {
   hydrateLazyAssets(root);
   
   // Personal vision - INSPIRING UNIVERSAL MESSAGE
-const visionEls = $$('.fh-personal-vision', root);
-if (visionEls.length > 0) {
-  let vision = '';
-  
-  if (ctx.activities?.includes('leadership') && ctx.priorities?.activities === 3) {
-    if (ctx.universityAspirations === 'Oxford or Cambridge' || ctx.universityAspirations === 'Oxbridge') {
+  const visionEls = $$('.fh-personal-vision', root);
+  if (visionEls.length > 0) {
+    let vision = '';
+    
+    if (ctx.activities?.includes('leadership') && ctx.priorities?.activities === 3) {
+      if (ctx.universityAspirations === 'Oxford or Cambridge' || ctx.universityAspirations === 'Oxbridge') {
+        vision = `Here, extraordinary journeys begin. Where curiosity becomes discovery, potential becomes achievement, and every student finds their unique path to a remarkable future.`;
+      } else {
+        vision = `Here, extraordinary journeys begin. Where curiosity becomes discovery, potential becomes achievement, and every student finds their unique path to a remarkable future.`;
+      }
+    } else if (ctx.priorities?.academic === 3) {
+      if (ctx.academicInterests?.includes('sciences')) {
+        vision = `Here, extraordinary journeys begin. Where curiosity becomes discovery, potential becomes achievement, and every student finds their unique path to a remarkable future.`;
+      } else if (ctx.academicInterests?.includes('mathematics')) {
+        vision = `Here, extraordinary journeys begin. Where curiosity becomes discovery, potential becomes achievement, and every student finds their unique path to a remarkable future.`;
+      } else {
+        vision = `Here, extraordinary journeys begin. Where curiosity becomes discovery, potential becomes achievement, and every student finds their unique path to a remarkable future.`;
+      }
+    } else if (ctx.activities?.includes('sports') && ctx.priorities?.sports >= 2) {
+      vision = `Here, extraordinary journeys begin. Where curiosity becomes discovery, potential becomes achievement, and every student finds their unique path to a remarkable future.`;
+    } else if (ctx.activities?.includes('music') || ctx.activities?.includes('drama')) {
+      vision = `Here, extraordinary journeys begin. Where curiosity becomes discovery, potential becomes achievement, and every student finds their unique path to a remarkable future.`;
+    } else if (ctx.boardingPreference === 'Full Boarding' || ctx.boardingPreference === 'boarding') {
       vision = `Here, extraordinary journeys begin. Where curiosity becomes discovery, potential becomes achievement, and every student finds their unique path to a remarkable future.`;
     } else {
       vision = `Here, extraordinary journeys begin. Where curiosity becomes discovery, potential becomes achievement, and every student finds their unique path to a remarkable future.`;
     }
-  } else if (ctx.priorities?.academic === 3) {
-    if (ctx.academicInterests?.includes('sciences')) {
-      vision = `Here, extraordinary journeys begin. Where curiosity becomes discovery, potential becomes achievement, and every student finds their unique path to a remarkable future.`;
-    } else if (ctx.academicInterests?.includes('mathematics')) {
-      vision = `Here, extraordinary journeys begin. Where curiosity becomes discovery, potential becomes achievement, and every student finds their unique path to a remarkable future.`;
-    } else {
-      vision = `Here, extraordinary journeys begin. Where curiosity becomes discovery, potential becomes achievement, and every student finds their unique path to a remarkable future.`;
-    }
-  } else if (ctx.activities?.includes('sports') && ctx.priorities?.sports >= 2) {
-    vision = `Here, extraordinary journeys begin. Where curiosity becomes discovery, potential becomes achievement, and every student finds their unique path to a remarkable future.`;
-  } else if (ctx.activities?.includes('music') || ctx.activities?.includes('drama')) {
-    vision = `Here, extraordinary journeys begin. Where curiosity becomes discovery, potential becomes achievement, and every student finds their unique path to a remarkable future.`;
-  } else if (ctx.boardingPreference === 'Full Boarding' || ctx.boardingPreference === 'boarding') {
-    vision = `Here, extraordinary journeys begin. Where curiosity becomes discovery, potential becomes achievement, and every student finds their unique path to a remarkable future.`;
-  } else {
-    vision = `Here, extraordinary journeys begin. Where curiosity becomes discovery, potential becomes achievement, and every student finds their unique path to a remarkable future.`;
+    
+    visionEls.forEach(el => el.textContent = vision);
   }
-  
-  visionEls.forEach(el => el.textContent = vision);
-}
   
   // Personal conclusion - FULL PERSONALIZATION
   const conclusionEl = $('.fh-personal-conclusion', root);
@@ -4322,20 +4322,18 @@ if (visionEls.length > 0) {
     }
   }
   
-  // VIDEO LOADING - Only when module enters view
-  const iframe = $('.fh-youtube-iframe', root);
-  if (iframe && iframe.dataset.src) {
+  // VIDEO LOADING - Updated for direct video element
+  const video = $('.fh-hero-video', root);
+  if (video) {
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) {
-        console.log('Final Hero module entered view - loading video');
-        iframe.src = iframe.dataset.src;
-        iframe.removeAttribute('data-src');
+        console.log('Final Hero module entered view - video ready');
         observer.unobserve(root);
         
-        // Setup sound control after video loads
-        setupSoundControl(iframe);
+        // Setup sound control for video element
+        setupSoundControl();
         
-        // Text timer - 20 seconds after video loads
+        // Text timer - 20 seconds after module loads
         setTimeout(() => {
           const overlay = $('.fh-overlay-content', root);
           const below = $('.fh-text-below-video', root);
@@ -4354,34 +4352,31 @@ if (visionEls.length > 0) {
     observer.observe(root);
   }
   
-  function setupSoundControl(videoIframe) {
-    const unmuteBtn = $('.fh-unmute-btn', root);
+  function setupSoundControl() {
+    const video = root.querySelector('.fh-hero-video');
+    const audioToggle = root.querySelector('#audioToggle');
     const heroSection = $('.fh-hero-video-section', root);
     
-    if (unmuteBtn) {
-      let isMuted = true;
-      unmuteBtn.addEventListener('click', () => {
-        if (videoIframe.src) {
-          if (isMuted) {
-            videoIframe.src = videoIframe.src.replace('mute=1', 'mute=0');
-            unmuteBtn.innerHTML = '🔇 Click to Mute';
-          } else {
-            videoIframe.src = videoIframe.src.replace('mute=0', 'mute=1');
-            unmuteBtn.innerHTML = '🔊 Click to Enable Sound';
-          }
-          isMuted = !isMuted;
+    if (audioToggle && video) {
+      audioToggle.addEventListener('click', () => {
+        if (video.muted) {
+          video.muted = false;
+          audioToggle.textContent = '🔇 Sound';
+        } else {
+          video.muted = true;
+          audioToggle.textContent = '🔊 Sound';
         }
       });
     }
     
     // Auto-mute when scrolled away
-    if (heroSection) {
+    if (heroSection && video) {
       const checkVisibility = () => {
         const rect = heroSection.getBoundingClientRect();
         const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
-        if (!isVisible && videoIframe.src && !videoIframe.src.includes('mute=1')) {
-          videoIframe.src = videoIframe.src.replace('mute=0', 'mute=1');
-          if (unmuteBtn) unmuteBtn.innerHTML = '🔊 Click to Enable Sound';
+        if (!isVisible && !video.muted) {
+          video.muted = true;
+          if (audioToggle) audioToggle.textContent = '🔊 Sound';
         }
       };
       window.addEventListener('scroll', checkVisibility, { passive: true });
