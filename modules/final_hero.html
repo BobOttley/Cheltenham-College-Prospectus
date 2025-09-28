@@ -3,14 +3,12 @@
     <div class="fh-final-module">
         <!-- Hero Video Section with Overlay Text -->
         <div class="fh-hero-video-section">
-            <!-- YouTube Video -->
+            <!-- Direct Video -->
             <div class="fh-video-container">
-                <iframe class="fh-youtube-iframe"
-                        data-src="https://www.youtube.com/embed/_cYMdp-QeIc?autoplay=1&mute=1&loop=1&playlist=_cYMdp-QeIc&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&enablejsapi=1"
-                        frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen>
-                </iframe>
+                <video class="fh-hero-video" autoplay muted loop playsinline>
+                    <source src="https://cheltenham-college-assets.lon1.cdn.digitaloceanspaces.com/final-hero-video.mp4" type="video/mp4"/>
+                    Your browser does not support the video tag.
+                </video>
                 <div class="fh-video-overlay"></div>
             </div>
 
@@ -31,9 +29,9 @@
                      class="fh-golden-bracket">
             </div>
 
-            <!-- Audio unmute button -->
-            <button class="fh-unmute-btn">
-                🔊 Click to Enable Sound
+            <!-- Audio toggle button (matching hero module) -->
+            <button class="audio-toggle" id="audioToggle">
+                🔊 Sound
             </button>
 
             <!-- Scroll Indicator -->
