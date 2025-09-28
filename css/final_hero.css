@@ -74,7 +74,7 @@
   text-align: center;
   color: white;
   z-index: 3;
-  padding: 2rem;
+  padding: 4rem 2rem;
   transition: all 0.8s ease;
 }
 
@@ -90,7 +90,7 @@
 
 .fh-main-headline {
   font-family: Georgia, 'Times New Roman', serif;
-  font-size: 5rem;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
   font-weight: 300;
   margin-bottom: 2rem;
   color: white;
@@ -109,8 +109,8 @@
 }
 
 .fh-main-subheadline {
-  font-size: 1.75rem;
-  margin-bottom: 1.5rem;
+  font-size: clamp(1.2rem, 3vw, 1.6rem);
+  margin-bottom: 3rem;
   opacity: 0.95;
   line-height: 1.6;
   font-weight: 300;
@@ -290,12 +290,15 @@
 /* Responsive Design */
 @media (max-width: 768px) {
   .fh-overlay-content {
-    padding: 1rem;
+    padding: 2rem 1rem;
+    justify-content: center;
+    min-height: 100vh;
   }
   
   .fh-main-headline {
     font-size: 3rem;
     margin-bottom: 1.5rem;
+    line-height: 1.1;
   }
   
   .fh-main-subheadline {
@@ -306,6 +309,7 @@
   .fh-personal-vision {
     padding: 1.5rem;
     font-size: 1rem;
+    margin-bottom: 2rem;
   }
   
   .fh-content-section {
@@ -329,17 +333,25 @@
 }
 
 @media (max-width: 480px) {
+  .fh-overlay-content {
+    padding: 1.5rem 1rem;
+  }
+  
   .fh-main-headline {
     font-size: 2.5rem;
+    line-height: 1.1;
+    margin-bottom: 1rem;
   }
   
   .fh-main-subheadline {
     font-size: 1.1rem;
+    margin-bottom: 1.5rem;
   }
   
   .fh-personal-vision {
     padding: 1.2rem;
     font-size: 0.95rem;
+    margin-bottom: 1.5rem;
   }
   
   .fh-content-section {
