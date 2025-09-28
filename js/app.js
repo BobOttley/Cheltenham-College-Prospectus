@@ -737,7 +737,7 @@ MODULES['student_gallery'] = (root, ctx) => {
   }
 };
 
-/* Sports module initializer - REPLACE the existing MODULES['sports'] in app.js */
+/* ====== SPORTS MODULE WITH MP4 VIDEO SUPPORT ONLY - NO IFRAMES ====== */
 MODULES['sports'] = (root, ctx) => {
   console.log('=== SPORTS MODULE INIT DEBUG ===');
   console.log('Full context received:', ctx);
@@ -791,7 +791,7 @@ MODULES['sports'] = (root, ctx) => {
       
       if (stat1) stat1.textContent = '15+';
       if (label1) label1.textContent = 'Teams';
-      if (stat2) stat2.textContent = '4';
+      if (stat2) stat2.textContent = '12';  // 12 RUGBY PITCHES
       if (label2) label2.textContent = 'Pitches';
       if (stat3) stat3.textContent = '2';
       if (label3) label3.textContent = 'Annual Tours';
@@ -819,7 +819,7 @@ MODULES['sports'] = (root, ctx) => {
       if (stat2) stat2.textContent = '6';
       if (label2) label2.textContent = 'Courts';
       
-      // HIDE THE THIRD STAT FOR NETBALL
+      // Hide the third stat for netball
       const thirdStatItem = stat3?.closest('.stat-item');
       if (thirdStatItem) {
         thirdStatItem.style.display = 'none';
@@ -827,39 +827,49 @@ MODULES['sports'] = (root, ctx) => {
     }
   };
 
-  // Video management
+  // Video management for HTML5 MP4 videos only
   let currentVideo = null;
   
-  const stopVideo = (iframe) => {
-    if (!iframe) return;
-    const currentSrc = iframe.getAttribute('src');
-    if (currentSrc && currentSrc !== 'about:blank') {
-      iframe.setAttribute('src', 'about:blank');
-    }
+  const stopVideo = (video) => {
+    if (!video) return;
+    video.pause();
+    video.currentTime = 0;
+    video.removeAttribute('src');
+    video.load(); // Reset video element
   };
 
-  const loadVideo = (iframe) => {
-    if (!iframe) return;
-    console.log('Loading video for iframe:', iframe.className);
+  const loadVideo = (video) => {
+    if (!video) return;
+    console.log('Loading MP4 video:', video.className);
     
-    if (iframe.classList.contains('gender-video')) {
+    // Stop any currently playing video
+    if (currentVideo && currentVideo !== video) {
+      stopVideo(currentVideo);
+    }
+    
+    // For gender-specific video, determine which source to use
+    if (video.classList.contains('gender-video')) {
       const videoSrc = gender === 'male' 
-        ? iframe.getAttribute('data-rugby-src')
-        : iframe.getAttribute('data-netball-src');
+        ? video.getAttribute('data-rugby-src')
+        : video.getAttribute('data-netball-src');
       console.log('Gender video source:', videoSrc);
       if (videoSrc) {
-        iframe.setAttribute('src', videoSrc);
+        video.setAttribute('src', videoSrc);
+        video.load();
+        video.play().catch(e => console.log('Video autoplay prevented:', e));
       }
-    } else if (iframe.classList.contains('hero-video')) {
-      const videoSrc = iframe.getAttribute('data-src');
+    } else if (video.classList.contains('hero-video')) {
+      const videoSrc = video.getAttribute('data-src');
       console.log('Hero video source:', videoSrc);
       if (videoSrc) {
-        iframe.setAttribute('src', videoSrc);
-        iframe.removeAttribute('data-src');
+        video.setAttribute('src', videoSrc);
+        video.removeAttribute('data-src');
+        video.load();
+        video.play().catch(e => console.log('Video autoplay prevented:', e));
       }
     }
     
-    currentVideo = iframe;
+    currentVideo = video;
   };
 
   // Setup tab switching with proper video handling
@@ -893,7 +903,7 @@ MODULES['sports'] = (root, ctx) => {
           const overviewSection = root.querySelector('#overview-section');
           if (overviewSection) {
             overviewSection.classList.add('active');
-            const overviewVideo = overviewSection.querySelector('.hero-video');
+            const overviewVideo = overviewSection.querySelector('video.hero-video');
             if (overviewVideo) {
               loadVideo(overviewVideo);
             }
@@ -903,7 +913,7 @@ MODULES['sports'] = (root, ctx) => {
           const genderSection = root.querySelector('#gender-specific-section');
           if (genderSection) {
             genderSection.classList.add('active');
-            const genderVideo = genderSection.querySelector('.gender-video');
+            const genderVideo = genderSection.querySelector('video.gender-video');
             if (genderVideo) {
               loadVideo(genderVideo);
             }
@@ -933,7 +943,7 @@ MODULES['sports'] = (root, ctx) => {
           // Load the video in the currently active section
           const activeSection = root.querySelector('.sport-section.active');
           if (activeSection) {
-            const video = activeSection.querySelector('iframe[data-src], .hero-video, .gender-video');
+            const video = activeSection.querySelector('video.hero-video, video.gender-video');
             if (video) {
               loadVideo(video);
             }
@@ -950,32 +960,56 @@ MODULES['sports'] = (root, ctx) => {
     observer.observe(heroSection);
   };
 
-  // Setup unmute buttons
+  // Setup unmute buttons for MP4 videos
   const setupUnmute = () => {
-    const unmuteButtons = root.querySelectorAll('.unmute-btn');
+    const unmuteButtons = root.querySelectorAll('.unmute-btn, .sports-unmute-btn');
     
     unmuteButtons.forEach(btn => {
       btn.addEventListener('click', () => {
         console.log('Unmute button clicked');
+        const videoSelector = btn.getAttribute('data-video-selector');
         const section = btn.closest('.sport-hero');
-        const iframe = section?.querySelector('iframe');
+        const video = section?.querySelector(videoSelector || 'video');
         
-        if (iframe && iframe.src && iframe.src !== 'about:blank') {
-          const currentSrc = iframe.src;
-          if (currentSrc.includes('mute=1')) {
-            const newSrc = currentSrc.replace('mute=1', 'mute=0');
-            iframe.src = newSrc;
+        if (video) {
+          if (video.muted) {
+            video.muted = false;
             btn.innerHTML = '🔇 Click to Mute';
             console.log('Video unmuted');
           } else {
-            const newSrc = currentSrc.replace('mute=0', 'mute=1');
-            iframe.src = newSrc; 
+            video.muted = true;
             btn.innerHTML = '🔊 Click for Sound';
             console.log('Video muted');
           }
         }
       });
     });
+  };
+
+  // Auto-mute videos when scrolling away
+  const setupAutoMute = () => {
+    const videos = root.querySelectorAll('video');
+    
+    const checkVideoVisibility = () => {
+      videos.forEach(video => {
+        if (video.src && !video.paused) {
+          const rect = video.getBoundingClientRect();
+          const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+          
+          if (!isVisible && !video.muted) {
+            video.muted = true;
+            // Update corresponding button
+            const section = video.closest('.sport-hero');
+            const btn = section?.querySelector('.unmute-btn, .sports-unmute-btn');
+            if (btn) {
+              btn.innerHTML = '🔊 Click for Sound';
+            }
+          }
+        }
+      });
+    };
+    
+    window.addEventListener('scroll', checkVideoVisibility, { passive: true });
   };
 
   // Filter sports cards by gender
@@ -994,242 +1028,162 @@ MODULES['sports'] = (root, ctx) => {
     });
   };
 
-  // THE MAIN FIX - Add personalized sports content with proper data handling
-const addSportsContent = () => {
-  const childName = ctx.childName || 'Child';
-  
-  // CRITICAL: Handle different possible data structures
-  let specificSports = [];
-  
-  // Check multiple possible data locations
-  if (Array.isArray(ctx.specificSports) && ctx.specificSports.length > 0) {
-    specificSports = ctx.specificSports;
-  } 
-  // Check if sports are stored as individual fields
-  else if (ctx.sport1 || ctx.sport2 || ctx.sport3) {
-    if (ctx.sport1) specificSports.push(ctx.sport1);
-    if (ctx.sport2) specificSports.push(ctx.sport2);
-    if (ctx.sport3) specificSports.push(ctx.sport3);
-  }
-  // Check if data is in a different structure (e.g., activities object)
-  else if (ctx.activities?.specificSports) {
-    specificSports = Array.isArray(ctx.activities.specificSports) 
-      ? ctx.activities.specificSports 
-      : [ctx.activities.specificSports];
-  }
-  
-  console.log('=== SPORTS CONTENT DEBUG ===');
-  console.log('Child name:', childName);
-  console.log('Raw ctx:', ctx);
-  console.log('Raw specificSports from ctx:', ctx.specificSports);
-  console.log('Individual sport fields - sport1:', ctx.sport1, 'sport2:', ctx.sport2, 'sport3:', ctx.sport3);
-  console.log('Processed specificSports array:', specificSports);
-  console.log('Array length:', specificSports.length);
-  console.log('===========================');
-  
-  // Update sports interest note
-  const sportNote = root.querySelector('.sport-interest-note');
-  if (sportNote) {
-    if (ctx.activities?.includes('sports')) {
-      sportNote.textContent = `${childName}, with your passion for sports already evident, `;
-    } else {
-      sportNote.textContent = `${childName}, `;
+  // Add personalized sports content
+  const addSportsContent = () => {
+    const childName = ctx.childName || 'Child';
+    
+    // Handle different possible data structures
+    let specificSports = [];
+    
+    if (Array.isArray(ctx.specificSports) && ctx.specificSports.length > 0) {
+      specificSports = ctx.specificSports;
+    } else if (ctx.sport1 || ctx.sport2 || ctx.sport3) {
+      if (ctx.sport1) specificSports.push(ctx.sport1);
+      if (ctx.sport2) specificSports.push(ctx.sport2);
+      if (ctx.sport3) specificSports.push(ctx.sport3);
+    } else if (ctx.activities?.specificSports) {
+      specificSports = Array.isArray(ctx.activities.specificSports) 
+        ? ctx.activities.specificSports 
+        : [ctx.activities.specificSports];
     }
-  }
-
-  // Update chosen sports highlight
-  const highlight = root.querySelector('.chosen-sports-highlight');
-  if (highlight) {
-    if (specificSports.length > 0) {
-      const sports = specificSports.slice(0, 3).join(' • ') + ' • Plus Many More Sports to Explore';
-      highlight.textContent = sports;
-      console.log('Updated highlight with user sports:', sports);
-    } else {
-      highlight.textContent = 'Hockey • Athletics • Tennis • Plus Many More Sports to Explore';
-      console.log('Using default sports highlight');
+    
+    console.log('Processed specificSports array:', specificSports);
+    
+    // Update sports interest note
+    const sportNote = root.querySelector('.sport-interest-note');
+    if (sportNote) {
+      if (ctx.activities?.includes('sports')) {
+        sportNote.textContent = `${childName}, with your passion for sports already evident, `;
+      } else {
+        sportNote.textContent = `${childName}, `;
+      }
     }
-  }
 
-  // Sport details mapping - EXACT MATCH to enquiry form options
-  const sportDetails = {
-    'Hockey': {
-      title: 'Hockey Excellence',
-      details: `${childName}, you'll train on our two Olympic-standard water-based Astro pitches alongside 20+ teams of passionate players. With professional coaching from former international players, you'll develop advanced stick skills, tactical awareness, and game intelligence. Regular fixtures against top schools like Millfield and Marlborough, plus National Finals appearances, will challenge you at the highest level. Our partnership with Cheltenham Hockey Club provides a direct pathway to National League hockey.`,
-      highlight: `U18 National Finals 2024 • Perfect for ${childName}`
-    },
-    'Athletics': {
-      title: 'Athletics Programme',
-      details: `${childName}, our athletics facilities will be your training ground for excellence. Whether you excel in sprints, middle-distance, throws, or jumps, our specialist coaches will develop your technique through biomechanical analysis. You'll compete in prestigious events including English Schools Championships and ISA Championships. With three National medallists last year, you'll train alongside the country's future stars.`,
-      highlight: `3 National Medallists • County Champions • Ideal for ${childName}`
-    },
-    'Tennis': {
-      title: 'Tennis Development',
-      details: `${childName}, with 12 hard courts, 6 grass courts, and 4 indoor courts at your disposal, you'll have year-round opportunities to perfect your game. Our LTA licensed coaches provide both individual and group coaching tailored to your skill level. You'll compete in prestigious competitions including ISTA tournaments and the Aberdare Cup. Tennis tours to La Manga and Portugal offer intensive training experiences, while our links with local performance centres support your journey to elite level play.`,
-      highlight: `National Schools Finalists • LTA Regional Centre • Year-Round Programme`
-    },
-    'Rugby': {
-      title: 'Rugby Excellence',
-      details: `${childName}, you'll join 15+ teams from U13 to 1st XV competing at the highest level. Four full-size pitches including floodlit training areas provide the perfect environment for your development. Professional coaching from former internationals will develop your strength, strategy, and the leadership qualities that define Cheltenham rugby. Regular fixtures against top rugby schools including Rugby School, Millfield, and Clifton College will challenge you at the elite level.`,
-      highlight: `U18 National Champions • England Internationals`
-    },
-    'Netball': {
-      title: 'Netball Excellence',
-      details: `${childName}, you'll compete with 12 teams from U13 to 1st VII at regional and national level. Six outdoor courts and indoor facilities provide year-round training opportunities. Specialist positional coaching and video analysis will develop your technique, while our partnership with Team Bath Superleague franchise provides pathways to elite level netball.`,
-      highlight: `Regional Champions • National Top 10`
-    },
-    'Cricket': {
-      title: 'Cricket Excellence',
-      details: `${childName}, you'll train on our professional standard cricket square with 12 pitches. Indoor cricket centre with bowling machines and video analysis provides year-round development opportunities. Boys' teams from U13 to 1st XI, girls' cricket programme expanding rapidly. MCC coaching qualified staff provide expert guidance, while regular fixtures against county and international school sides will challenge your skills.`,
-      highlight: `County Cup Winners • MCC Coaching`
-    },
-    'Swimming': {
-      title: 'Swimming Excellence',
-      details: `${childName}, you'll train in our 25m six-lane heated indoor pool with electronic timing systems. Daily squad training from 6:30am develops competitive swimming, water polo, lifesaving, and synchronised swimming skills. County and regional championship participants benefit from open water swimming opportunities and swim camps in Lanzarote.`,
-      highlight: `Regional Champions • 8 County Swimmers`
-    },
-    'Rowing': {
-      title: 'Rowing Excellence',
-      details: `${childName}, our state-of-the-art boathouse on River Severn houses a fleet of 50+ boats including eights, fours, and singles. Indoor rowing suite with Concept2 ergometers supports year-round training. Compete at Henley Royal Regatta, National Schools' Regatta, and Head of the River races with full-time professional coaching staff.`,
-      highlight: `Henley Qualifiers • GB Juniors Pipeline`
-    },
-    'Squash': {
-      title: 'Squash Excellence',
-      details: `${childName}, you'll train on four glass-backed championship courts in our dedicated squash centre. Professional coaching from former PSA tour players provides individual support for county and regional players. Teams compete in National Schools Championships with squash scholarships available for talented players.`,
-      highlight: `Top 10 UK School • County Training Venue`
-    },
-    'Badminton': {
-      title: 'Badminton Excellence',
-      details: `${childName}, you'll compete in our four-court sports hall with specialist badminton flooring. Teams compete in National Schools Championships and county leagues with individual coaching available including video analysis. Partnership with Cheltenham Badminton Club provides additional training opportunities.`,
-      highlight: `County Champions • Regional Finals`
-    },
-    'Basketball': {
-      title: 'Basketball Excellence',
-      details: `${childName}, you'll play on indoor courts with professional hoops and electronic scoreboards. Boys' and girls' teams compete in regional leagues with American-style coaching methods including video analysis. Basketball scholarships available for talented players, with links to Bristol Flyers professional team.`,
-      highlight: `Regional League Winners • National Schools Qualifiers`
-    },
-    'Football': {
-      title: 'Football Excellence',
-      details: `${childName}, you'll train on our 3G all-weather pitch and multiple grass pitches. Boys' teams from U13 to 1st XI, girls' teams growing rapidly. FA qualified coaches including UEFA B license holders provide expert guidance, while football tours to Spain and Holland offer international experience.`,
-      highlight: `ISFA Regional Champions • County Cup Semi-Finals`
-    },
-    'Cross Country': {
-      title: 'Cross Country Excellence',
-      details: `${childName}, you'll train across beautiful countryside routes with specialist distance coaching. Our winter cross-country programme builds endurance and mental toughness, with teams competing in county and regional championships. Links with local running clubs provide additional training opportunities.`,
-      highlight: `County Champions • Regional Competitors`
-    },
-    'Golf': {
-      title: 'Golf Excellence',
-      details: `${childName}, you'll benefit from partnerships with Cotswold Hills and Lilley Brook Golf Clubs. PGA professional coaching with video analysis and Trackman technology provides cutting-edge instruction. Regular 18-hole competitions and ISGA Championships participation, with golf tours to Portugal and Scotland.`,
-      highlight: `ISGA Finals • 3 County Players`
-    },
-    'Equestrian': {
-      title: 'Equestrian Excellence',
-      details: `${childName}, comprehensive programme covering showjumping, eventing, dressage, and polo. Partnership with local BHS approved centres. NSEA competitions including Schools Championships at Hickstead. Support for horse owners with livery arrangements.`,
-      highlight: `NSEA National Qualifiers • Hickstead Competitors`
-    },
-    'Clay Shooting': {
-      title: 'Clay Shooting Excellence',
-      details: `${childName}, partnership with premier local shooting grounds. CPSA qualified instruction in all disciplines. Compete in Schools Challenge and NSRA championships. All equipment provided for beginners.`,
-      highlight: `Schools Challenge Finalists • CPSA Registered`
-    },
-    'Polo': {
-      title: 'Polo Excellence',
-      details: `${childName}, introduction to polo at Edgeworth Polo Club. HPA coaching with horses provided. Compete in SUPA schools tournaments. Summer camps in Argentina available.`,
-      highlight: `SUPA Tournament Players • HPA Affiliated`
-    },
-    'Water Polo': {
-      title: 'Water Polo Excellence',
-      details: `${childName}, train in our 25m pool with dedicated equipment. Boys' and girls' teams competing in regional leagues. Coaching from former GB players. Pathway to regional and national squads.`,
-      highlight: `Regional League • National Schools Competition`
-    },
-    'Volleyball': {
-      title: 'Volleyball Excellence',
-      details: `${childName}, indoor volleyball in sports hall with competition-standard nets. Teams compete in National Schools competitions. Coaching from former national players.`,
-      highlight: `Regional Competitors • Fastest Growing Sport`
-    },
-    'Ultimate Frisbee': {
-      title: 'Ultimate Frisbee Excellence',
-      details: `${childName}, mixed teams competing in school tournaments. Participate in UK Ultimate Junior tournaments. Emphasis on Spirit of the Game and self-officiating.`,
-      highlight: `National Schools Tournament • Inclusive Sport Award`
-    },
-    'Lacrosse': {
-      title: 'Lacrosse Excellence',
-      details: `${childName}, you'll join our growing lacrosse programme with specialist coaching and competitive fixtures against other schools. This rapidly developing sport offers excellent opportunities for advancement and university recruitment.`,
-      highlight: `Growing Programme • Competitive Fixtures`
-    },
-    'Rounders': {
-      title: 'Rounders Excellence',
-      details: `${childName}, summer term sport with teams from U13 to 1st IX. County tournament participation including Lady Taverners competitions. Professional coaching with tactical development.`,
-      highlight: `County Tournament Winners • Regional Finals`
+    // Update chosen sports highlight
+    const highlight = root.querySelector('.chosen-sports-highlight');
+    if (highlight) {
+      if (specificSports.length > 0) {
+        const sports = specificSports.slice(0, 3).join(' • ') + ' • Plus Many More Sports to Explore';
+        highlight.textContent = sports;
+      } else {
+        highlight.textContent = 'Hockey • Athletics • Tennis • Plus Many More Sports to Explore';
+      }
+    }
+
+    // Sport details mapping
+    const sportDetails = {
+      'Hockey': {
+        title: 'Hockey Excellence',
+        details: `${childName}, you'll train on our two Olympic-standard water-based Astro pitches alongside 20+ teams of passionate players. With professional coaching from former international players, you'll develop advanced stick skills, tactical awareness, and game intelligence. Regular fixtures against top schools like Millfield and Marlborough, plus National Finals appearances, will challenge you at the highest level.`,
+        highlight: `U18 National Finals 2024 • Perfect for ${childName}`
+      },
+      'Athletics': {
+        title: 'Athletics Programme',
+        details: `${childName}, our athletics facilities will be your training ground for excellence. Whether you excel in sprints, middle-distance, throws, or jumps, our specialist coaches will develop your technique through biomechanical analysis. You'll compete in prestigious events including English Schools Championships and ISA Championships.`,
+        highlight: `3 National Medallists • County Champions • Ideal for ${childName}`
+      },
+      'Tennis': {
+        title: 'Tennis Development',
+        details: `${childName}, with 12 hard courts, 6 grass courts, and 4 indoor courts at your disposal, you'll have year-round opportunities to perfect your game. Our LTA licensed coaches provide both individual and group coaching tailored to your skill level.`,
+        highlight: `National Schools Finalists • LTA Regional Centre`
+      },
+      'Rugby': {
+        title: 'Rugby Excellence',
+        details: `${childName}, you'll join 15+ teams from U13 to 1st XV competing at the highest level. Twelve full-size pitches including floodlit training areas provide the perfect environment for your development.`,
+        highlight: `U18 National Champions • England Internationals`
+      },
+      'Netball': {
+        title: 'Netball Excellence',
+        details: `${childName}, you'll compete with 12 teams from U13 to 1st VII at regional and national level. Six outdoor courts and indoor facilities provide year-round training opportunities.`,
+        highlight: `Regional Champions • National Top 10`
+      },
+      'Cricket': {
+        title: 'Cricket Excellence',
+        details: `${childName}, you'll train on our professional standard cricket square with 12 pitches. Indoor cricket centre with bowling machines and video analysis provides year-round development.`,
+        highlight: `County Cup Winners • MCC Coaching`
+      },
+      'Swimming': {
+        title: 'Swimming Excellence',
+        details: `${childName}, you'll train in our 25m six-lane heated indoor pool with electronic timing systems. Daily squad training from 6:30am develops competitive swimming skills.`,
+        highlight: `Regional Champions • 8 County Swimmers`
+      },
+      'Rowing': {
+        title: 'Rowing Excellence',
+        details: `${childName}, our state-of-the-art boathouse on River Severn houses a fleet of 50+ boats. Compete at Henley Royal Regatta and National Schools' Regatta.`,
+        highlight: `Henley Qualifiers • GB Juniors Pipeline`
+      }
+    };
+
+    // Update top sport cards
+    const topCards = root.querySelectorAll('.top-sport-card');
+    
+    if (topCards.length > 0 && specificSports.length > 0) {
+      topCards.forEach((card, index) => {
+        if (index < specificSports.length) {
+          const sport = specificSports[index];
+          
+          const badge = card.querySelector('.top-sport-badge');
+          const title = card.querySelector('.sport-name');
+          const details = card.querySelector('.sport-details');
+          const highlight = card.querySelector('.sport-highlight');
+          
+          if (badge) {
+            badge.innerHTML = `<span class="child-name">${childName.toUpperCase()}</span>'S CHOICE #${index + 1}`;
+          }
+          
+          if (sportDetails[sport]) {
+            if (title) title.textContent = sportDetails[sport].title;
+            if (details) details.textContent = sportDetails[sport].details;
+            if (highlight) highlight.textContent = sportDetails[sport].highlight;
+          } else {
+            if (title) title.textContent = sport;
+            if (details) details.textContent = `${childName}, you'll develop your ${sport.toLowerCase()} skills with our professional coaching and excellent facilities.`;
+            if (highlight) highlight.textContent = `Excellence in ${sport} • Perfect for ${childName}`;
+          }
+          
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    } else {
+      topCards.forEach(card => {
+        card.style.display = 'none';
+      });
+      
+      const topSportsSection = root.querySelector('.student-sports-section');
+      if (topSportsSection && specificSports.length === 0) {
+        topSportsSection.style.display = 'none';
+      }
     }
   };
 
-  // CRITICAL - Find and update the top sport cards
-  const topCards = root.querySelectorAll('.top-sport-card');
-  console.log('Found', topCards.length, 'top sport cards in DOM');
-
-  if (topCards.length > 0 && specificSports.length > 0) {
-    console.log('User selected sports - displaying:', specificSports);
+  // Hide hero content after delay
+  const setupHeroContentHiding = () => {
+    const heroContents = root.querySelectorAll('.hero-content');
     
-    topCards.forEach((card, index) => {
-      if (index < specificSports.length) {
-        const sport = specificSports[index];
-        console.log(`Card ${index + 1}: Updating with "${sport}"`);
-        
-        const badge = card.querySelector('.top-sport-badge');
-        const title = card.querySelector('.sport-name');
-        const details = card.querySelector('.sport-details');
-        const highlight = card.querySelector('.sport-highlight');
-        
-        // Update badge
-        if (badge) {
-          badge.innerHTML = `<span class="child-name">${childName.toUpperCase()}</span>'S CHOICE #${index + 1}`;
-        }
-        
-        // Update content if we have details for this sport
-        if (sportDetails[sport]) {
-          if (title) title.textContent = sportDetails[sport].title;
-          if (details) details.textContent = sportDetails[sport].details;
-          if (highlight) highlight.textContent = sportDetails[sport].highlight;
-        } else {
-          // Fallback for sports without specific details
-          if (title) title.textContent = sport;
-          if (details) details.textContent = `${childName}, you'll develop your ${sport.toLowerCase()} skills with our professional coaching and excellent facilities.`;
-          if (highlight) highlight.textContent = `Excellence in ${sport} • Perfect for ${childName}`;
-        }
-        
-        // Show this card
-        card.style.display = 'block';
-        card.style.visibility = 'visible';
-      } else {
-        // Hide extra cards
-        card.style.display = 'none';
-      }
-    });
-  } else {
-    // No sports selected - hide ALL cards
-    console.log('No sports selected - hiding all sport choice cards');
-    topCards.forEach(card => {
-      card.style.display = 'none';
-    });
-    
-    // Also hide the entire top sports section if no sports selected
-    const topSportsSection = root.querySelector('.student-sports-section');
-    if (topSportsSection && specificSports.length === 0) {
-      topSportsSection.style.display = 'none';
-      console.log('Hidden entire top sports section');
-    }
-  }
-};
+    setTimeout(() => {
+      heroContents.forEach(content => {
+        content.classList.add('hide');
+      });
+    }, 20000); // Hide after 20 seconds
+  };
 
   // Initialize all functions in correct order
   console.log('Initializing sports module components...');
   setupGenderContent();
   setupTabs();
-  setupVideoLazyLoading(); // This handles the lazy loading
+  setupVideoLazyLoading();
   setupUnmute();
+  setupAutoMute();
   filterSportsByGender();
-  addSportsContent(); // This should show the selected sports
+  addSportsContent();
+  setupHeroContentHiding();
+  
+  // Lazy load images
+  if (typeof hydrateLazyAssets === 'function') {
+    hydrateLazyAssets(root);
+  }
   
   console.log('Sports module initialization complete');
 };

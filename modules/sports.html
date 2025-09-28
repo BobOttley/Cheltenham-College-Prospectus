@@ -15,12 +15,12 @@
         <!-- Hero with General Sports Video -->
         <div class="sport-hero">
             <div class="video-container">
-                <iframe class="hero-video"
-                    data-src="https://www.youtube.com/embed/kdCMeZtDTwU?autoplay=1&mute=1&loop=1&playlist=kdCMeZtDTwU&controls=0&modestbranding=1&rel=0"
-                    frameborder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen>
-                </iframe>
+                <!-- MP4 Video instead of YouTube iframe -->
+                <video class="hero-video" 
+                       data-src="https://cheltenham-college-assets.lon1.cdn.digitaloceanspaces.com/sports-overview-video.mp4"
+                       muted loop playsinline
+                       poster="">
+                </video>
             </div>
             <div class="video-overlay"></div>
             <div class="hero-content">
@@ -42,7 +42,7 @@
                     </div>
                 </div>
             </div>
-            <button class="unmute-btn">🔊 Click for Sound</button>
+            <button class="unmute-btn sports-unmute-btn" data-video-selector=".hero-video">🔊 Click for Sound</button>
         </div>
 
         <!-- Personal Sports Message -->
@@ -70,36 +70,29 @@
                 </div>
                 
                 <div class="top-sports-grid" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3rem;">
-                    <!-- Hockey Card - DETAILED -->
-                    <div class="top-sport-card" data-gender="mixed">
-                        <span class="top-sport-badge"><span class="child-name">CHILD</span>'S CHOICE #1</span>
-                        <h3 class="sport-name">Hockey Excellence</h3>
-                        <p class="sport-details">
-                            <span class="child-name">Child</span>, you'll train on our two Olympic-standard water-based Astro pitches alongside 20+ teams of passionate players. With professional coaching from former international players, you'll develop advanced stick skills, tactical awareness, and game intelligence. Regular fixtures against top schools like Millfield and Marlborough, plus National Finals appearances, will challenge you at the highest level. Our partnership with Cheltenham Hockey Club provides a direct pathway to National League hockey.
-                        </p>
-                        <span class="sport-highlight boys" style="display: none;">U18 Boys National Finals 2024 • Perfect for <span class="child-name">child</span></span>
-                        <span class="sport-highlight girls" style="display: none;">U18 Girls National Finals 2024 • Perfect for <span class="child-name">child</span></span>
-                        <span class="sport-highlight mixed">National Finals 2024 • Perfect for <span class="child-name">child</span></span>
+                    <!-- These cards will be populated dynamically based on enquiry form selections -->
+                    <!-- Card 1 - Will be filled with user's first sport choice -->
+                    <div class="top-sport-card" data-gender="mixed" style="display: none;">
+                        <span class="top-sport-badge"></span>
+                        <h3 class="sport-name"></h3>
+                        <p class="sport-details"></p>
+                        <span class="sport-highlight"></span>
                     </div>
 
-                    <!-- Athletics Card - DETAILED -->
-                    <div class="top-sport-card" data-gender="mixed">
-                        <span class="top-sport-badge"><span class="child-name">CHILD</span>'S CHOICE #2</span>
-                        <h3 class="sport-name">Athletics Programme</h3>
-                        <p class="sport-details">
-                            <span class="child-name">Child</span>, our athletics facilities will be your training ground for excellence. Whether you excel in sprints, middle-distance, throws, or jumps, our specialist coaches will develop your technique through biomechanical analysis. You'll compete in prestigious events including English Schools Championships and ISA Championships. With three National medallists last year, you'll train alongside the country's future stars.
-                        </p>
-                        <span class="sport-highlight">3 National Medallists • County Champions • Ideal for <span class="child-name">child</span></span>
+                    <!-- Card 2 - Will be filled with user's second sport choice -->
+                    <div class="top-sport-card" data-gender="mixed" style="display: none;">
+                        <span class="top-sport-badge"></span>
+                        <h3 class="sport-name"></h3>
+                        <p class="sport-details"></p>
+                        <span class="sport-highlight"></span>
                     </div>
 
-                    <!-- Tennis Card - DETAILED -->
-                    <div class="top-sport-card" data-gender="mixed">
-                        <span class="top-sport-badge"><span class="child-name">CHILD</span>'S CHOICE #3</span>
-                        <h3 class="sport-name">Tennis Development</h3>
-                        <p class="sport-details">
-                            <span class="child-name">Child</span>, with 12 hard courts, 6 grass courts, and 4 indoor courts at your disposal, you'll have year-round opportunities to perfect your game. Our LTA licensed coaches provide both individual and group coaching tailored to your skill level. You'll compete in prestigious competitions including ISTA tournaments and the Aberdare Cup. Tennis tours to La Manga and Portugal offer intensive training experiences, while our links with local performance centres support your journey to elite level play.
-                        </p>
-                        <span class="sport-highlight">National Schools Finalists • LTA Regional Centre • Year-Round Programme</span>
+                    <!-- Card 3 - Will be filled with user's third sport choice -->
+                    <div class="top-sport-card" data-gender="mixed" style="display: none;">
+                        <span class="top-sport-badge"></span>
+                        <h3 class="sport-name"></h3>
+                        <p class="sport-details"></p>
+                        <span class="sport-highlight"></span>
                     </div>
                 </div>
             </div>
@@ -345,13 +338,13 @@
     <div class="sport-section" id="gender-specific-section">
         <div class="sport-hero">
             <div class="video-container">
-                <iframe class="gender-video"
-                    data-rugby-src="https://www.youtube.com/embed/iDKxO0L0-eQ?autoplay=1&mute=1&start=66&loop=1&playlist=iDKxO0L0-eQ&controls=0&modestbranding=1&rel=0"
-                    data-netball-src="https://www.youtube.com/embed/twWPmYWvTL8?autoplay=1&mute=1&start=7&loop=1&playlist=twWPmYWvTL8&controls=0&modestbranding=1&rel=0"
-                    frameborder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen>
-                </iframe>
+                <!-- MP4 Video with both sources -->
+                <video class="gender-video"
+                       data-rugby-src="https://cheltenham-college-assets.lon1.cdn.digitaloceanspaces.com/rugby-video.mp4"
+                       data-netball-src="https://cheltenham-college-assets.lon1.cdn.digitaloceanspaces.com/netball-video.mp4"
+                       muted loop playsinline
+                       poster="">
+                </video>
             </div>
             <div class="video-overlay"></div>
             <div class="hero-content">
@@ -364,7 +357,7 @@
                         <span class="stat-label gender-label-1">Teams</span>
                     </div>
                     <div class="stat-item">
-                        <span class="stat-number gender-stat-2">4</span>
+                        <span class="stat-number gender-stat-2">12</span>
                         <span class="stat-label gender-label-2">Pitches</span>
                     </div>
                     <div class="stat-item">
@@ -373,7 +366,7 @@
                     </div>
                 </div>
             </div>
-            <button class="unmute-btn">🔊 Click for Sound</button>
+            <button class="unmute-btn sports-unmute-btn" data-video-selector=".gender-video">🔊 Click for Sound</button>
         </div>
     </div>
 
@@ -418,3 +411,4 @@
         </a>
     </div>
 </div>
+</section>
