@@ -759,83 +759,108 @@ MODULES['sports'] = (root, ctx) => {
     if (raw.startsWith('m') || raw.includes('boy')) return 'male';
     return 'female'; // Default to female
   };
-
   const gender = getGender();
-  
+
   // Setup gender-specific tab and content
   const setupGenderContent = () => {
     const genderTab = root.querySelector('.gender-sport-tab');
     const genderSection = root.querySelector('#gender-specific-section');
-    
     if (!genderTab || !genderSection) return;
 
-    // Configure based on gender
     if (gender === 'male') {
       genderTab.textContent = 'RUGBY';
       genderTab.style.display = 'inline-block';
-      
+
       const title = root.querySelector('.gender-sport-title');
       const heroTitle = root.querySelector('.gender-sport-hero-title');
       const subtitle = root.querySelector('.gender-sport-subtitle');
-      
       if (title) title.textContent = 'RUGBY AT CHELTENHAM';
       if (heroTitle) heroTitle.textContent = 'Strength, Strategy, Success';
       if (subtitle) subtitle.textContent = 'Elite Rugby Programme with International Recognition';
-      
+
       const stat1 = root.querySelector('.gender-stat-1');
       const label1 = root.querySelector('.gender-label-1');
       const stat2 = root.querySelector('.gender-stat-2');
       const label2 = root.querySelector('.gender-label-2');
       const stat3 = root.querySelector('.gender-stat-3');
       const label3 = root.querySelector('.gender-label-3');
-      
+
       if (stat1) stat1.textContent = '15+';
       if (label1) label1.textContent = 'Teams';
-      if (stat2) stat2.textContent = '12';  // 12 RUGBY PITCHES
+      if (stat2) stat2.textContent = '12';
       if (label2) label2.textContent = 'Pitches';
       if (stat3) stat3.textContent = '2';
       if (label3) label3.textContent = 'Annual Tours';
-      
+
     } else {
       genderTab.textContent = 'NETBALL';
       genderTab.style.display = 'inline-block';
-      
+
       const title = root.querySelector('.gender-sport-title');
       const heroTitle = root.querySelector('.gender-sport-hero-title');
       const subtitle = root.querySelector('.gender-sport-subtitle');
-      
       if (title) title.textContent = 'NETBALL AT CHELTENHAM';
       if (heroTitle) heroTitle.textContent = 'Precision, Power, Performance';
       if (subtitle) subtitle.textContent = 'Elite Netball Programme with National Recognition';
-      
+
       const stat1 = root.querySelector('.gender-stat-1');
       const label1 = root.querySelector('.gender-label-1');
       const stat2 = root.querySelector('.gender-stat-2');
       const label2 = root.querySelector('.gender-label-2');
       const stat3 = root.querySelector('.gender-stat-3');
-      
+
       if (stat1) stat1.textContent = '12';
       if (label1) label1.textContent = 'Teams';
       if (stat2) stat2.textContent = '6';
       if (label2) label2.textContent = 'Courts';
-      
+
       // Hide the third stat for netball
       const thirdStatItem = stat3?.closest('.stat-item');
-      if (thirdStatItem) {
-        thirdStatItem.style.display = 'none';
-      }
+      if (thirdStatItem) thirdStatItem.style.display = 'none';
     }
   };
 
-  // Video management for HTML5 MP4 videos only
+  // ===== Video management for HTML5 MP4 videos only =====
   let currentVideo = null;
-  
+
+  // Helper: set autoplay-safe attributes
+  const primeVideo = (video) => {
+    if (!video) return;
+    video.muted = true;                  // required for autoplay
+    video.playsInline = true;            // JS property
+    video.setAttribute('playsinline', ''); // iOS attribute
+    if (!video.hasAttribute('loop')) video.setAttribute('loop', '');
+    if (!video.hasAttribute('autoplay')) video.setAttribute('autoplay', '');
+    if (!video.hasAttribute('preload')) video.setAttribute('preload', 'metadata');
+  };
+
+  // IMPORTANT FIX: do NOT remove src (breaks replay on Safari/iOS)
   const stopVideo = (video) => {
     if (!video) return;
-    video.pause();
-    video.currentTime = 0;
-    video.removeAttribute('src');
-    video.load(); // Reset video element
+    try {
+      video.pause();
+      video.currentTime = 0;
+      // keep src intact; no video.load() here
+    } catch (e) {
+      console.error('stopVideo error:', e);
+    }
+  };
+
+  // For data-driven sources, set src once from data-* attributes
+  const ensureSrcFromData = (video) => {
+    if (!video) return;
+    if (video.classList.contains('gender-video')) {
+      const ds = gender === 'male'
+        ? video.getAttribute('data-rugby-src')
+        : video.getAttribute('data-netball-src');
+      if (ds && video.src !== ds) video.src = ds;
+    } else {
+      const ds = video.getAttribute('data-src');
+      if (ds && video.src !== ds) {
+        video.src = ds;
+        video.removeAttribute('data-src');
+      }
+    }
   };
 
   const loadVideo = (video) => {
@@ -843,51 +868,31 @@ MODULES['sports'] = (root, ctx) => {
       console.error('No video element provided to loadVideo');
       return;
     }
-    
+
     console.log('Loading MP4 video:', video.className);
-    console.log('Video element:', video);
-    
-    // Stop any currently playing video
+
     if (currentVideo && currentVideo !== video) {
       stopVideo(currentVideo);
     }
-    
-    // For gender-specific video, determine which source to use
-    if (video.classList.contains('gender-video')) {
-      const videoSrc = gender === 'male' 
-        ? video.getAttribute('data-rugby-src')
-        : video.getAttribute('data-netball-src');
-      console.log('Gender video source:', videoSrc);
-      if (videoSrc) {
-        video.setAttribute('src', videoSrc);
-        video.load();
-        video.play().catch(e => console.log('Video autoplay prevented:', e));
-      } else {
-        console.error('No video source found for gender video');
-      }
-    } else if (video.classList.contains('hero-video')) {
-      const videoSrc = video.getAttribute('data-src');
-      console.log('Hero video data-src:', videoSrc);
-      if (videoSrc) {
-        console.log('Setting video src to:', videoSrc);
-        video.setAttribute('src', videoSrc);
-        video.removeAttribute('data-src');
-        video.load();
-        // Add event listeners to debug loading
-        video.addEventListener('loadstart', () => console.log('Video load started'));
-        video.addEventListener('loadedmetadata', () => console.log('Video metadata loaded'));
-        video.addEventListener('canplay', () => console.log('Video can play'));
-        video.addEventListener('error', (e) => console.error('Video error:', e));
-        video.play().then(() => {
-          console.log('Video playing successfully');
-        }).catch(e => {
-          console.error('Video play failed:', e);
-        });
-      } else {
-        console.error('No data-src attribute found on hero video');
-      }
+
+    primeVideo(video);
+    ensureSrcFromData(video);
+
+    // Debug listeners (safe to add once)
+    if (!video._dbgBound) {
+      video.addEventListener('loadstart', () => console.log('Video load started'));
+      video.addEventListener('loadedmetadata', () => console.log('Video metadata loaded'));
+      video.addEventListener('canplay', () => console.log('Video can play'));
+      video.addEventListener('error', (e) => console.error('Video error:', e));
+      video._dbgBound = true;
     }
-    
+
+    video.play().then(() => {
+      console.log('Video playing successfully');
+    }).catch(e => {
+      console.log('Autoplay deferred until interaction:', e?.name || e);
+    });
+
     currentVideo = video;
   };
 
@@ -895,66 +900,56 @@ MODULES['sports'] = (root, ctx) => {
   const setupTabs = () => {
     const tabs = root.querySelectorAll('.sport-tab');
     const sections = root.querySelectorAll('.sport-section');
-    
+
     tabs.forEach(tab => {
       tab.addEventListener('click', (e) => {
         e.preventDefault();
-        
+
         const targetSport = tab.getAttribute('data-sport');
         console.log('Tab clicked:', targetSport);
-        
+
         // Stop current video
         if (currentVideo) {
           stopVideo(currentVideo);
           currentVideo = null;
         }
-        
+
         // Update active states
         tabs.forEach(t => t.classList.remove('active'));
         tab.classList.add('active');
-        
+
         // Show/hide sections
-        sections.forEach(section => {
-          section.classList.remove('active');
-        });
-        
+        sections.forEach(section => section.classList.remove('active'));
+
         if (targetSport === 'overview') {
           const overviewSection = root.querySelector('#overview-section');
           if (overviewSection) {
             overviewSection.classList.add('active');
             const overviewVideo = overviewSection.querySelector('video.hero-video');
-            if (overviewVideo) {
-              loadVideo(overviewVideo);
-            }
+            if (overviewVideo) loadVideo(overviewVideo);
           }
-          
         } else if (targetSport === 'gender-specific') {
           const genderSection = root.querySelector('#gender-specific-section');
           if (genderSection) {
             genderSection.classList.add('active');
             const genderVideo = genderSection.querySelector('video.gender-video');
-            if (genderVideo) {
-              loadVideo(genderVideo);
-            }
+            if (genderVideo) loadVideo(genderVideo);
           }
         }
-        
+
         // Show unmute button for new video
         const activeSection = root.querySelector('.sport-section.active');
-        const unmuteBtn = activeSection?.querySelector('.unmute-btn');
-        if (unmuteBtn) {
-          unmuteBtn.style.display = 'block';
-        }
+        const unmuteBtn = activeSection?.querySelector('.unmute-btn, .sports-unmute-btn');
+        if (unmuteBtn) unmuteBtn.style.display = 'block';
       });
     });
   };
 
   // LAZY VIDEO LOADING - When sports module scrolls into view
   const setupVideoLazyLoading = () => {
-    // Find the first hero section in the active tab
     const activeSection = root.querySelector('.sport-section.active');
     if (!activeSection) return;
-    
+
     const heroSection = activeSection.querySelector('.sport-hero');
     if (!heroSection) return;
 
@@ -962,24 +957,22 @@ MODULES['sports'] = (root, ctx) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           console.log('Sports module hero entered viewport - loading initial video');
-          
-          // Find video in the active section specifically
-          const video = activeSection.querySelector('video.hero-video') || 
-                       activeSection.querySelector('video.gender-video');
-          
+
+          const video = activeSection.querySelector('video.hero-video') ||
+                        activeSection.querySelector('video.gender-video');
+
           if (video) {
             console.log('Found video to load:', video.className);
-            console.log('Video data-src:', video.getAttribute('data-src'));
             loadVideo(video);
           } else {
             console.error('No video element found in active section!');
           }
-          
+
           observer.unobserve(heroSection);
         }
       });
     }, {
-      threshold: 0.1,  // Lower threshold to trigger earlier
+      threshold: 0.1,
       rootMargin: '0px 0px -10% 0px'
     });
 
@@ -989,24 +982,27 @@ MODULES['sports'] = (root, ctx) => {
   // Setup unmute buttons for MP4 videos
   const setupUnmute = () => {
     const unmuteButtons = root.querySelectorAll('.unmute-btn, .sports-unmute-btn');
-    
+
     unmuteButtons.forEach(btn => {
       btn.addEventListener('click', () => {
         console.log('Unmute button clicked');
-        const videoSelector = btn.getAttribute('data-video-selector');
-        const section = btn.closest('.sport-hero');
-        const video = section?.querySelector(videoSelector || 'video');
-        
-        if (video) {
-          if (video.muted) {
-            video.muted = false;
-            btn.innerHTML = '🔇 Click to Mute';
-            console.log('Video unmuted');
-          } else {
-            video.muted = true;
-            btn.innerHTML = '🔊 Click for Sound';
-            console.log('Video muted');
-          }
+        const videoSelector = btn.getAttribute('data-video-selector') || 'video';
+        const section = btn.closest('.sport-hero') || root;
+        const video = section.querySelector(videoSelector) || root.querySelector(videoSelector);
+        if (!video) return;
+
+        primeVideo(video); // ensure autoplay-safe attributes
+        ensureSrcFromData(video);
+        if (video.paused) { video.play().catch(()=>{}); }
+
+        if (video.muted) {
+          video.muted = false;
+          btn.innerHTML = '🔇 Click to Mute';
+          console.log('Video unmuted');
+        } else {
+          video.muted = true;
+          btn.innerHTML = '🔊 Click for Sound';
+          console.log('Video muted');
         }
       });
     });
@@ -1015,38 +1011,33 @@ MODULES['sports'] = (root, ctx) => {
   // Auto-mute videos when scrolling away
   const setupAutoMute = () => {
     const videos = root.querySelectorAll('video');
-    
+
     const checkVideoVisibility = () => {
       videos.forEach(video => {
         if (video.src && !video.paused) {
           const rect = video.getBoundingClientRect();
           const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
-          
+
           if (!isVisible && !video.muted) {
             video.muted = true;
-            // Update corresponding button
             const section = video.closest('.sport-hero');
             const btn = section?.querySelector('.unmute-btn, .sports-unmute-btn');
-            if (btn) {
-              btn.innerHTML = '🔊 Click for Sound';
-            }
+            if (btn) btn.innerHTML = '🔊 Click for Sound';
           }
         }
       });
     };
-    
+
     window.addEventListener('scroll', checkVideoVisibility, { passive: true });
   };
 
   // Filter sports cards by gender
   const filterSportsByGender = () => {
     root.querySelectorAll('.sport-card[data-gender]').forEach(card => {
-      const cardGender = card.getAttribute('data-gender');
-      
-      // Always show mixed sports
-      if (cardGender === 'mixed') return;
-      
-      // Hide opposite gender sports
+      const cardGender = (card.getAttribute('data-gender') || '').toLowerCase();
+
+      if (cardGender === 'mixed' || cardGender === '') return;
+
       if ((gender === 'female' && cardGender === 'male') ||
           (gender === 'male' && cardGender === 'female')) {
         card.style.display = 'none';
@@ -1054,13 +1045,12 @@ MODULES['sports'] = (root, ctx) => {
     });
   };
 
-  // Add personalized sports content
+  // Add personalised sports content
   const addSportsContent = () => {
     const childName = ctx.childName || 'Child';
-    
-    // Handle different possible data structures
+
+    // Build specificSports array from various shapes of ctx
     let specificSports = [];
-    
     if (Array.isArray(ctx.specificSports) && ctx.specificSports.length > 0) {
       specificSports = ctx.specificSports;
     } else if (ctx.sport1 || ctx.sport2 || ctx.sport3) {
@@ -1068,17 +1058,16 @@ MODULES['sports'] = (root, ctx) => {
       if (ctx.sport2) specificSports.push(ctx.sport2);
       if (ctx.sport3) specificSports.push(ctx.sport3);
     } else if (ctx.activities?.specificSports) {
-      specificSports = Array.isArray(ctx.activities.specificSports) 
-        ? ctx.activities.specificSports 
+      specificSports = Array.isArray(ctx.activities.specificSports)
+        ? ctx.activities.specificSports
         : [ctx.activities.specificSports];
     }
-    
     console.log('Processed specificSports array:', specificSports);
-    
+
     // Update sports interest note
     const sportNote = root.querySelector('.sport-interest-note');
     if (sportNote) {
-      if (ctx.activities?.includes('sports')) {
+      if (Array.isArray(ctx.activities) && ctx.activities.includes('sports')) {
         sportNote.textContent = `${childName}, with your passion for sports already evident, `;
       } else {
         sportNote.textContent = `${childName}, `;
@@ -1212,41 +1201,35 @@ MODULES['sports'] = (root, ctx) => {
 
     // Update top sport cards
     const topCards = root.querySelectorAll('.top-sport-card');
-    
     if (topCards.length > 0 && specificSports.length > 0) {
       topCards.forEach((card, index) => {
         if (index < specificSports.length) {
           const sport = specificSports[index];
-          
+
           const badge = card.querySelector('.top-sport-badge');
           const title = card.querySelector('.sport-name');
           const details = card.querySelector('.sport-details');
-          const highlight = card.querySelector('.sport-highlight');
-          
-          if (badge) {
-            badge.innerHTML = `<span class="child-name">${childName.toUpperCase()}</span>'S CHOICE #${index + 1}`;
-          }
-          
+          const highlightEl = card.querySelector('.sport-highlight');
+
+          if (badge) badge.innerHTML = `<span class="child-name">${childName.toUpperCase()}</span>'S CHOICE #${index + 1}`;
+
           if (sportDetails[sport]) {
             if (title) title.textContent = sportDetails[sport].title;
             if (details) details.textContent = sportDetails[sport].details;
-            if (highlight) highlight.textContent = sportDetails[sport].highlight;
+            if (highlightEl) highlightEl.textContent = sportDetails[sport].highlight;
           } else {
             if (title) title.textContent = sport;
             if (details) details.textContent = `${childName}, you'll develop your ${sport.toLowerCase()} skills with our professional coaching and excellent facilities.`;
-            if (highlight) highlight.textContent = `Excellence in ${sport} • Perfect for ${childName}`;
+            if (highlightEl) highlightEl.textContent = `Excellence in ${sport} • Perfect for ${childName}`;
           }
-          
+
           card.style.display = 'block';
         } else {
           card.style.display = 'none';
         }
       });
     } else {
-      topCards.forEach(card => {
-        card.style.display = 'none';
-      });
-      
+      topCards.forEach(card => { card.style.display = 'none'; });
       const topSportsSection = root.querySelector('.student-sports-section');
       if (topSportsSection && specificSports.length === 0) {
         topSportsSection.style.display = 'none';
@@ -1257,15 +1240,12 @@ MODULES['sports'] = (root, ctx) => {
   // Hide hero content after delay
   const setupHeroContentHiding = () => {
     const heroContents = root.querySelectorAll('.hero-content');
-    
     setTimeout(() => {
-      heroContents.forEach(content => {
-        content.classList.add('hide');
-      });
+      heroContents.forEach(content => content.classList.add('hide'));
     }, 20000); // Hide after 20 seconds
   };
 
-  // Initialize all functions in correct order
+  // Initialise in correct order
   console.log('Initializing sports module components...');
   setupGenderContent();
   setupTabs();
@@ -1275,14 +1255,15 @@ MODULES['sports'] = (root, ctx) => {
   filterSportsByGender();
   addSportsContent();
   setupHeroContentHiding();
-  
+
   // Lazy load images
   if (typeof hydrateLazyAssets === 'function') {
     hydrateLazyAssets(root);
   }
-  
+
   console.log('Sports module initialization complete');
 };
+
 
 /* CCF Module initializer - Add to MODULES object in app.js */
 MODULES['ccf'] = (root, ctx) => {
