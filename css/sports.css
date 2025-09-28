@@ -338,85 +338,49 @@
 /* Mobile */
 /* ===== Phones (portrait & general) ===== */
 @media (max-width: 768px){
-  /* Nav tighter on phones */
-  .mod--sports .sports-nav{ padding: .5rem 0; }
-  .mod--sports .nav-content{
-    height: 48px;                 /* a bit slimmer */
-    padding: 0 .8rem;
-    gap: .4rem;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  .mod--sports .nav-title{ font-size: .8rem; letter-spacing: .02em; }
-  .mod--sports .sport-tabs{ gap: .35rem; flex-wrap: wrap; justify-content: center; }
-  .mod--sports .sport-tab{ padding: .28rem .5rem; font-size: .72rem; }
+  .mod--sports .sport-hero{ height: 80vh; }
 
-  /* Bigger video: increase hero height */
-  .mod--sports .sport-hero{
-    height: 75vh;                 /* was 60–68vh; gives a much larger video */
-    touch-action: pan-y;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  /* Overlay text — smaller and tighter so video reads better */
+  /* Overlay text – make it SMALL */
   .mod--sports .student-name{
-    font-size: clamp(0.9rem, 3vh, 1.1rem);
-    letter-spacing: .08em;        /* was wider */
-    margin-bottom: .25rem;
+    font-size: clamp(0.7rem, 2.2vh, 0.95rem);
+    letter-spacing: .06em;
+    margin-bottom: .2rem;
   }
   .mod--sports .hero-title{
-    font-size: clamp(.95rem, 3.6vh, 1.2rem);
-    line-height: 1.15;
-    margin-bottom: .5rem;
+    font-size: clamp(0.85rem, 2.6vh, 1.05rem);
+    line-height: 1.12;
+    margin-bottom: .4rem;
   }
   .mod--sports .hero-subtitle{
-    font-size: clamp(.75rem, 2.2vh, .9rem);
-    line-height: 1.25;
-    margin-bottom: .75rem;
+    font-size: clamp(0.7rem, 2vh, 0.9rem);
+    line-height: 1.22;
+    margin-bottom: .6rem;
   }
 
   /* Stats smaller */
-  .mod--sports .sport-stats{ flex-direction: column; gap: .8rem; margin-top: 1rem; }
-  .mod--sports .stat-number{ font-size: 1.2rem; }
-  .mod--sports .stat-label{ font-size: .7rem; letter-spacing: .08em; }
+  .mod--sports .sport-stats{ flex-direction: column; gap: .6rem; margin-top: .8rem; }
+  .mod--sports .stat-number{ font-size: 0.95rem; }
+  .mod--sports .stat-label{ font-size: 0.65rem; letter-spacing: .06em; }
 
-  /* Unmute button smaller */
-  .mod--sports .unmute-btn{
-    right: .5rem; bottom: .5rem;
-    padding: .35rem .6rem; font-size: .78rem;
-  }
-
-  /* Section headings smaller */
-  .mod--sports .personal-message-title{ font-size: 1.4rem; }
-  .mod--sports .personal-message-text{  font-size: .9rem; }
-  .mod--sports .section-title{ font-size: 1.45rem; }
-  .mod--sports .excellence-quote{ font-size: 1.2rem; }
-
-  /* Single-column grids on phone */
-  .mod--sports .top-sports-grid,
-  .mod--sports .sports-grid{ grid-template-columns: 1fr; }
+  /* Optional: smaller button */
+  .mod--sports .unmute-btn{ padding: .3rem .55rem; font-size: .75rem; right: .5rem; bottom: .5rem; }
 }
-/* ===== Phones in LANDSCAPE (short height) ===== */
 @media (max-width: 768px) and (orientation: landscape){
-  /* Give the video as much height as possible on short screens */
-  .mod--sports .sport-hero{ height: 82vh; }
+  .mod--sports .sport-hero{ height: 88vh; }
 
-  /* Make overlay text even smaller when height is tight */
   .mod--sports .student-name{
-    font-size: clamp(0.8rem, 3.2vh, 1rem);
-    letter-spacing: .07em;
+    font-size: clamp(0.6rem, 2vh, 0.85rem);
+    letter-spacing: .05em;
   }
   .mod--sports .hero-title{
-    font-size: clamp(.9rem, 3.2vh, 1.1rem);
-    line-height: 1.12;
+    font-size: clamp(0.7rem, 2.2vh, 0.95rem);
+    line-height: 1.1;
   }
   .mod--sports .hero-subtitle{
-    font-size: clamp(.7rem, 2vh, .85rem);
-    line-height: 1.22;
+    font-size: clamp(0.6rem, 1.8vh, 0.8rem);
+    line-height: 1.18;
   }
 
-  .mod--sports .stat-number{ font-size: 1.05rem; }
-  .mod--sports .stat-label{ font-size: .68rem; }
+  .mod--sports .stat-number{ font-size: 0.9rem; }
+  .mod--sports .stat-label{ font-size: 0.6rem; }
 }
-
