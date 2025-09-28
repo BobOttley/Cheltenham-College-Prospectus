@@ -4322,19 +4322,39 @@ MODULES['final_hero'] = (root, ctx) => {
     }
   }
   
-  // Simple setup like hero module - no complex lazy loading
-  setupSoundControl();
-  
-  // Text timer - 20 seconds after module loads
-  setTimeout(() => {
-    const overlay = $('.fh-overlay-content', root);
-    const below = $('.fh-text-below-video', root);
-    if (overlay && below) {
-      overlay.style.opacity = '0';
-      below.classList.add('visible');
-      console.log('Final Hero: Text moved down after 20 seconds');
-    }
-  }, 20000);
+  // VIDEO LOADING - Only when module enters view
+  const video = $('.fh-hero-video', root);
+  if (video) {
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        console.log('Final Hero module entered view - starting video');
+        
+        // Start the video when the module comes into view
+        video.play().catch(e => console.log('Video play failed:', e));
+        
+        observer.unobserve(root);
+        
+        // Setup sound control for video element
+        setupSoundControl();
+        
+        // Text timer - 20 seconds after video starts
+        setTimeout(() => {
+          const overlay = $('.fh-overlay-content', root);
+          const below = $('.fh-text-below-video', root);
+          if (overlay && below) {
+            overlay.style.opacity = '0';
+            below.classList.add('visible');
+            console.log('Final Hero: Text moved down after 20 seconds');
+          }
+        }, 20000);
+      }
+    }, { 
+      threshold: 0.1, // Less aggressive - starts when 10% visible
+      rootMargin: '50px 0px 0px 0px'  // Start earlier
+    });
+    
+    observer.observe(root);
+  }
   
   function setupSoundControl() {
     const video = root.querySelector('.fh-hero-video');
