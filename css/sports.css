@@ -98,16 +98,35 @@
   z-index: 1;
 }
 
-.mod--sports .video-container iframe,
+/* Updated for HTML5 video elements */
+.mod--sports .video-container video,
 .mod--sports .hero-video,
 .mod--sports .gender-video {
   position: absolute;
-  top: -12%;
-  left: 0;
-  width: 100%;
-  height: 124%;
-  border: none;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  transform: translate(-50%, -50%);
+  object-fit: cover;
   pointer-events: none;
+}
+
+/* Mobile video optimization */
+@media (max-aspect-ratio: 16/9) {
+  .mod--sports .video-container video {
+    width: 100%;
+    height: auto;
+  }
+}
+
+@media (min-aspect-ratio: 16/9) {
+  .mod--sports .video-container video {
+    width: auto;
+    height: 100%;
+  }
 }
 
 .mod--sports .video-overlay {
@@ -193,7 +212,9 @@
   margin-top: 0.5rem;
 }
 
-.mod--sports .unmute-btn {
+/* Updated unmute button styling */
+.mod--sports .unmute-btn,
+.mod--sports .sports-unmute-btn {
   position: absolute;
   bottom: 30px;
   right: 30px;
@@ -207,9 +228,11 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
 }
 
-.mod--sports .unmute-btn:hover {
+.mod--sports .unmute-btn:hover,
+.mod--sports .sports-unmute-btn:hover {
   background: rgba(201, 169, 97, 1);
   transform: scale(1.05);
 }
@@ -347,6 +370,32 @@
   text-transform: uppercase;
   font-size: 0.85rem;
   letter-spacing: 0.1em;
+}
+
+/* Primary Sport Statement */
+.mod--sports .primary-sport-statement {
+  background: #f8f6f1;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.mod--sports .primary-sport-content {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.mod--sports .statement-title {
+  font-size: 2.5rem;
+  color: #1e3a5f;
+  margin-bottom: 1.5rem;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight: 300;
+}
+
+.mod--sports .statement-text {
+  font-size: 1.3rem;
+  line-height: 1.8;
+  color: #666;
 }
 
 /* Excellence Section */
@@ -558,6 +607,10 @@
   .mod--sports .sports-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+  
+  .mod--sports .sport-stats {
+    gap: 2rem;
+  }
 }
 
 @media (max-width: 768px) {
@@ -565,8 +618,16 @@
     height: 70vh;
   }
   
+  /* Better mobile video display */
+  .mod--sports .video-container video {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+  }
+  
   .mod--sports .hero-content {
     bottom: 40px;
+    padding: 0 1rem;
   }
   
   .mod--sports .hero-title {
@@ -599,5 +660,26 @@
     flex-direction: column;
     align-items: center;
     gap: 1rem;
+  }
+  
+  .mod--sports .student-name {
+    font-size: 2rem;
+  }
+  
+  .mod--sports .personal-message-title {
+    font-size: 2rem;
+  }
+  
+  .mod--sports .personal-message-text {
+    font-size: 1.1rem;
+  }
+  
+  /* Mobile unmute button position */
+  .mod--sports .unmute-btn,
+  .mod--sports .sports-unmute-btn {
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 16px;
+    font-size: 13px;
   }
 }
