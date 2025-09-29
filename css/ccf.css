@@ -24,20 +24,26 @@
   overflow: hidden;
 }
 
-.mod--ccf .ccf-video-iframe {
+/* Switched from iframe to MP4 video */
+.mod--ccf .ccf-video {
   position: absolute;
-  top: -10%;
+  top: 50%;
   left: 50%;
-  width: 100vw;
-  height: 120%;
-  transform: translateX(-50%);
-  min-width: 177.77vh;
-  pointer-events: none;
+  /* Fill container like background-cover */
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  transform: translate(-50%, -50%);
+  object-fit: cover;
+  pointer-events: none; /* video itself not clickable; sound button handles UX */
   opacity: 0;
-  transition: opacity 2s ease;
+  transition: opacity 0.8s ease;
 }
 
-.mod--ccf .ccf-video-iframe[src] {
+/* When metadata is ready, JS or browser will paint it; keep fade-in consistent */
+.mod--ccf .ccf-video[poster], 
+.mod--ccf .ccf-video:not([poster]) {
   opacity: 1;
 }
 

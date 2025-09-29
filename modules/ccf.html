@@ -2,13 +2,20 @@
     <!-- Hero Section with Video -->
     <div class="ccf-hero-wrapper">
         <div class="ccf-video-container">
-            <iframe 
-                class="ccf-video-iframe"
-                data-src="https://www.youtube.com/embed/ix9H6ITB6Bs?autoplay=1&mute=1&controls=0&showinfo=0&rel=0&loop=1&playlist=ix9H6ITB6Bs&modestbranding=1&playsinline=1&enablejsapi=1"
-                frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen>
-            </iframe>
+            <video
+                class="ccf-video"
+                id="ccf-video"
+                src="/assets/video/ccf-video.mp4"
+                autoplay
+                muted
+                playsinline
+                loop
+                preload="metadata"
+                poster=""
+                controls
+                controlslist="nodownload noremoteplayback"
+                disablepictureinpicture
+            ></video>
             <div class="ccf-video-overlay"></div>
         </div>
 
