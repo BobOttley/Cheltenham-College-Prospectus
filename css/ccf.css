@@ -46,16 +46,27 @@
   overflow: hidden;
 }
 
-/* MP4 Video Styles - MATCHING SPORTS MODULE EXACTLY */
+/* MP4 Video Styles - Mobile Optimized */
 .mod--ccf .ccf-hero-video {
   position: absolute;
-  top: -12%;
-  left: 0;
-  width: 100%;
-  height: 124%;
-  border: none;
-  pointer-events: none;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  transform: translate(-50%, -50%);
   object-fit: cover;
+  opacity: 0;
+  transition: opacity 2s ease;
+  /* Mobile video optimization */
+  -webkit-transform: translate(-50%, -50%);
+  -webkit-backface-visibility: hidden;
+  -webkit-perspective: 1000;
+}
+
+.mod--ccf .ccf-hero-video.loaded {
+  opacity: 1;
 }
 
 /* Portrait mode optimization */
@@ -109,63 +120,46 @@
   }
 }
 
-/* Sound Control Button - Mobile Optimized */
-.mod--ccf .ccf-sound-control {
-  position: absolute;
-  bottom: 40px;
-  right: 40px;
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px); /* iOS support */
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  cursor: pointer;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  animation: ccf-pulse 2s infinite;
-  /* Touch optimization */
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
+/* Sound Control Button - LIKE SPORTS MODULE */
+.mod--ccf .unmute-btn,
+.mod--ccf .ccf-unmute-btn {
+  position: absolute !important;
+  bottom: 30px !important;
+  right: 30px !important;
+  z-index: 100 !important;
+  background: rgba(201,169,97,.95) !important;
+  color: #fff !important;
+  border: none !important;
+  padding: 12px 20px !important;
+  border-radius: 25px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: transform .15s ease, background .2s ease !important;
+  pointer-events: auto !important;
+  display: block !important;
+}
+
+.mod--ccf .unmute-btn:hover,
+.mod--ccf .ccf-unmute-btn:hover {
+  background: #c9a961 !important;
+  transform: scale(1.05) !important;
+}
+
+.mod--ccf .unmute-btn:active,
+.mod--ccf .ccf-unmute-btn:active {
+  transform: scale(0.98) !important;
 }
 
 /* Mobile-specific sound button */
-@media (max-width: 480px) {
-  .mod--ccf .ccf-sound-control {
-    bottom: 15px;
-    right: 15px;
-    width: 44px; /* iOS minimum touch target */
-    height: 44px;
-    border-width: 1px;
+@media (max-width: 768px) {
+  .mod--ccf .unmute-btn,
+  .mod--ccf .ccf-unmute-btn {
+    bottom: 20px !important;
+    right: 20px !important;
+    padding: 10px 16px !important;
+    font-size: 12px !important;
   }
-  
-  .mod--ccf .ccf-sound-icon {
-    font-size: 1.2rem;
-  }
-}
-
-@media (min-width: 481px) and (max-width: 768px) {
-  .mod--ccf .ccf-sound-control {
-    bottom: 20px;
-    right: 20px;
-    width: 50px;
-    height: 50px;
-  }
-}
-
-@keyframes ccf-pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-}
-
-.mod--ccf .ccf-sound-control:hover,
-.mod--ccf .ccf-sound-control:active {
-  background: rgba(255, 255, 255, 0.25);
-  transform: scale(1.1);
 }
 
 /* Hero Content - Mobile Optimized */
