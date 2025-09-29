@@ -2,12 +2,10 @@
     <!-- Hero Section with Video -->
     <div class="ccf-hero-wrapper">
         <div class="ccf-video-container">
-            <!-- MP4 Video - EXACT same structure as sports module -->
             <video 
-                class="ccf-hero-video"
+                class="ccf-video"
                 data-src="https://cheltenham-college-assets.lon1.cdn.digitaloceanspaces.com/ccf-video.mp4"
-                muted loop playsinline
-                poster="">
+                muted loop playsinline>
             </video>
             <div class="ccf-video-overlay"></div>
         </div>
@@ -44,128 +42,220 @@
             </p>
         </div>
 
+        <div class="ccf-interest-note"></div>
+
         <div class="ccf-services-grid">
-            <!-- Royal Navy Section Card -->
-            <div class="ccf-service-card">
-                <div class="ccf-service-image">
-                    <img data-lazy="/images/ccf-navy.jpg" alt="Royal Navy Section">
+            <!-- Army Section -->
+            <div class="ccf-service-card" data-service="army">
+                <div class="ccf-service-header">
+                    <h3 class="ccf-service-name">Army Section</h3>
+                    <p class="ccf-service-tagline">Ground Forces Excellence</p>
                 </div>
                 <div class="ccf-service-content">
-                    <h3 class="ccf-service-title">Royal Navy Section</h3>
-                    <p class="ccf-service-description">Master seamanship, navigation, and maritime leadership</p>
-                    <ul class="ccf-service-features">
-                        <li>Annual sailing expeditions</li>
-                        <li>Portsmouth Naval Base visits</li>
-                        <li>RYA qualifications available</li>
+                    <ul class="ccf-service-activities">
+                        <li>Fieldcraft and tactical training</li>
+                        <li>Weapon handling and marksmanship</li>
+                        <li>Adventure training expeditions</li>
+                        <li>Military knowledge and drill</li>
+                        <li>Leadership exercises</li>
+                        <li>Annual camps with regular units</li>
                     </ul>
+                    <div class="ccf-personal-connection army-connection"></div>
                 </div>
             </div>
 
-            <!-- Army Section Card -->
-            <div class="ccf-service-card">
-                <div class="ccf-service-image">
-                    <img data-lazy="/images/ccf-army.jpg" alt="Army Section">
+            <!-- RAF Section -->
+            <div class="ccf-service-card" data-service="raf">
+                <div class="ccf-service-header">
+                    <h3 class="ccf-service-name">RAF Section</h3>
+                    <p class="ccf-service-tagline">Aim for the Skies</p>
                 </div>
                 <div class="ccf-service-content">
-                    <h3 class="ccf-service-title">Army Section</h3>
-                    <p class="ccf-service-description">Develop fieldcraft, tactical skills, and team leadership</p>
-                    <ul class="ccf-service-features">
-                        <li>Duke of Edinburgh integration</li>
-                        <li>Annual camps and exercises</li>
-                        <li>Weapons training and marksmanship</li>
+                    <ul class="ccf-service-activities">
+                        <li>Flying and gliding opportunities</li>
+                        <li>Aviation and aerospace studies</li>
+                        <li>Air navigation training</li>
+                        <li>RAF camps and station visits</li>
+                        <li>Leadership and command tasks</li>
+                        <li>Powered flying scholarships</li>
                     </ul>
+                    <div class="ccf-personal-connection raf-connection"></div>
                 </div>
             </div>
 
-            <!-- RAF Section Card -->
-            <div class="ccf-service-card">
-                <div class="ccf-service-image">
-                    <img data-lazy="/images/ccf-raf.jpg" alt="RAF Section">
+            <!-- Navy Section -->
+            <div class="ccf-service-card" data-service="navy">
+                <div class="ccf-service-header">
+                    <h3 class="ccf-service-name">Royal Navy Section</h3>
+                    <p class="ccf-service-tagline">Navigate Your Future</p>
                 </div>
                 <div class="ccf-service-content">
-                    <h3 class="ccf-service-title">RAF Section</h3>
-                    <p class="ccf-service-description">Experience aviation, air power, and aerospace technology</p>
-                    <ul class="ccf-service-features">
-                        <li>Flying scholarships available</li>
-                        <li>RAF base visits and camps</li>
-                        <li>Gliding opportunities</li>
+                    <ul class="ccf-service-activities">
+                        <li>Sailing and seamanship</li>
+                        <li>Navigation and boat handling</li>
+                        <li>Royal Navy ship visits</li>
+                        <li>Marine engineering basics</li>
+                        <li>Offshore sailing expeditions</li>
+                        <li>Diving and water sports</li>
                     </ul>
+                    <div class="ccf-personal-connection navy-connection"></div>
                 </div>
             </div>
         </div>
-
-        <div class="ccf-interest-note"></div>
     </div>
 
-    <!-- Features Section -->
+    <!-- Key Features Section -->
     <div class="ccf-features-section">
         <div class="ccf-section-header">
-            <h2 class="ccf-section-title">Developing <span class="highlight">Leaders</span></h2>
-            <p class="ccf-section-subtitle">Skills and experiences that shape tomorrow's leaders</p>
+            <h2 class="ccf-section-title">Why <span class="child-name" data-fallback="Your Child">Your Child</span> Should Join <span class="highlight">CCF</span></h2>
+            <p class="ccf-section-subtitle">
+                Develop skills and qualities that will serve throughout life
+            </p>
         </div>
 
         <div class="ccf-features-grid">
-            <div class="ccf-feature">
-                <div class="ccf-feature-icon">🎖️</div>
-                <h4>Leadership Development</h4>
-                <p class="leadership-feature">NCO ranks available from Fifth Form, with opportunities to lead sections and train younger cadets.</p>
+            <div class="ccf-feature-item" data-feature="character">
+                <h3 class="ccf-feature-title">Build Character</h3>
+                <p class="ccf-feature-description">
+                    Develop resilience, self-discipline, and mental fortitude through challenging training and experiences.
+                </p>
             </div>
-            <div class="ccf-feature">
-                <div class="ccf-feature-icon">🏔️</div>
-                <h4>Adventure Training</h4>
-                <p class="adventure-feature">Expeditions to Scotland, Wales, and overseas destinations challenge cadets physically and mentally.</p>
+
+            <div class="ccf-feature-item" data-feature="leadership">
+                <h3 class="ccf-feature-title">Leadership Skills</h3>
+                <p class="ccf-feature-description leadership-feature">
+                    Learn to lead, motivate and inspire others through progressive responsibility and command opportunities.
+                </p>
             </div>
-            <div class="ccf-feature">
-                <div class="ccf-feature-icon">🎯</div>
-                <h4>Skill Development</h4>
-                <p>From marksmanship to navigation, cadets develop practical skills valued by universities and employers.</p>
+
+            <div class="ccf-feature-item" data-feature="adventure">
+                <h3 class="ccf-feature-title">Adventure Training</h3>
+                <p class="ccf-feature-description adventure-feature">
+                    Experience expeditions, camps, and outdoor challenges that push boundaries and create lasting memories.
+                </p>
             </div>
-            <div class="ccf-feature">
-                <div class="ccf-feature-icon">🤝</div>
-                <h4>Team Building</h4>
-                <p>Learn to work effectively in teams, building trust and camaraderie that lasts beyond College years.</p>
+
+            <div class="ccf-feature-item" data-feature="skills">
+                <h3 class="ccf-feature-title">Life Skills</h3>
+                <p class="ccf-feature-description">
+                    Gain practical skills in first aid, navigation, communication, and problem-solving that apply beyond CCF.
+                </p>
             </div>
         </div>
     </div>
 
-    <!-- Journey Timeline Section -->
+    <!-- Leadership Journey Section -->
     <div class="ccf-journey-section">
         <div class="ccf-section-header">
-            <h2 class="ccf-section-title"><span class="child-name" data-fallback="Your child">Your child</span>'s <span class="highlight">CCF Journey</span></h2>
-            <p class="ccf-section-subtitle">A progressive pathway from recruit to leader</p>
+            <h2 class="ccf-section-title"><span class="child-name" data-fallback="Your child">Your child</span>'s <span class="highlight">Leadership Journey</span></h2>
+            <p class="ccf-section-subtitle">
+                Progress through the ranks and take on increasing responsibility
+            </p>
         </div>
 
-        <div class="ccf-timeline">
+        <div class="ccf-journey-timeline">
+            <div class="ccf-timeline-line"></div>
+            
             <div class="ccf-timeline-item">
-                <div class="ccf-timeline-year">Fourth Form</div>
+                <div class="ccf-timeline-marker"></div>
                 <div class="ccf-timeline-content">
-                    <h4>Foundation Year</h4>
-                    <p>Experience all three services, learn basic military skills, participate in first field day</p>
+                    <div class="ccf-timeline-year age-specific-year">Fourth Form</div>
+                    <div class="ccf-timeline-title">Foundation Year</div>
+                    <p class="ccf-timeline-description foundation-description">
+                        Experience CCF, learn basic military skills, drill, and experience all three service sections before choosing specialisation.
+                    </p>
                 </div>
             </div>
+
             <div class="ccf-timeline-item">
-                <div class="ccf-timeline-year">Fifth Form</div>
+                <div class="ccf-timeline-marker"></div>
                 <div class="ccf-timeline-content">
-                    <h4>Specialisation</h4>
-                    <p>Choose your service, undertake advanced training, eligible for NCO promotion</p>
+                    <div class="ccf-timeline-year">Fifth Form</div>
+                    <div class="ccf-timeline-title">Skills Development</div>
+                    <p class="ccf-timeline-description">
+                        Specialise in chosen service, attend camps and courses, begin taking on junior leadership roles and mentoring new cadets.
+                    </p>
                 </div>
             </div>
+
             <div class="ccf-timeline-item">
-                <div class="ccf-timeline-year">Sixth Form</div>
+                <div class="ccf-timeline-marker"></div>
                 <div class="ccf-timeline-content">
-                    <h4>Leadership</h4>
-                    <p>Lead sections, train recruits, compete for senior NCO positions, attend advanced courses</p>
+                    <div class="ccf-timeline-year">Sixth Form</div>
+                    <div class="ccf-timeline-title">Senior Leadership</div>
+                    <p class="ccf-timeline-description sixth-form-description">
+                        Take command as NCOs and senior cadets, lead training, organise activities, and represent the CCF at ceremonial events.
+                    </p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Final CTA Section -->
+    <!-- Opportunities Section -->
+    <div class="ccf-opportunities-section">
+        <div class="ccf-section-header">
+            <h2 class="ccf-section-title">Exceptional <span class="highlight">Opportunities</span></h2>
+            <p class="ccf-section-subtitle">
+                Experiences that go beyond the ordinary for <span class="child-name" data-fallback="your child">your child</span>
+            </p>
+        </div>
+
+        <div class="ccf-opportunities-grid">
+            <div class="ccf-opportunity-card" data-opportunity="camps">
+                <h3 class="ccf-opportunity-title">Annual Camps</h3>
+                <p class="ccf-opportunity-description">
+                    Week-long camps with regular military units, experiencing real military life and advanced training.
+                </p>
+            </div>
+
+            <div class="ccf-opportunity-card" data-opportunity="shooting">
+                <h3 class="ccf-opportunity-title">Shooting Competitions</h3>
+                <p class="ccf-opportunity-description">
+                    Compete at Bisley and other ranges, developing marksmanship skills and competitive spirit.
+                </p>
+            </div>
+
+            <div class="ccf-opportunity-card" data-opportunity="flying">
+                <h3 class="ccf-opportunity-title">Flying & Gliding</h3>
+                <p class="ccf-opportunity-description">
+                    RAF section cadets can earn flying scholarships and experience powered flight and gliding.
+                </p>
+            </div>
+
+            <div class="ccf-opportunity-card" data-opportunity="adventure">
+                <h3 class="ccf-opportunity-title">Adventurous Training</h3>
+                <p class="ccf-opportunity-description adventure-training">
+                    Mountain expeditions, sailing voyages, and outdoor challenges that test limits and build confidence.
+                </p>
+            </div>
+
+            <div class="ccf-opportunity-card" data-opportunity="ceremonial">
+                <h3 class="ccf-opportunity-title">Ceremonial Duties</h3>
+                <p class="ccf-opportunity-description">
+                    Participate in remembrance parades, inspections, and prestigious ceremonial occasions.
+                </p>
+            </div>
+
+            <div class="ccf-opportunity-card" data-opportunity="career">
+                <h3 class="ccf-opportunity-title">Career Insights</h3>
+                <p class="ccf-opportunity-description career-insights">
+                    Gain valuable experience and connections for those considering military or leadership careers.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Call to Action Section -->
     <div class="ccf-cta-section">
-        <h2 class="ccf-cta-title">Ready to Lead?</h2>
-        <p class="ccf-cta-text">
-            <span class="child-name" data-fallback="Your child">Your child</span>'s journey in the CCF will develop confidence, resilience, and leadership skills that last a lifetime.
-        </p>
-        <div class="ccf-commitment-note"></div>
+        <div class="ccf-cta-container">
+            <h2 class="ccf-cta-title">Come <span class="highlight">&</span> See</h2>
+            <p class="ccf-cta-subtitle">
+                Experience firsthand what makes our Combined Cadet Force extraordinary. 
+                Book your visit and discover how CCF will shape <span class="child-name" data-fallback="your child">your child</span>'s character and future.
+            </p>
+            <a href="https://www.cheltenhamcollege.org/admissions/visit-us/" class="ccf-cta-button" target="_blank">
+                Book Your Visit
+            </a>
+        </div>
     </div>
 </section>

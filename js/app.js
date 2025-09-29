@@ -1437,13 +1437,8 @@ MODULES['sports'] = (root, ctx) => {
 };
 
 /* CCF Module initializer - Add to MODULES object in app.js */
-/* CCF Module initializer - Using exact Sports module pattern */
+/* CCF Module initializer - Replace existing MODULES['ccf'] in app.js */
 MODULES['ccf'] = (root, ctx) => {
-  console.log('=== CCF MODULE INIT ===');
-  
-  // Track current video
-  let currentVideo = null;
-  
   // Update name placeholders
   const updateNames = () => {
     root.querySelectorAll('.child-name').forEach(el => {
@@ -1453,213 +1448,143 @@ MODULES['ccf'] = (root, ctx) => {
     });
   };
 
-  // Add conditional content based on priorities
+  // Add conditional content based on context
   const addConditionalContent = () => {
-    const childName = ctx.childName || 'Your child';
+    const childName = ctx.childName || 'your child';
     
-    // Interest note based on activities
+    // Leadership interest note
+    const leadershipNote = root.querySelector('.leadership-note');
+    if (leadershipNote && ctx.activities?.includes('leadership')) {
+      leadershipNote.textContent = `${childName} will find CCF's progressive leadership structure particularly rewarding, developing real command experience.`;
+    }
+    
+    // Interest note for activities
     const interestNote = root.querySelector('.ccf-interest-note');
     if (interestNote) {
-      if (ctx.activities?.includes('leadership')) {
-        interestNote.textContent = `With ${childName}'s interest in leadership, the CCF provides the perfect environment to develop command skills and earn NCO ranks.`;
-      } else if (ctx.activities?.includes('outdoor-education')) {
-        interestNote.textContent = `${childName}'s enthusiasm for outdoor education will be perfectly matched by CCF's adventurous training expeditions.`;
-      }
-    }
-    
-    // Commitment note
-    const commitmentNote = root.querySelector('.ccf-commitment-note');
-    if (commitmentNote && ctx.priorities?.activities === 3) {
-      commitmentNote.textContent = `We're delighted that ${childName} values co-curricular activities so highly - the CCF will be central to their College experience.`;
-    }
-    
-    // Personal note in hero
-    const personalNote = root.querySelector('.ccf-personal-note');
-    if (personalNote) {
-      if (ctx.universityAspirations === 'Oxford or Cambridge' || ctx.universityAspirations === 'Oxbridge') {
-        personalNote.textContent = `Universities, especially Oxbridge, highly value the leadership and service demonstrated through CCF participation.`;
+      if (ctx.activities?.includes('outdoor-education')) {
+        interestNote.textContent = `With ${childName}'s love of the outdoors, CCF will provide extraordinary opportunities for adventure training and expeditions.`;
       } else if (ctx.activities?.includes('leadership')) {
-        personalNote.textContent = `${childName}'s leadership potential will flourish through progressive ranks and command opportunities.`;
+        interestNote.textContent = `CCF's structured leadership development aligns perfectly with ${childName}'s interest in developing leadership skills.`;
       }
     }
     
-    // Update feature descriptions
+    // Service-specific connections
+    const armyConnection = root.querySelector('.army-connection');
+    if (armyConnection && ctx.activities?.includes('outdoor-education')) {
+      armyConnection.textContent = `The Army section's fieldcraft and expeditions would be perfect for ${childName}.`;
+    }
+    
+    const rafConnection = root.querySelector('.raf-connection');
+    if (rafConnection && (ctx.academicInterests?.includes('sciences') || ctx.academicInterests?.includes('physics'))) {
+      rafConnection.textContent = `${childName}'s interest in science would be enriched by RAF section's aviation and aerospace studies.`;
+    }
+    
+    const navyConnection = root.querySelector('.navy-connection');
+    if (navyConnection && ctx.activities?.includes('water-sports')) {
+      navyConnection.textContent = `With ${childName}'s interest in water activities, the Royal Navy section's sailing program would be ideal.`;
+    }
+    
+    // Age-specific year labels
+    const ageSpecificYear = root.querySelector('.age-specific-year');
+    if (ageSpecificYear && ctx.stage === 'Lower') {
+      ageSpecificYear.textContent = 'Third Form';
+    }
+    
+    // Foundation description for younger students
+    const foundationDesc = root.querySelector('.foundation-description');
+    if (foundationDesc && ctx.stage === 'Lower') {
+      foundationDesc.textContent = 'Begin your CCF journey, learning basic military skills, drill, and experiencing all three service sections.';
+    }
+    
+    // Sixth form description with leadership emphasis
+    const sixthFormDesc = root.querySelector('.sixth-form-description');
+    if (sixthFormDesc && ctx.activities?.includes('leadership')) {
+      sixthFormDesc.textContent = `${childName} will excel in senior leadership roles, commanding sections, leading training, and representing the CCF.`;
+    }
+    
+    // Leadership feature
     const leadershipFeature = root.querySelector('.leadership-feature');
     if (leadershipFeature && ctx.activities?.includes('leadership')) {
-      leadershipFeature.textContent = `${childName} will have opportunities to earn NCO ranks and lead sections from Fifth Form onwards.`;
+      leadershipFeature.textContent = `${childName} will thrive in CCF's progressive leadership structure, from junior roles to senior command positions.`;
     }
     
+    // Adventure feature
     const adventureFeature = root.querySelector('.adventure-feature');
     if (adventureFeature && ctx.activities?.includes('outdoor-education')) {
       adventureFeature.textContent = `${childName} will thrive on CCF's challenging expeditions, from mountain training to survival courses.`;
     }
   };
 
-  // EXACT SAME VIDEO FUNCTIONS AS SPORTS MODULE
-  const primeVideo = (video) => {
-    if (!video) return;
-    video.setAttribute('muted', '');
-    video.setAttribute('loop', '');
-    video.setAttribute('playsinline', '');
-    video.setAttribute('webkit-playsinline', '');
-    video.muted = true;
-    video.loop = true;
-    video.playsInline = true;
-  };
-
-  const stopVideo = (video) => {
-    if (!video) return;
-    video.pause();
-    video.currentTime = 0;
-  };
-
-  const ensureSrcFromData = (video) => {
-    if (!video) return;
-    const ds = video.getAttribute('data-src');
-    if (ds && video.src !== ds) {
-      video.src = ds;
-      video.removeAttribute('data-src');
-    }
-  };
-
-  const loadVideo = (video) => {
-    if (!video) {
-      console.error('No video element provided to loadVideo');
-      return;
-    }
-
-    console.log('Loading CCF video');
-
-    if (currentVideo && currentVideo !== video) {
-      stopVideo(currentVideo);
-    }
-
-    primeVideo(video);
-    ensureSrcFromData(video);
-
-    video.play().then(() => {
-      console.log('CCF video playing successfully');
-    }).catch(e => {
-      console.log('Autoplay deferred until interaction:', e?.name || e);
-    });
-
-    currentVideo = video;
-  };
-
-  // LAZY VIDEO LOADING - EXACT SAME AS SPORTS MODULE
-  const setupVideoLazyLoading = () => {
+  // Video and interaction management
+  const setupVideoAndInteractions = () => {
+    const video = root.querySelector('.ccf-video');
+    const soundControl = root.querySelector('.ccf-sound-control');
+    const soundIcon = root.querySelector('.ccf-sound-icon');
+    const heroContent = root.querySelector('.ccf-hero-content');
     const heroSection = root.querySelector('.ccf-hero-wrapper');
-    const video = root.querySelector('.ccf-hero-video');
     
-    if (!heroSection || !video) {
-      console.error('CCF: Hero section or video not found');
-      return;
+    // PROPER LAZY LOAD: Use IntersectionObserver to load video only when hero is actually visible
+    if (video && video.dataset.src && !video.src && heroSection) {
+      const videoObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            // NOW load the video when hero section is actually in view
+            video.src = video.dataset.src;
+            video.removeAttribute('data-src');
+            video.play().catch(e => console.log('CCF video autoplay prevented:', e));
+            videoObserver.unobserve(heroSection);
+          }
+        });
+      }, { threshold: 0.1 });
+      
+      videoObserver.observe(heroSection);
     }
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          console.log('CCF module hero entered viewport - starting video');
-          loadVideo(video);
-          observer.unobserve(heroSection);
+    
+    // Hide hero content after 20 seconds
+    if (heroContent) {
+      setTimeout(() => {
+        heroContent.classList.add('hide');
+      }, 20000);
+    }
+    
+    // Sound control for video element
+    if (soundControl && video) {
+      soundControl.addEventListener('click', () => {
+        if (video.muted) {
+          video.muted = false;
+          soundIcon.textContent = '🔊';
+        } else {
+          video.muted = true;
+          soundIcon.textContent = '🔇';
         }
       });
-    }, {
-      threshold: 0.4,
-      rootMargin: '0px 0px -10% 0px'
-    });
-
-    observer.observe(heroSection);
-  };
-
-  // Setup unmute button - SAME AS SPORTS
-  const setupUnmute = () => {
-    const soundControl = root.querySelector('.ccf-sound-control');
-    const video = root.querySelector('.ccf-hero-video');
-    const soundIcon = root.querySelector('.ccf-sound-icon');
-
-    if (!soundControl || !video) return;
-
-    soundControl.addEventListener('click', () => {
-      console.log('CCF unmute button clicked');
-      
-      primeVideo(video);
-      ensureSrcFromData(video);
-      
-      if (video.paused) {
-        video.play().catch(() => {});
-      }
-
-      if (video.muted) {
-        video.muted = false;
-        soundIcon.textContent = '🔇';
-      } else {
-        video.muted = true;
-        soundIcon.textContent = '🔊';
-      }
-    });
-  };
-
-  // Auto-mute when scrolling - SAME AS SPORTS
-  const setupAutoMute = () => {
-    const video = root.querySelector('.ccf-hero-video');
-    const soundIcon = root.querySelector('.ccf-sound-icon');
+    }
     
-    if (!video) return;
-
-    let lastScrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    let scrollTimer = null;
-
-    const handleScroll = () => {
-      clearTimeout(scrollTimer);
-      scrollTimer = setTimeout(() => {
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        const scrollingDown = scrollTop > lastScrollTop;
+    // Auto-mute when scrolling away from video
+    if (heroSection && video) {
+      const checkVideoVisibility = () => {
+        const rect = heroSection.getBoundingClientRect();
+        const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
         
-        if (scrollingDown && scrollTop > 200 && !video.muted) {
+        if (!isVisible && !video.muted) {
           video.muted = true;
-          if (soundIcon) soundIcon.textContent = '🔇';
-          console.log('CCF video auto-muted on scroll');
+          soundIcon.textContent = '🔇';
         }
-        
-        lastScrollTop = scrollTop;
-      }, 100);
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
+      };
+      
+      window.addEventListener('scroll', checkVideoVisibility, { passive: true });
+    }
   };
 
-  // Hide hero content after delay
-  const setupHeroContentHiding = () => {
-    const heroContent = root.querySelector('.ccf-hero-content');
-    if (!heroContent) return;
-
-    const isMobile = window.matchMedia('(max-width: 768px)').matches;
-    const hideDelay = isMobile ? 10000 : 20000; // 10 seconds mobile, 20 seconds desktop
-
-    console.log(`CCF: Setting hide timer: ${hideDelay/1000} seconds`);
-
-    setTimeout(() => {
-      heroContent.classList.add('hide');
-      console.log('CCF hero content hidden');
-    }, hideDelay);
-  };
-
-  // Initialize module in correct order
-  console.log('Initializing CCF module components...');
+  // Initialize module
   updateNames();
   addConditionalContent();
-  setupVideoLazyLoading();
-  setupUnmute();
-  setupAutoMute();
-  setupHeroContentHiding();
-
-  // Lazy load images
+  setupVideoAndInteractions();
+  
+  // Lazy load any images
   if (typeof hydrateLazyAssets === 'function') {
     hydrateLazyAssets(root);
   }
-
-  console.log('CCF module initialization complete');
 };
 
 /* ====== Loader (fetch + mount on intersection) ====== */
