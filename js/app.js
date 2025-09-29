@@ -1437,10 +1437,7 @@ MODULES['sports'] = (root, ctx) => {
 };
 
 /* CCF Module initializer - Add to MODULES object in app.js */
-/* CCF Module initializer - Simplified like hero module */
 MODULES['ccf'] = (root, ctx) => {
-  console.log('=== CCF MODULE INIT ===');
-  
   // Update name placeholders
   const updateNames = () => {
     root.querySelectorAll('.child-name').forEach(el => {
@@ -1450,147 +1447,226 @@ MODULES['ccf'] = (root, ctx) => {
     });
   };
 
-  // Add conditional content based on priorities
+  // Add conditional content based on interests
   const addConditionalContent = () => {
-    const childName = ctx.childName || 'Your child';
+    const childName = ctx.childName || 'your child';
     
-    // Interest note based on activities
-    const interestNote = root.querySelector('.ccf-interest-note');
-    if (interestNote) {
+    // Leadership interest note in hero
+    const leadNote = root.querySelector('.leadership-note');
+    if (leadNote) {
       if (ctx.activities?.includes('leadership')) {
-        interestNote.textContent = `With ${childName}'s interest in leadership, the CCF provides the perfect environment to develop command skills and earn NCO ranks.`;
-      } else if (ctx.activities?.includes('outdoor-education')) {
-        interestNote.textContent = `${childName}'s enthusiasm for outdoor education will be perfectly matched by CCF's adventurous training expeditions.`;
+        if (ctx.priorities?.activities === 3) {
+          leadNote.textContent = `With ${childName}'s passion for leadership, CCF will provide the perfect platform to develop command skills and inspire others.`;
+        } else {
+          leadNote.textContent = `CCF will help ${childName} develop natural leadership abilities through progressive responsibility.`;
+        }
+      } else if (ctx.values?.includes('character-building')) {
+        leadNote.textContent = `Your family's focus on character-building makes CCF an ideal choice for ${childName}'s development.`;
       }
     }
-    
-    // Commitment note
-    const commitmentNote = root.querySelector('.ccf-commitment-note');
-    if (commitmentNote && ctx.priorities?.activities === 3) {
-      commitmentNote.textContent = `We're delighted that ${childName} values co-curricular activities so highly - the CCF will be central to their College experience.`;
-    }
-    
-    // Personal note in hero
-    const personalNote = root.querySelector('.ccf-personal-note');
-    if (personalNote) {
-      if (ctx.universityAspirations === 'Oxford or Cambridge' || ctx.universityAspirations === 'Oxbridge') {
-        personalNote.textContent = `Universities, especially Oxbridge, highly value the leadership and service demonstrated through CCF participation.`;
+
+    // CCF interest note based on activities// CCF interest note based on activities
+    const ccfNote = root.querySelector('.ccf-interest-note');
+    if (ccfNote) {
+      let note = '';
+      if (ctx.activities?.includes('outdoor-education')) {
+        note = `I see ${childName} enjoys outdoor education - CCF's adventure training and expeditions will be a perfect match.`;
       } else if (ctx.activities?.includes('leadership')) {
-        personalNote.textContent = `${childName}'s leadership potential will flourish through progressive ranks and command opportunities.`;
+        note = `${childName}'s leadership interests align perfectly with CCF's progressive responsibility system.`;
+      } else if (ctx.activities?.includes('sports')) {
+        note = `${childName}'s sporting background will translate beautifully to CCF's team challenges and physical training.`;
+      } else if (ctx.values?.includes('character-building')) {
+        note = `Your focus on character-building makes CCF an ideal choice for ${childName}'s development.`;
+      } else {
+        note = `CCF will introduce ${childName} to new challenges that build confidence and resilience.`;
+      }
+      ccfNote.textContent = note;
+    }
+
+    // Service-specific connections
+    addServiceConnections();
+    
+    // Customize timeline based on age/stage
+    customizeTimeline();
+    
+    // Emphasize relevant opportunities
+    emphasizeOpportunities();
+  };
+
+  const addServiceConnections = () => {
+    const childName = ctx.childName || 'your child';
+    
+    // Army connection
+    const armyConn = root.querySelector('.army-connection');
+    if (armyConn) {
+      if (ctx.activities?.includes('outdoor-education')) {
+        armyConn.textContent = `${childName}'s love of outdoor activities makes Army section's fieldcraft and expeditions a natural fit.`;
+      } else if (ctx.activities?.includes('leadership')) {
+        armyConn.textContent = `Army section's emphasis on tactical leadership will develop ${childName}'s command potential.`;
+      } else if (ctx.specificSports?.includes('athletics') || ctx.specificSports?.includes('rugby')) {
+        armyConn.textContent = `${childName}'s physical fitness background will serve well in Army section's demanding training.`;
+      }
+    }
+
+    // RAF connection
+    const rafConn = root.querySelector('.raf-connection');
+    if (rafConn) {
+      if (ctx.academicInterests?.includes('sciences')) {
+        rafConn.textContent = `With ${childName}'s science interests, RAF section's aerospace studies and navigation training will be fascinating.`;
+      } else if (ctx.academicInterests?.includes('mathematics')) {
+        rafConn.textContent = `${childName}'s mathematical mind will excel in RAF section's precision navigation and flight calculations.`;
+      } else if (ctx.universityAspirations === 'Oxford or Cambridge') {
+        rafConn.textContent = `RAF section's flying scholarships could provide unique experiences for ${childName}'s university applications.`;
+      }
+    }
+
+    // Navy connection
+    const navyConn = root.querySelector('.navy-connection');
+    if (navyConn) {
+      if (ctx.specificSports?.includes('swimming') || ctx.specificSports?.includes('rowing')) {
+        navyConn.textContent = `${childName}'s water sports experience makes Navy section's sailing and seamanship a perfect progression.`;
+      } else if (ctx.activities?.includes('outdoor-education')) {
+        navyConn.textContent = `Navy section's offshore expeditions will extend ${childName}'s outdoor education into maritime adventures.`;
+      } else if (ctx.academicInterests?.includes('sciences')) {
+        navyConn.textContent = `${childName} will enjoy Navy section's hands-on approach to marine engineering and navigation.`;
+      }
+    }
+  };
+
+  const customizeTimeline = () => {
+    const childName = ctx.childName || 'your child';
+    const ageYear = root.querySelector('.age-specific-year');
+    const foundationDesc = root.querySelector('.foundation-description');
+    const sixthFormDesc = root.querySelector('.sixth-form-description');
+    
+    if (ageYear && foundationDesc) {
+      if (ctx.stage === 'Lower' || ctx.age === '13-14') {
+        ageYear.textContent = 'Fourth Form (Current)';
+        foundationDesc.textContent = `${childName} is currently experiencing CCF, learning basic military skills, drill, and experiencing all three service sections before choosing specialisation.`;
+      } else if (ctx.stage === 'Middle' || ctx.age === '15-16') {
+        ageYear.textContent = 'Fourth Form';
+        foundationDesc.textContent = `${childName} will experience CCF, learning basic military skills, drill, and experiencing all three service sections before choosing specialisation.`;
+      } else if (ctx.stage === 'Senior' || ctx.age === '16-18') {
+        ageYear.textContent = 'Fourth Form (Completed)';
+        foundationDesc.textContent = `${childName} will have already completed foundation training and chosen their specialisation.`;
       }
     }
     
-    // Update feature descriptions
+    if (sixthFormDesc && ctx.universityAspirations === 'Oxford or Cambridge') {
+      sixthFormDesc.textContent = `Take command as NCOs and senior cadets, lead training, organise activities, and represent the CCF at ceremonial events. Leadership experience is highly valued by Oxbridge admissions.`;
+    }
+  };
+
+  const emphasizeOpportunities = () => {
+    const childName = ctx.childName || 'your child';
+    
+    // Adventure training emphasis
+    const adventureTraining = root.querySelector('.adventure-training');
+    if (adventureTraining && ctx.activities?.includes('outdoor-education')) {
+      adventureTraining.textContent = `Perfect for ${childName} - mountain expeditions, sailing voyages, and outdoor challenges that build on existing outdoor education interests.`;
+    }
+    
+    // Career insights emphasis
+    const careerInsights = root.querySelector('.career-insights');
+    if (careerInsights) {
+      if (ctx.universityAspirations === 'Oxford or Cambridge') {
+        careerInsights.textContent = `Gain valuable leadership experience and connections that strengthen Oxbridge applications and future career prospects.`;
+      } else if (ctx.activities?.includes('leadership')) {
+        careerInsights.textContent = `Develop leadership experience and networks for ${childName}'s future career, whether in military, business, or public service.`;
+      }
+    }
+    
+    // Leadership feature emphasis
     const leadershipFeature = root.querySelector('.leadership-feature');
     if (leadershipFeature && ctx.activities?.includes('leadership')) {
-      leadershipFeature.textContent = `${childName} will have opportunities to earn NCO ranks and lead sections from Fifth Form onwards.`;
+      leadershipFeature.textContent = `Perfect for ${childName} - develop advanced leadership skills that will benefit university applications and future careers.`;
     }
-    
+
+    // Adventure feature emphasis
     const adventureFeature = root.querySelector('.adventure-feature');
     if (adventureFeature && ctx.activities?.includes('outdoor-education')) {
       adventureFeature.textContent = `${childName} will thrive on CCF's challenging expeditions, from mountain training to survival courses.`;
     }
   };
 
-  // Simple video setup - just ensure it's muted on load
-  const setupVideo = () => {
-    const video = root.querySelector('.ccf-hero-video');
-    if (video) {
-      // Ensure video is muted for autoplay
-      video.muted = true;
-      video.playsInline = true;
+  // Video and interaction management
+  const setupVideoAndInteractions = () => {
+    const iframe = root.querySelector('.ccf-video-iframe');
+    const soundControl = root.querySelector('.ccf-sound-control');
+    const soundIcon = root.querySelector('.ccf-sound-icon');
+    const heroContent = root.querySelector('.ccf-hero-content');
+    const heroSection = root.querySelector('.ccf-hero-wrapper');
+    
+    // PROPER LAZY LOAD: Use IntersectionObserver to load video only when hero is actually visible
+    if (iframe && iframe.dataset.src && !iframe.src && heroSection) {
+      const videoObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            // NOW load the video when hero section is actually in view
+            iframe.src = iframe.dataset.src;
+            iframe.removeAttribute('data-src');
+            videoObserver.unobserve(heroSection);
+          }
+        });
+      }, { threshold: 0.1 });
       
-      // Log when video plays
-      video.addEventListener('playing', () => {
-        console.log('CCF video is playing');
+      videoObserver.observe(heroSection);
+    }
+    
+    // Hide hero content after 20 seconds
+    if (heroContent) {
+      setTimeout(() => {
+        heroContent.classList.add('hide');
+      }, 20000);
+    }
+    
+    // Sound control
+    let isMuted = true;
+    if (soundControl && iframe) {
+      soundControl.addEventListener('click', () => {
+        if (isMuted) {
+          // Unmute
+          const src = iframe.src;
+          iframe.src = src.replace('mute=1', 'mute=0');
+          soundIcon.textContent = '🔊';
+          isMuted = false;
+        } else {
+          // Mute
+          const src = iframe.src;
+          iframe.src = src.replace('mute=0', 'mute=1');
+          soundIcon.textContent = '🔇';
+          isMuted = true;
+        }
       });
+    }
+    
+    // Auto-mute when scrolling away from video
+    if (heroSection && iframe) {
+      const checkVideoVisibility = () => {
+        const rect = heroSection.getBoundingClientRect();
+        const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+        
+        if (!isVisible && !isMuted) {
+          const src = iframe.src;
+          iframe.src = src.replace('mute=0', 'mute=1');
+          soundIcon.textContent = '🔇';
+          isMuted = true;
+        }
+      };
       
-      // Log any errors
-      video.addEventListener('error', (e) => {
-        console.error('CCF video error:', e);
-      });
+      window.addEventListener('scroll', checkVideoVisibility, { passive: true });
     }
   };
 
-  // Setup unmute button
-  const setupUnmute = () => {
-    const unmuteBtn = root.querySelector('.unmute-btn, .ccf-unmute-btn');
-    const video = root.querySelector('.ccf-hero-video');
-
-    if (!unmuteBtn || !video) return;
-
-    unmuteBtn.addEventListener('click', () => {
-      console.log('CCF unmute button clicked');
-      
-      if (video.muted) {
-        // Unmute
-        video.muted = false;
-        video.volume = 1.0;
-        unmuteBtn.innerHTML = '🔇 Click to Mute';
-        console.log('CCF video unmuted');
-      } else {
-        // Mute
-        video.muted = true;
-        unmuteBtn.innerHTML = '🔊 Click for Sound';
-        console.log('CCF video muted');
-      }
-    });
-  };
-
-  // Auto-mute when scrolling away
-  const setupAutoMute = () => {
-    const video = root.querySelector('.ccf-hero-video');
-    const unmuteBtn = root.querySelector('.unmute-btn, .ccf-unmute-btn');
-    
-    if (!video) return;
-
-    const checkVideoVisibility = () => {
-      const heroSection = root.querySelector('.ccf-hero-wrapper');
-      if (!heroSection) return;
-      
-      const rect = heroSection.getBoundingClientRect();
-      const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
-      
-      if (!isVisible && !video.muted) {
-        video.muted = true;
-        if (unmuteBtn) unmuteBtn.innerHTML = '🔊 Click for Sound';
-        console.log('CCF video auto-muted - scrolled out of view');
-      }
-    };
-
-    let scrollTimer = null;
-    window.addEventListener('scroll', () => {
-      clearTimeout(scrollTimer);
-      scrollTimer = setTimeout(checkVideoVisibility, 100);
-    }, { passive: true });
-  };
-
-  // Hide hero content after 20 seconds
-  const setupHeroContentHiding = () => {
-    const heroContent = root.querySelector('.ccf-hero-content');
-    if (!heroContent) return;
-
-    setTimeout(() => {
-      heroContent.classList.add('hide');
-      console.log('CCF hero content hidden');
-    }, 20000);
-  };
-
   // Initialize module
-  console.log('Initializing CCF module...');
   updateNames();
   addConditionalContent();
-  setupVideo();
-  setupUnmute();
-  setupAutoMute();
-  setupHeroContentHiding();
-
-  // Lazy load images
+  setupVideoAndInteractions();
+  
+  // Lazy load any images
   if (typeof hydrateLazyAssets === 'function') {
     hydrateLazyAssets(root);
   }
-
-  console.log('CCF module initialization complete');
 };
 
 /* ====== Loader (fetch + mount on intersection) ====== */
@@ -4503,79 +4579,3 @@ MODULES['final_hero'] = (root, ctx) => {
   
   console.log('Final Hero module initialized for:', ctx.childName);
 };
-// ===== COLLAPSIBLE NAVIGATION FOR MOBILE - FIXED VERSION =====
-function setupCollapsibleNav(root) {
-  if (window.innerWidth > 768) return;
-  
-  // Find navigation containers and titles based on module type
-  const moduleType = root.className.match(/mod--(\w+)/)?.[1];
-  if (!moduleType) return;
-  
-  let navElement, titleElement;
-  
-  // Match the navigation based on module type
-  switch(moduleType) {
-    case 'applied_vocational':
-      navElement = root.querySelector('.av-nav');
-      titleElement = navElement?.querySelector('.av-nav-title');
-      break;
-    case 'sciences_mathematics':
-      navElement = root.querySelector('.sm-nav');
-      titleElement = navElement?.querySelector('.sm-nav-title');
-      break;
-    case 'languages_classics':
-      navElement = root.querySelector('.lc-subject-nav');
-      titleElement = navElement?.querySelector('.lc-nav-title');
-      break;
-    case 'third_form_humanities':
-      navElement = root.querySelector('.hum-nav');
-      titleElement = navElement?.querySelector('.hum-nav-title');
-      break;
-    case 'upper_school':
-      navElement = root.querySelector('.us-nav');
-      titleElement = navElement?.querySelector('.us-nav-title');
-      break;
-    default:
-      navElement = root.querySelector('.section-nav, .subject-nav');
-      titleElement = navElement?.querySelector('.nav-title');
-  }
-  
-  if (titleElement && navElement && !titleElement._hasClickHandler) {
-    titleElement._hasClickHandler = true;
-    
-    titleElement.addEventListener('click', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      navElement.classList.toggle('expanded');
-    });
-  }
-}
-
-// Apply to all loaded modules on resize
-window.addEventListener('resize', () => {
-  if (window.innerWidth <= 768) {
-    setTimeout(() => {
-      document.querySelectorAll('.mod').forEach(setupCollapsibleNav);
-    }, 100);
-  }
-});
-
-// Apply when modules load
-const _origMount = window.mountPlaceholder || mountPlaceholder;
-window.mountPlaceholder = async function(ph) {
-  await _origMount(ph);
-  setTimeout(() => {
-    const key = ph.getAttribute('data-mod');
-    const module = document.querySelector(`.mod--${key}`);
-    if (module) setupCollapsibleNav(module);
-  }, 100);
-};
-
-// Initial setup
-document.addEventListener('DOMContentLoaded', () => {
-  if (window.innerWidth <= 768) {
-    setTimeout(() => {
-      document.querySelectorAll('.mod').forEach(setupCollapsibleNav);
-    }, 500);
-  }
-});
