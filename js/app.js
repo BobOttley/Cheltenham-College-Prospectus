@@ -1454,6 +1454,8 @@ MODULES['ccf'] = (root, ctx) => {
   applyNames();
 
   // VIDEO SETUP
+  let isMuted = true;
+  
   const primeVideo = (video) => {
     if (!video) return;
     video.muted = true;
@@ -1461,7 +1463,7 @@ MODULES['ccf'] = (root, ctx) => {
     video.setAttribute('playsinline', '');
     if (!video.hasAttribute('loop')) video.setAttribute('loop', '');
     if (!video.hasAttribute('preload')) video.setAttribute('preload', 'metadata');
-    video.removeAttribute('autoplay'); // Remove autoplay
+    video.removeAttribute('autoplay');
   };
 
   const loadVideo = (video) => {
@@ -1488,6 +1490,8 @@ MODULES['ccf'] = (root, ctx) => {
   const video = $('.ccf-video');
   const heroSection = $('.ccf-hero');
   const overlay = $('#ccfOverlay');
+  const audioBtn = $('#ccfAudioToggle');
+  const audioIcon = $('#ccfAudioIcon');
   
   if (video && heroSection) {
     const observer = new IntersectionObserver((entries) => {
@@ -1515,17 +1519,37 @@ MODULES['ccf'] = (root, ctx) => {
     observer.observe(heroSection);
   }
 
+  // AUTO-MUTE ON SCROLL AWAY
+  const handleScroll = () => {
+    if (!video || !heroSection) return;
+    
+    const rect = heroSection.getBoundingClientRect();
+    const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+    
+    if (!isVisible && !video.muted) {
+      video.muted = true;
+      isMuted = true;
+      if (audioIcon) audioIcon.textContent = 'Click to unmute';
+      console.log('CCF video auto-muted - scrolled away');
+    }
+  };
+  
+  window.addEventListener('scroll', handleScroll, { passive: true });
+
   // AUDIO TOGGLE
-  const audioBtn = $('#ccfAudioToggle');
-  const audioIcon = $('#ccfAudioIcon');
+  const updateMuteLabel = () => {
+    if (!audioIcon) return;
+    audioIcon.textContent = isMuted ? 'Click to unmute' : 'Click to mute';
+  };
+  updateMuteLabel();
   
   if (audioBtn && video) {
     audioBtn.addEventListener('click', () => {
-      video.muted = !video.muted;
-      if (audioIcon) {
-        audioIcon.textContent = video.muted ? '🔊' : '🔇';
-      }
-      if (!video.muted && video.paused) {
+      isMuted = !isMuted;
+      video.muted = isMuted;
+      updateMuteLabel();
+      
+      if (!isMuted && video.paused) {
         video.play().catch(() => {});
       }
     });
