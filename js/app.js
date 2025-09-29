@@ -1437,237 +1437,84 @@ MODULES['sports'] = (root, ctx) => {
 };
 
 /* CCF Module initializer - Add to MODULES object in app.js */
+/* CCF Module – MP4 version, fully scoped and self-contained */
 MODULES['ccf'] = (root, ctx) => {
-  // Update name placeholders
+  // ---------- Scoped helpers ----------
+  const $  = (sel, p = root) => p.querySelector(sel);
+  const $$ = (sel, p = root) => Array.from(p.querySelectorAll(sel));
+
+  // If you use your global lazy hydrator, call it safely:
+  if (typeof hydrateLazyAssets === 'function') {
+    try { hydrateLazyAssets(root); } catch (e) { console.warn('CCF hydrate skipped:', e); }
+  }
+
+  // ---------- Update names (SCOPED) ----------
   const updateNames = () => {
-    root.querySelectorAll('.child-name').forEach(el => {
+    $$('.child-name').forEach(el => {
       const fallback = el.getAttribute('data-fallback') || 'your child';
-      const name = (ctx.childName || '').trim();
-      el.textContent = name && !name.startsWith('[') ? name : fallback;
+      const name = (ctx?.childName || '').trim();
+      el.textContent = (name && !name.startsWith('[')) ? name : fallback;
     });
   };
-
-  // Add conditional content based on interests
-  const addConditionalContent = () => {
-    const childName = ctx.childName || 'your child';
-    
-    // Leadership interest note in hero
-    const leadNote = root.querySelector('.leadership-note');
-    if (leadNote) {
-      if (ctx.activities?.includes('leadership')) {
-        if (ctx.priorities?.activities === 3) {
-          leadNote.textContent = `With ${childName}'s passion for leadership, CCF will provide the perfect platform to develop command skills and inspire others.`;
-        } else {
-          leadNote.textContent = `CCF will help ${childName} develop natural leadership abilities through progressive responsibility.`;
-        }
-      } else if (ctx.values?.includes('character-building')) {
-        leadNote.textContent = `Your family's focus on character-building makes CCF an ideal choice for ${childName}'s development.`;
-      }
-    }
-
-    // CCF interest note based on activities// CCF interest note based on activities
-    const ccfNote = root.querySelector('.ccf-interest-note');
-    if (ccfNote) {
-      let note = '';
-      if (ctx.activities?.includes('outdoor-education')) {
-        note = `I see ${childName} enjoys outdoor education - CCF's adventure training and expeditions will be a perfect match.`;
-      } else if (ctx.activities?.includes('leadership')) {
-        note = `${childName}'s leadership interests align perfectly with CCF's progressive responsibility system.`;
-      } else if (ctx.activities?.includes('sports')) {
-        note = `${childName}'s sporting background will translate beautifully to CCF's team challenges and physical training.`;
-      } else if (ctx.values?.includes('character-building')) {
-        note = `Your focus on character-building makes CCF an ideal choice for ${childName}'s development.`;
-      } else {
-        note = `CCF will introduce ${childName} to new challenges that build confidence and resilience.`;
-      }
-      ccfNote.textContent = note;
-    }
-
-    // Service-specific connections
-    addServiceConnections();
-    
-    // Customize timeline based on age/stage
-    customizeTimeline();
-    
-    // Emphasize relevant opportunities
-    emphasizeOpportunities();
-  };
-
-  const addServiceConnections = () => {
-    const childName = ctx.childName || 'your child';
-    
-    // Army connection
-    const armyConn = root.querySelector('.army-connection');
-    if (armyConn) {
-      if (ctx.activities?.includes('outdoor-education')) {
-        armyConn.textContent = `${childName}'s love of outdoor activities makes Army section's fieldcraft and expeditions a natural fit.`;
-      } else if (ctx.activities?.includes('leadership')) {
-        armyConn.textContent = `Army section's emphasis on tactical leadership will develop ${childName}'s command potential.`;
-      } else if (ctx.specificSports?.includes('athletics') || ctx.specificSports?.includes('rugby')) {
-        armyConn.textContent = `${childName}'s physical fitness background will serve well in Army section's demanding training.`;
-      }
-    }
-
-    // RAF connection
-    const rafConn = root.querySelector('.raf-connection');
-    if (rafConn) {
-      if (ctx.academicInterests?.includes('sciences')) {
-        rafConn.textContent = `With ${childName}'s science interests, RAF section's aerospace studies and navigation training will be fascinating.`;
-      } else if (ctx.academicInterests?.includes('mathematics')) {
-        rafConn.textContent = `${childName}'s mathematical mind will excel in RAF section's precision navigation and flight calculations.`;
-      } else if (ctx.universityAspirations === 'Oxford or Cambridge') {
-        rafConn.textContent = `RAF section's flying scholarships could provide unique experiences for ${childName}'s university applications.`;
-      }
-    }
-
-    // Navy connection
-    const navyConn = root.querySelector('.navy-connection');
-    if (navyConn) {
-      if (ctx.specificSports?.includes('swimming') || ctx.specificSports?.includes('rowing')) {
-        navyConn.textContent = `${childName}'s water sports experience makes Navy section's sailing and seamanship a perfect progression.`;
-      } else if (ctx.activities?.includes('outdoor-education')) {
-        navyConn.textContent = `Navy section's offshore expeditions will extend ${childName}'s outdoor education into maritime adventures.`;
-      } else if (ctx.academicInterests?.includes('sciences')) {
-        navyConn.textContent = `${childName} will enjoy Navy section's hands-on approach to marine engineering and navigation.`;
-      }
-    }
-  };
-
-  const customizeTimeline = () => {
-    const childName = ctx.childName || 'your child';
-    const ageYear = root.querySelector('.age-specific-year');
-    const foundationDesc = root.querySelector('.foundation-description');
-    const sixthFormDesc = root.querySelector('.sixth-form-description');
-    
-    if (ageYear && foundationDesc) {
-      if (ctx.stage === 'Lower' || ctx.age === '13-14') {
-        ageYear.textContent = 'Fourth Form (Current)';
-        foundationDesc.textContent = `${childName} is currently experiencing CCF, learning basic military skills, drill, and experiencing all three service sections before choosing specialisation.`;
-      } else if (ctx.stage === 'Middle' || ctx.age === '15-16') {
-        ageYear.textContent = 'Fourth Form';
-        foundationDesc.textContent = `${childName} will experience CCF, learning basic military skills, drill, and experiencing all three service sections before choosing specialisation.`;
-      } else if (ctx.stage === 'Senior' || ctx.age === '16-18') {
-        ageYear.textContent = 'Fourth Form (Completed)';
-        foundationDesc.textContent = `${childName} will have already completed foundation training and chosen their specialisation.`;
-      }
-    }
-    
-    if (sixthFormDesc && ctx.universityAspirations === 'Oxford or Cambridge') {
-      sixthFormDesc.textContent = `Take command as NCOs and senior cadets, lead training, organise activities, and represent the CCF at ceremonial events. Leadership experience is highly valued by Oxbridge admissions.`;
-    }
-  };
-
-  const emphasizeOpportunities = () => {
-    const childName = ctx.childName || 'your child';
-    
-    // Adventure training emphasis
-    const adventureTraining = root.querySelector('.adventure-training');
-    if (adventureTraining && ctx.activities?.includes('outdoor-education')) {
-      adventureTraining.textContent = `Perfect for ${childName} - mountain expeditions, sailing voyages, and outdoor challenges that build on existing outdoor education interests.`;
-    }
-    
-    // Career insights emphasis
-    const careerInsights = root.querySelector('.career-insights');
-    if (careerInsights) {
-      if (ctx.universityAspirations === 'Oxford or Cambridge') {
-        careerInsights.textContent = `Gain valuable leadership experience and connections that strengthen Oxbridge applications and future career prospects.`;
-      } else if (ctx.activities?.includes('leadership')) {
-        careerInsights.textContent = `Develop leadership experience and networks for ${childName}'s future career, whether in military, business, or public service.`;
-      }
-    }
-    
-    // Leadership feature emphasis
-    const leadershipFeature = root.querySelector('.leadership-feature');
-    if (leadershipFeature && ctx.activities?.includes('leadership')) {
-      leadershipFeature.textContent = `Perfect for ${childName} - develop advanced leadership skills that will benefit university applications and future careers.`;
-    }
-
-    // Adventure feature emphasis
-    const adventureFeature = root.querySelector('.adventure-feature');
-    if (adventureFeature && ctx.activities?.includes('outdoor-education')) {
-      adventureFeature.textContent = `${childName} will thrive on CCF's challenging expeditions, from mountain training to survival courses.`;
-    }
-  };
-
-  // Video and interaction management
-  const setupVideoAndInteractions = () => {
-    const iframe = root.querySelector('.ccf-video-iframe');
-    const soundControl = root.querySelector('.ccf-sound-control');
-    const soundIcon = root.querySelector('.ccf-sound-icon');
-    const heroContent = root.querySelector('.ccf-hero-content');
-    const heroSection = root.querySelector('.ccf-hero-wrapper');
-    
-    // PROPER LAZY LOAD: Use IntersectionObserver to load video only when hero is actually visible
-    if (iframe && iframe.dataset.src && !iframe.src && heroSection) {
-      const videoObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            // NOW load the video when hero section is actually in view
-            iframe.src = iframe.dataset.src;
-            iframe.removeAttribute('data-src');
-            videoObserver.unobserve(heroSection);
-          }
-        });
-      }, { threshold: 0.1 });
-      
-      videoObserver.observe(heroSection);
-    }
-    
-    // Hide hero content after 20 seconds
-    if (heroContent) {
-      setTimeout(() => {
-        heroContent.classList.add('hide');
-      }, 20000);
-    }
-    
-    // Sound control
-    let isMuted = true;
-    if (soundControl && iframe) {
-      soundControl.addEventListener('click', () => {
-        if (isMuted) {
-          // Unmute
-          const src = iframe.src;
-          iframe.src = src.replace('mute=1', 'mute=0');
-          soundIcon.textContent = '🔊';
-          isMuted = false;
-        } else {
-          // Mute
-          const src = iframe.src;
-          iframe.src = src.replace('mute=0', 'mute=1');
-          soundIcon.textContent = '🔇';
-          isMuted = true;
-        }
-      });
-    }
-    
-    // Auto-mute when scrolling away from video
-    if (heroSection && iframe) {
-      const checkVideoVisibility = () => {
-        const rect = heroSection.getBoundingClientRect();
-        const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
-        
-        if (!isVisible && !isMuted) {
-          const src = iframe.src;
-          iframe.src = src.replace('mute=0', 'mute=1');
-          soundIcon.textContent = '🔇';
-          isMuted = true;
-        }
-      };
-      
-      window.addEventListener('scroll', checkVideoVisibility, { passive: true });
-    }
-  };
-
-  // Initialize module
   updateNames();
-  addConditionalContent();
-  setupVideoAndInteractions();
-  
-  // Lazy load any images
-  if (typeof hydrateLazyAssets === 'function') {
-    hydrateLazyAssets(root);
+
+  // ---------- Media wiring (MP4) ----------
+  const video   = $('.ccf-video');
+  const muteBtn = $('.ccf-mute-toggle');
+
+  if (!video) {
+    console.warn('CCF: .ccf-video not found in this module root');
+    return;
   }
+
+  // Required for iOS inline behaviour & muted autoplay policies
+  video.muted = true;
+  video.playsInline = true;
+
+  // Play/pause based on visibility of THIS video only (prevents hero interference)
+  const observer = new IntersectionObserver((entries) => {
+    for (const entry of entries) {
+      if (entry.target !== video) continue;
+      if (entry.isIntersecting) {
+        // Try to play when in view; ignore if user hasn’t interacted yet
+        video.play().catch(() => { /* autoplay may be blocked; fine when muted */ });
+      } else {
+        video.pause();
+      }
+    }
+  }, { threshold: 0.35 });
+  observer.observe(video);
+
+  // Mute toggle (scoped)
+  const syncMuteUi = () => {
+    if (!muteBtn) return;
+    const unmuted = !video.muted;
+    muteBtn.setAttribute('aria-pressed', String(unmuted));
+    muteBtn.textContent = video.muted ? 'Unmute' : 'Mute';
+  };
+  syncMuteUi();
+
+  if (muteBtn) {
+    muteBtn.addEventListener('click', () => {
+      video.muted = !video.muted;
+      syncMuteUi();
+      if (!video.muted && video.paused) {
+        // If user unmutes and autoplay was blocked, try playing now
+        video.play().catch(() => {});
+      }
+    });
+  }
+
+  // ---------- Defensive cleanup when this module is torn down ----------
+  const teardown = () => {
+    try { observer.disconnect(); } catch (e) {}
+    if (muteBtn) muteBtn.replaceWith(muteBtn.cloneNode(true)); // cheap remove all listeners
+  };
+
+  // If your framework dispatches a teardown event per module, listen for it:
+  root.addEventListener('module:teardown', teardown);
 };
+
 
 /* ====== Loader (fetch + mount on intersection) ====== */
 /* ====== Updated Module Loader with CSS Support ====== */
