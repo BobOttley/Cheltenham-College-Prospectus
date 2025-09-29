@@ -1018,7 +1018,7 @@ MODULES['sports'] = (root, ctx) => {
     observer.observe(heroSection);
   };
 
-  // FIXED: Setup unmute buttons for MP4 videos - NOW WORKS PROPERLY
+  // FIXED: Setup unmute buttons for MP4 videos - NOW WORKS FOR BOTH MUTE AND UNMUTE
   const setupUnmute = () => {
     const unmuteButtons = root.querySelectorAll('.unmute-btn, .sports-unmute-btn');
 
@@ -1040,23 +1040,25 @@ MODULES['sports'] = (root, ctx) => {
           return;
         }
 
-        primeVideo(video); // ensure autoplay-safe attributes
+        // Ensure video has source
         ensureSrcFromData(video);
-        
-        // Try to play if paused
-        if (video.paused) { 
-          video.play().catch((err) => {
-            console.error('Could not play video:', err);
-          });
-        }
 
-        // Toggle mute state
+        // Toggle mute state FIRST before trying to play
         if (video.muted) {
+          // Unmute
           video.muted = false;
           video.volume = 1.0; // Ensure volume is up
           btn.innerHTML = '🔇 Click to Mute';
           console.log('Video unmuted, volume:', video.volume);
+          
+          // Try to play if paused
+          if (video.paused) { 
+            video.play().catch((err) => {
+              console.error('Could not play video:', err);
+            });
+          }
         } else {
+          // Mute
           video.muted = true;
           btn.innerHTML = '🔊 Click for Sound';
           console.log('Video muted');
@@ -1065,27 +1067,37 @@ MODULES['sports'] = (root, ctx) => {
     });
   };
 
-  // Auto-mute videos when scrolling away
+  // Auto-mute videos when scrolling away - FIXED TO ACTUALLY WORK
   const setupAutoMute = () => {
-    const videos = root.querySelectorAll('video');
-
     const checkVideoVisibility = () => {
-      videos.forEach(video => {
-        if (video.src && !video.paused) {
-          const rect = video.getBoundingClientRect();
-          const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
-
-          if (!isVisible && !video.muted) {
-            video.muted = true;
-            const section = video.closest('.sport-hero');
-            const btn = section?.querySelector('.unmute-btn, .sports-unmute-btn');
-            if (btn) btn.innerHTML = '🔊 Click for Sound';
-          }
-        }
-      });
+      const activeSection = root.querySelector('.sport-section.active');
+      if (!activeSection) return;
+      
+      const video = activeSection.querySelector('video.hero-video') || 
+                    activeSection.querySelector('video.gender-video');
+      if (!video || !video.src) return;
+      
+      const rect = video.getBoundingClientRect();
+      const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+      
+      // If video is out of view and not muted, mute it
+      if (!isVisible && !video.muted) {
+        video.muted = true;
+        const btn = activeSection.querySelector('.unmute-btn, .sports-unmute-btn');
+        if (btn) btn.innerHTML = '🔊 Click for Sound';
+        console.log('Video auto-muted - scrolled out of view');
+      }
     };
 
-    window.addEventListener('scroll', checkVideoVisibility, { passive: true });
+    // Check on scroll with throttling
+    let scrollTimer;
+    window.addEventListener('scroll', () => {
+      if (scrollTimer) return;
+      scrollTimer = setTimeout(() => {
+        scrollTimer = null;
+        checkVideoVisibility();
+      }, 100);
+    }, { passive: true });
   };
 
   // Filter sports cards by gender
