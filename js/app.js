@@ -1521,23 +1521,10 @@ MODULES['ccf'] = (root, ctx) => {
     const soundControl = root.querySelector('.ccf-sound-control');
     const soundIcon = root.querySelector('.ccf-sound-icon');
     const heroContent = root.querySelector('.ccf-hero-content');
-    const heroSection = root.querySelector('.ccf-hero-wrapper');
     
-    // PROPER LAZY LOAD: Use IntersectionObserver to load video only when hero is actually visible
-    if (video && video.dataset.src && !video.src && heroSection) {
-      const videoObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            // NOW load the video when hero section is actually in view
-            video.src = video.dataset.src;
-            video.removeAttribute('data-src');
-            video.play().catch(e => console.log('CCF video autoplay prevented:', e));
-            videoObserver.unobserve(heroSection);
-          }
-        });
-      }, { threshold: 0.1 });
-      
-      videoObserver.observe(heroSection);
+    // Video should autoplay with the autoplay attribute, but ensure it's muted
+    if (video) {
+      video.muted = true;
     }
     
     // Hide hero content after 20 seconds
@@ -1561,9 +1548,9 @@ MODULES['ccf'] = (root, ctx) => {
     }
     
     // Auto-mute when scrolling away from video
-    if (heroSection && video) {
+    if (video) {
       const checkVideoVisibility = () => {
-        const rect = heroSection.getBoundingClientRect();
+        const rect = video.getBoundingClientRect();
         const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
         
         if (!isVisible && !video.muted) {
