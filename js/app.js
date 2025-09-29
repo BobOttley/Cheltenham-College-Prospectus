@@ -1443,20 +1443,7 @@ MODULES['ccf'] = (root, ctx) => {
   // Scoped helpers
   const $  = (sel, p = root) => p.querySelector(sel);
   const $$ = (sel, p = root) => Array.from(p.querySelectorAll(sel));
-  const video = $('.ccf-video');
-  const audioBtn = $('#ccfAudioToggle');
-  const audioIcon = $('#ccfAudioIcon');
 
-  if (video) {
-    video.play().catch(() => {});
-    
-    if (audioBtn) {
-      audioBtn.addEventListener('click', () => {
-        video.muted = !video.muted;
-        audioIcon.textContent = video.muted ? 'Click to unmute' : 'Click to mute';
-      });
-    }
-  }
   // Personalisation: child name in overlay (scoped)
   const applyNames = () => {
     const name = (ctx?.childName || '').trim();
@@ -1467,13 +1454,13 @@ MODULES['ccf'] = (root, ctx) => {
   };
   applyNames();
 
-  // Video + mute UX (same pattern as hero)
+  // Video + mute UX
   let isMuted = true;
-  const video         = $('.ccf-video');
-  const audioBtn      = $('#ccfAudioToggle');
-  const audioIcon     = $('#ccfAudioIcon');
-  const overlay       = $('#ccfOverlay');
-  const scrollHint    = $('#ccfScrollIndicator');
+  const video = $('.ccf-video');
+  const audioBtn = $('#ccfAudioToggle');
+  const audioIcon = $('#ccfAudioIcon');
+  const overlay = $('#ccfOverlay');
+  const scrollHint = $('#ccfScrollIndicator');
 
   if (!video) {
     console.warn('CCF: video element not found');
@@ -1481,11 +1468,8 @@ MODULES['ccf'] = (root, ctx) => {
   }
 
   // Initialise video state
-  try {
-    video.muted = isMuted;
-    // Some mobile browsers need a play attempt after user gesture; we rely on muted autoplay like hero
-    // No controls attribute in HTML => no native play button visible
-  } catch (e) {}
+  video.muted = isMuted;
+  video.play().catch(() => console.log('CCF video autoplay blocked'));
 
   const updateMuteLabel = () => {
     if (!audioIcon) return;
@@ -1497,11 +1481,14 @@ MODULES['ccf'] = (root, ctx) => {
     isMuted = !isMuted;
     video.muted = isMuted;
     updateMuteLabel();
+    if (!isMuted && video.paused) {
+      video.play().catch(() => {});
+    }
   };
 
   if (audioBtn) audioBtn.addEventListener('click', toggleAudio, { passive: true });
 
-  // Auto-mute on scroll (same safety as hero)
+  // Auto-mute on scroll
   const handleScroll = () => {
     if (window.scrollY > 50 && !video.muted) {
       isMuted = true;
@@ -1511,7 +1498,7 @@ MODULES['ccf'] = (root, ctx) => {
   };
   window.addEventListener('scroll', handleScroll, { passive: true });
 
-  // Optional: mirror hero’s timed overlay move + show scroll hint
+  // Timed overlay move + show scroll hint
   setTimeout(() => {
     if (overlay) overlay.classList.add('move-bottom');
     if (scrollHint) setTimeout(() => scrollHint.classList.add('show'), 300);
