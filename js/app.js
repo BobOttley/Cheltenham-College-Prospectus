@@ -1125,7 +1125,7 @@ MODULES['sports'] = (root, ctx) => {
     });
   };
 
-  // Add personalised sports content
+  // FIXED: Add personalised sports content - NOW WITH PROPER FALLBACK
   const addSportsContent = () => {
     const childName = ctx.childName || 'Child';
 
@@ -1279,41 +1279,80 @@ MODULES['sports'] = (root, ctx) => {
       }
     };
 
-    // Update top sport cards
+    // FIXED: Update top sport cards with proper fallback
     const topCards = root.querySelectorAll('.top-sport-card');
-    if (topCards.length > 0 && specificSports.length > 0) {
-      topCards.forEach((card, index) => {
-        if (index < specificSports.length) {
-          const sport = specificSports[index];
+    
+    if (topCards.length > 0) {
+      // If we have specific sports, populate with those
+      if (specificSports.length > 0) {
+        topCards.forEach((card, index) => {
+          if (index < specificSports.length) {
+            const sport = specificSports[index];
 
-          const badge = card.querySelector('.top-sport-badge');
-          const title = card.querySelector('.sport-name');
-          const details = card.querySelector('.sport-details');
-          const highlightEl = card.querySelector('.sport-highlight');
+            const badge = card.querySelector('.top-sport-badge');
+            const title = card.querySelector('.sport-name');
+            const details = card.querySelector('.sport-details');
+            const highlightEl = card.querySelector('.sport-highlight');
 
-          if (badge) badge.innerHTML = `<span class="child-name">${childName.toUpperCase()}</span>'S CHOICE #${index + 1}`;
+            if (badge) badge.innerHTML = `<span class="child-name">${childName.toUpperCase()}</span>'S CHOICE #${index + 1}`;
 
-          if (sportDetails[sport]) {
-            if (title) title.textContent = sportDetails[sport].title;
-            if (details) details.textContent = sportDetails[sport].details;
-            if (highlightEl) highlightEl.textContent = sportDetails[sport].highlight;
+            if (sportDetails[sport]) {
+              if (title) title.textContent = sportDetails[sport].title;
+              if (details) details.textContent = sportDetails[sport].details;
+              if (highlightEl) highlightEl.textContent = sportDetails[sport].highlight;
+            } else {
+              if (title) title.textContent = sport;
+              if (details) details.textContent = `${childName}, you'll develop your ${sport.toLowerCase()} skills with our professional coaching and excellent facilities.`;
+              if (highlightEl) highlightEl.textContent = `Excellence in ${sport} • Perfect for ${childName}`;
+            }
+
+            // Ensure card is visible
+            card.style.display = 'block';
+            card.style.opacity = '1';
+            card.style.visibility = 'visible';
           } else {
-            if (title) title.textContent = sport;
-            if (details) details.textContent = `${childName}, you'll develop your ${sport.toLowerCase()} skills with our professional coaching and excellent facilities.`;
-            if (highlightEl) highlightEl.textContent = `Excellence in ${sport} • Perfect for ${childName}`;
+            // Hide extra cards if we have fewer sports than cards
+            card.style.display = 'none';
           }
+        });
+      } else {
+        // NO SPECIFIC SPORTS - Show default popular sports instead of hiding everything
+        const defaultSports = ['Hockey', 'Athletics', 'Tennis'];
+        
+        topCards.forEach((card, index) => {
+          if (index < defaultSports.length) {
+            const sport = defaultSports[index];
+            
+            const badge = card.querySelector('.top-sport-badge');
+            const title = card.querySelector('.sport-name');
+            const details = card.querySelector('.sport-details');
+            const highlightEl = card.querySelector('.sport-highlight');
 
-          card.style.display = 'block';
-        } else {
-          card.style.display = 'none';
-        }
-      });
-    } else {
-      topCards.forEach(card => { card.style.display = 'none'; });
-      const topSportsSection = root.querySelector('.student-sports-section');
-      if (topSportsSection && specificSports.length === 0) {
-        topSportsSection.style.display = 'none';
+            if (badge) badge.textContent = `TOP SPORT`;
+
+            if (sportDetails[sport]) {
+              if (title) title.textContent = sportDetails[sport].title;
+              if (details) details.textContent = sportDetails[sport].details;
+              if (highlightEl) highlightEl.textContent = sportDetails[sport].highlight;
+            }
+
+            // Ensure card is visible
+            card.style.display = 'block';
+            card.style.opacity = '1';
+            card.style.visibility = 'visible';
+          } else {
+            card.style.display = 'none';
+          }
+        });
       }
+    }
+    
+    // Don't hide the entire section even if no specific sports
+    const topSportsSection = root.querySelector('.student-sports-section');
+    if (topSportsSection) {
+      topSportsSection.style.display = 'block';
+      topSportsSection.style.opacity = '1';
+      topSportsSection.style.visibility = 'visible';
     }
   };
 
