@@ -363,22 +363,28 @@
   font-style: italic;
 }
 
-/* --- TOP SPORTS CARDS --- */
+/* --- TOP SPORTS CARDS - ENSURE THEY'RE VISIBLE AND MOBILE FRIENDLY --- */
 .mod--sports .top-sports-grid {
-  display: grid;
+  display: grid !important;
   grid-template-columns: repeat(3, 1fr);
   gap: 2.5rem;
   margin-bottom: 4rem;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
 .mod--sports .top-sport-card {
-  background: linear-gradient(135deg, #f8f6f1 0%, #ffffff 100%);
-  padding: 2.5rem;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0,0,0,.1);
-  border: 2px solid #c9a961;
+  background: linear-gradient(135deg, #f8f6f1 0%, #ffffff 100%) !important;
+  padding: 2.5rem !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,.1) !important;
+  border: 2px solid #c9a961 !important;
   transition: transform .2s ease, box-shadow .2s ease;
   position: relative;
+  opacity: 1 !important;
+  visibility: visible !important;
+  /* Ensure these cards KEEP their backgrounds */
+  backdrop-filter: none !important;
 }
 
 .mod--sports .top-sport-card:hover {
@@ -390,8 +396,8 @@
   position: absolute;
   top: -15px;
   right: 20px;
-  background: #c9a961;
-  color: #fff;
+  background: #c9a961 !important;
+  color: #fff !important;
   padding: .45rem 1.25rem;
   border-radius: 20px;
   font-size: .8rem;
@@ -402,24 +408,147 @@
 
 .mod--sports .sport-name {
   font-size: 1.8rem;
-  color: #1e3a5f;
+  color: #1e3a5f !important;
   margin-bottom: .8rem;
   font-weight: 300;
   font-family: Georgia, "Times New Roman", serif;
+  background: none !important;
 }
 
 .mod--sports .sport-details {
-  color: #666;
+  color: #666 !important;
   line-height: 1.8;
   margin-bottom: 1.25rem;
+  background: none !important;
 }
 
 .mod--sports .sport-highlight {
-  color: #c9a961;
+  color: #c9a961 !important;
   font-weight: 700;
   text-transform: uppercase;
   font-size: .85rem;
   letter-spacing: .1em;
+  background: none !important;
+}
+
+/* Ensure the section is visible */
+.mod--sports .student-sports-section {
+  display: block !important;
+  background: #fff !important;
+  padding: 5rem 2rem;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.mod--sports .student-sports-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* MOBILE RESPONSIVE FOR TOP SPORTS CARDS */
+/* Tablet - 2 columns */
+@media (max-width: 1024px) {
+  .mod--sports .top-sports-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 2rem !important;
+    padding: 0 1.5rem;
+  }
+  
+  .mod--sports .top-sport-card {
+    padding: 2rem !important;
+  }
+  
+  .mod--sports .sport-name {
+    font-size: 1.6rem;
+  }
+}
+
+/* Mobile - Single column */
+@media (max-width: 768px) {
+  .mod--sports .top-sports-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+    padding: 0 1rem;
+    max-width: 500px;
+    margin: 0 auto 3rem;
+  }
+  
+  .mod--sports .top-sport-card {
+    padding: 1.5rem !important;
+    margin: 0;
+    width: 100%;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08) !important;
+  }
+  
+  .mod--sports .top-sport-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12) !important;
+  }
+  
+  .mod--sports .top-sport-badge {
+    top: -12px;
+    right: 15px;
+    padding: 0.35rem 1rem;
+    font-size: 0.75rem;
+  }
+  
+  .mod--sports .sport-name {
+    font-size: 1.4rem !important;
+    margin-bottom: 0.6rem;
+  }
+  
+  .mod--sports .sport-details {
+    font-size: 0.95rem !important;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+  
+  .mod--sports .sport-highlight {
+    font-size: 0.8rem !important;
+  }
+  
+  .mod--sports .student-sports-section {
+    padding: 3rem 1rem !important;
+  }
+}
+
+/* Small mobile */
+@media (max-width: 480px) {
+  .mod--sports .top-sports-grid {
+    gap: 1rem !important;
+    padding: 0 0.75rem;
+  }
+  
+  .mod--sports .top-sport-card {
+    padding: 1.25rem !important;
+  }
+  
+  .mod--sports .sport-name {
+    font-size: 1.25rem !important;
+  }
+  
+  .mod--sports .sport-details {
+    font-size: 0.85rem !important;
+  }
+  
+  .mod--sports .top-sport-badge {
+    font-size: 0.7rem;
+    padding: 0.3rem 0.8rem;
+  }
+}
+
+/* Touch-friendly on mobile */
+@media (hover: none) and (pointer: coarse) {
+  .mod--sports .top-sport-card:hover {
+    transform: none;
+  }
+  
+  .mod--sports .top-sport-card:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
 }
 
 /* --- EXCELLENCE SECTION --- */
