@@ -112,22 +112,31 @@
   z-index: 2;
 }
 
-/* --- HERO TEXT OVERLAY (NO WHITE TILES) --- */
-.mod--sports .hero-content {
-  position: absolute;
-  bottom: 80px;
-  left: 50%;
-  transform: translateX(-50%);
-  text-align: center;
-  color: #fff;
-  z-index: 3;
-  width: min(90%, 1200px);
-  transition: opacity .6s ease, transform .6s ease;
-  /* Remove all background styling */
+/* --- HERO TEXT OVERLAY - EXACTLY LIKE HERO MODULE (NO WHITE TILES) --- */
+
+/* FORCE REMOVE ALL WHITE TILES/BACKGROUNDS */
+.mod--sports .hero-content,
+.mod--sports .hero-content * {
   background: none !important;
+  background-color: transparent !important;
   backdrop-filter: none !important;
   box-shadow: none !important;
+  border: none !important;
+  border-radius: 0 !important;
+}
+
+.mod--sports .hero-content {
+  position: absolute !important;
+  bottom: 80px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  text-align: center !important;
+  color: #fff !important;
+  z-index: 3 !important;
+  width: min(90%, 1200px) !important;
+  transition: opacity .6s ease, transform .6s ease !important;
   padding: 0 !important;
+  margin: 0 !important;
 }
 
 .mod--sports .hero-content.hide {
@@ -136,81 +145,118 @@
   pointer-events: none;
 }
 
-/* Text elements with shadows for visibility */
+/* STUDENT NAME - STYLED EXACTLY LIKE HERO */
 .mod--sports .student-name {
-  font-size: 3rem;
-  letter-spacing: .28em;
-  text-transform: uppercase;
-  color: #c9a961;
-  margin-bottom: .75rem;
-  font-weight: 700;
+  /* Force no backgrounds */
+  background: none !important;
+  background-color: transparent !important;
+  padding: 0 !important;
+  margin: 0 0 0.75rem 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  
+  /* Text styling matching hero */
+  font-size: 3rem !important;
+  letter-spacing: .28em !important;
+  text-transform: uppercase !important;
+  color: #c9a961 !important;
+  font-weight: 700 !important;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5) !important;
   animation: fadeInUp .6s ease;
-  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7),
-               0px 0px 20px rgba(0, 0, 0, 0.5);
-  /* Remove any background */
-  background: none !important;
-  padding: 0 !important;
 }
 
+/* HERO TITLE - STYLED EXACTLY LIKE HERO MODULE */
 .mod--sports .hero-title {
-  font-size: 4rem;
-  font-weight: 300;
-  margin-bottom: 1.25rem;
-  line-height: 1.1;
-  color: #ffffff;
+  /* Force no backgrounds */
+  background: none !important;
+  background-color: transparent !important;
+  padding: 0 !important;
+  margin: 0 0 1.25rem 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  
+  /* Text styling matching hero module */
+  font-family: Georgia, 'Times New Roman', serif !important;
+  font-size: 4rem !important;
+  font-weight: 300 !important;
+  line-height: 1.1 !important;
+  color: white !important;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5) !important;
   animation: fadeInUp .6s ease .12s both;
-  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8),
-               0px 0px 30px rgba(0, 0, 0, 0.6);
-  /* Remove any background */
-  background: none !important;
-  padding: 0 !important;
 }
 
+/* HERO SUBTITLE - STYLED EXACTLY LIKE HERO */
 .mod--sports .hero-subtitle {
-  font-size: 1.5rem;
-  font-weight: 300;
-  color: #ffffff;
-  margin-bottom: 1.75rem;
-  animation: fadeInUp .6s ease .22s both;
-  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7),
-               0px 0px 20px rgba(0, 0, 0, 0.5);
-  /* Remove any background */
+  /* Force no backgrounds */
   background: none !important;
+  background-color: transparent !important;
   padding: 0 !important;
+  margin: 0 0 1.75rem 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  
+  /* Text styling */
+  font-size: 1.5rem !important;
+  font-weight: 300 !important;
+  color: white !important;
+  opacity: 0.95 !important;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.5) !important;
+  animation: fadeInUp .6s ease .22s both;
 }
 
-/* Stats row */
+/* STATS ROW - NO BACKGROUNDS */
 .mod--sports .sport-stats {
   display: flex;
   justify-content: center;
   gap: 3rem;
   margin-top: 2.5rem;
   animation: fadeInUp .6s ease .32s both;
-  /* Remove any background */
+  /* Force no backgrounds */
   background: none !important;
+  background-color: transparent !important;
   padding: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 .mod--sports .stat-item {
   text-align: center;
   min-width: 120px;
   flex: 1;
-  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
+  /* Force no backgrounds */
+  background: none !important;
+  background-color: transparent !important;
+  padding: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 .mod--sports .stat-number {
-  font-size: 2.6rem;
-  color: #c9a961;
-  font-weight: 700;
+  font-size: 2.6rem !important;
+  color: #c9a961 !important;
+  font-weight: 700 !important;
   display: block;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5) !important;
+  /* Force no backgrounds */
+  background: none !important;
+  background-color: transparent !important;
+  padding: 0 !important;
+  border: none !important;
 }
 
 .mod--sports .stat-label {
-  font-size: .9rem;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  margin-top: .4rem;
-  color: #ffffff;
+  font-size: .9rem !important;
+  letter-spacing: .1em !important;
+  text-transform: uppercase !important;
+  margin-top: .4rem !important;
+  color: white !important;
+  opacity: 0.9 !important;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.5) !important;
+  /* Force no backgrounds */
+  background: none !important;
+  background-color: transparent !important;
+  padding: 0 !important;
+  border: none !important;
 }
 
 /* Unmute button */
