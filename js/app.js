@@ -4579,47 +4579,79 @@ MODULES['final_hero'] = (root, ctx) => {
   
   console.log('Final Hero module initialized for:', ctx.childName);
 };
-// ===== COLLAPSIBLE NAVIGATION FOR MOBILE - AT THE VERY END =====
+// ===== COLLAPSIBLE NAVIGATION FOR MOBILE - FIXED VERSION =====
 function setupCollapsibleNav(root) {
   if (window.innerWidth > 768) return;
   
-  const navSelectors = [
-    { nav: '.av-nav', title: '.av-nav-title' },
-    { nav: '.sm-nav', title: '.sm-nav-title' },
-    { nav: '.lc-subject-nav', title: '.lc-nav-title' },
-    { nav: '.section-nav', title: '.nav-title' },
-    { nav: '.subject-nav', title: '.nav-title' },
-    { nav: '.hum-nav', title: '.hum-nav-title' },
-    { nav: '.us-nav', title: '.us-nav-title' }
-  ];
+  // Find navigation containers and titles based on module type
+  const moduleType = root.className.match(/mod--(\w+)/)?.[1];
+  if (!moduleType) return;
   
-  navSelectors.forEach(config => {
-    const navElement = root.querySelector(config.nav);
-    const titleElement = navElement?.querySelector(config.title);
+  let navElement, titleElement;
+  
+  // Match the navigation based on module type
+  switch(moduleType) {
+    case 'applied_vocational':
+      navElement = root.querySelector('.av-nav');
+      titleElement = navElement?.querySelector('.av-nav-title');
+      break;
+    case 'sciences_mathematics':
+      navElement = root.querySelector('.sm-nav');
+      titleElement = navElement?.querySelector('.sm-nav-title');
+      break;
+    case 'languages_classics':
+      navElement = root.querySelector('.lc-subject-nav');
+      titleElement = navElement?.querySelector('.lc-nav-title');
+      break;
+    case 'third_form_humanities':
+      navElement = root.querySelector('.hum-nav');
+      titleElement = navElement?.querySelector('.hum-nav-title');
+      break;
+    case 'upper_school':
+      navElement = root.querySelector('.us-nav');
+      titleElement = navElement?.querySelector('.us-nav-title');
+      break;
+    default:
+      navElement = root.querySelector('.section-nav, .subject-nav');
+      titleElement = navElement?.querySelector('.nav-title');
+  }
+  
+  if (titleElement && navElement && !titleElement._hasClickHandler) {
+    titleElement._hasClickHandler = true;
     
-    if (titleElement && navElement && !titleElement._collapsible) {
-      titleElement._collapsible = true;
-      
-      titleElement.addEventListener('click', function(e) {
-        e.preventDefault();
-        navElement.classList.toggle('expanded');
-      });
-    }
-  });
+    titleElement.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      navElement.classList.toggle('expanded');
+    });
+  }
 }
 
-// Hook into existing mount function
-const _originalMount = mountPlaceholder;
-window.mountPlaceholder = async function(ph) {
-  await _originalMount(ph);
-  const key = ph.getAttribute('data-mod');
-  const module = document.querySelector(`.mod--${key}`);
-  if (module) setupCollapsibleNav(module);
-};
-
-// Setup on resize
+// Apply to all loaded modules on resize
 window.addEventListener('resize', () => {
   if (window.innerWidth <= 768) {
-    document.querySelectorAll('.mod').forEach(setupCollapsibleNav);
+    setTimeout(() => {
+      document.querySelectorAll('.mod').forEach(setupCollapsibleNav);
+    }, 100);
+  }
+});
+
+// Apply when modules load
+const _origMount = window.mountPlaceholder || mountPlaceholder;
+window.mountPlaceholder = async function(ph) {
+  await _origMount(ph);
+  setTimeout(() => {
+    const key = ph.getAttribute('data-mod');
+    const module = document.querySelector(`.mod--${key}`);
+    if (module) setupCollapsibleNav(module);
+  }, 100);
+};
+
+// Initial setup
+document.addEventListener('DOMContentLoaded', () => {
+  if (window.innerWidth <= 768) {
+    setTimeout(() => {
+      document.querySelectorAll('.mod').forEach(setupCollapsibleNav);
+    }, 500);
   }
 });
