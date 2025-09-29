@@ -1437,12 +1437,12 @@ MODULES['sports'] = (root, ctx) => {
 };
 
 /* CCF Module initializer - Add to MODULES object in app.js */
-/* CCF Module initializer - Fully Mobile Optimized */
+/* CCF Module initializer - Using exact Sports module pattern */
 MODULES['ccf'] = (root, ctx) => {
-  // Detect mobile and touch devices
-  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-  const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-  const isSmallScreen = window.matchMedia('(max-width: 768px)').matches;
+  console.log('=== CCF MODULE INIT ===');
+  
+  // Track current video
+  let currentVideo = null;
   
   // Update name placeholders
   const updateNames = () => {
@@ -1495,307 +1495,171 @@ MODULES['ccf'] = (root, ctx) => {
     }
   };
 
-  // Video and interaction management for MP4 - Mobile Optimized
-  const setupVideoAndInteractions = () => {
-    const video = root.querySelector('.ccf-hero-video');
-    const soundControl = root.querySelector('.ccf-sound-control');
-    const soundIcon = root.querySelector('.ccf-sound-icon');
-    const heroContent = root.querySelector('.ccf-hero-content');
+  // EXACT SAME VIDEO FUNCTIONS AS SPORTS MODULE
+  const primeVideo = (video) => {
+    if (!video) return;
+    video.setAttribute('muted', '');
+    video.setAttribute('loop', '');
+    video.setAttribute('playsinline', '');
+    video.setAttribute('webkit-playsinline', '');
+    video.muted = true;
+    video.loop = true;
+    video.playsInline = true;
+  };
+
+  const stopVideo = (video) => {
+    if (!video) return;
+    video.pause();
+    video.currentTime = 0;
+  };
+
+  const ensureSrcFromData = (video) => {
+    if (!video) return;
+    const ds = video.getAttribute('data-src');
+    if (ds && video.src !== ds) {
+      video.src = ds;
+      video.removeAttribute('data-src');
+    }
+  };
+
+  const loadVideo = (video) => {
+    if (!video) {
+      console.error('No video element provided to loadVideo');
+      return;
+    }
+
+    console.log('Loading CCF video');
+
+    if (currentVideo && currentVideo !== video) {
+      stopVideo(currentVideo);
+    }
+
+    primeVideo(video);
+    ensureSrcFromData(video);
+
+    video.play().then(() => {
+      console.log('CCF video playing successfully');
+    }).catch(e => {
+      console.log('Autoplay deferred until interaction:', e?.name || e);
+    });
+
+    currentVideo = video;
+  };
+
+  // LAZY VIDEO LOADING - EXACT SAME AS SPORTS MODULE
+  const setupVideoLazyLoading = () => {
     const heroSection = root.querySelector('.ccf-hero-wrapper');
+    const video = root.querySelector('.ccf-hero-video');
+    
+    if (!heroSection || !video) {
+      console.error('CCF: Hero section or video not found');
+      return;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          console.log('CCF module hero entered viewport - starting video');
+          loadVideo(video);
+          observer.unobserve(heroSection);
+        }
+      });
+    }, {
+      threshold: 0.4,
+      rootMargin: '0px 0px -10% 0px'
+    });
+
+    observer.observe(heroSection);
+  };
+
+  // Setup unmute button - SAME AS SPORTS
+  const setupUnmute = () => {
+    const soundControl = root.querySelector('.ccf-sound-control');
+    const video = root.querySelector('.ccf-hero-video');
+    const soundIcon = root.querySelector('.ccf-sound-icon');
+
+    if (!soundControl || !video) return;
+
+    soundControl.addEventListener('click', () => {
+      console.log('CCF unmute button clicked');
+      
+      primeVideo(video);
+      ensureSrcFromData(video);
+      
+      if (video.paused) {
+        video.play().catch(() => {});
+      }
+
+      if (video.muted) {
+        video.muted = false;
+        soundIcon.textContent = '🔇';
+      } else {
+        video.muted = true;
+        soundIcon.textContent = '🔊';
+      }
+    });
+  };
+
+  // Auto-mute when scrolling - SAME AS SPORTS
+  const setupAutoMute = () => {
+    const video = root.querySelector('.ccf-hero-video');
+    const soundIcon = root.querySelector('.ccf-sound-icon');
     
     if (!video) return;
-    
-    // Helper functions for video
-    const primeVideo = (videoElement) => {
-      if (!videoElement) return;
-      
-      // Essential attributes for mobile autoplay
-      videoElement.setAttribute('muted', '');
-      videoElement.setAttribute('loop', '');
-      videoElement.setAttribute('playsinline', '');
-      videoElement.setAttribute('webkit-playsinline', '');
-      videoElement.setAttribute('x5-playsinline', '');
-      videoElement.setAttribute('x5-video-player-type', 'h5');
-      videoElement.setAttribute('x5-video-player-fullscreen', 'false');
-      
-      // Set properties directly
-      videoElement.muted = true;
-      videoElement.loop = true;
-      videoElement.playsInline = true;
-      videoElement.defaultMuted = true;
-      
-      // Mobile-specific: disable controls to prevent native player
-      if (isMobile) {
-        videoElement.controls = false;
-      }
-    };
 
-    const loadVideoSource = (videoElement) => {
-      if (!videoElement) return;
-      const dataSrc = videoElement.getAttribute('data-src');
-      if (dataSrc && !videoElement.src) {
-        videoElement.src = dataSrc;
-        videoElement.removeAttribute('data-src');
-        
-        // Preload strategy for mobile
-        if (isMobile) {
-          videoElement.preload = 'metadata'; // Save bandwidth on mobile
-        } else {
-          videoElement.preload = 'auto';
-        }
-      }
-    };
+    let lastScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    let scrollTimer = null;
 
-    const startVideoPlayback = async (videoElement) => {
-      if (!videoElement) return;
-      
-      try {
-        // Prime video first
-        primeVideo(videoElement);
+    const handleScroll = () => {
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(() => {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const scrollingDown = scrollTop > lastScrollTop;
         
-        // For mobile, wait for user interaction if needed
-        if (isMobile && videoElement.paused) {
-          // Try to play muted first
-          await videoElement.play();
-        } else {
-          await videoElement.play();
-        }
-        
-        console.log('CCF video playing successfully');
-      } catch (error) {
-        console.log('Video autoplay prevented, will play on user interaction:', error.name);
-        
-        // Set up click-to-play fallback for mobile
-        if (isMobile) {
-          const playOnInteraction = () => {
-            videoElement.play().then(() => {
-              console.log('Video started after user interaction');
-              heroSection.removeEventListener('touchstart', playOnInteraction);
-              heroSection.removeEventListener('click', playOnInteraction);
-            }).catch(e => console.log('Play failed:', e));
-          };
-          
-          heroSection.addEventListener('touchstart', playOnInteraction, { once: true });
-          heroSection.addEventListener('click', playOnInteraction, { once: true });
-        }
-      }
-    };
-
-    // Optimized lazy loading with mobile consideration
-    if (video && heroSection) {
-      // Use different thresholds for mobile vs desktop
-      const observerOptions = {
-        threshold: isMobile ? 0.05 : 0.1, // Lower threshold on mobile
-        rootMargin: isMobile ? '100px 0px' : '50px 0px' // More aggressive on mobile
-      };
-      
-      const videoObserver = new IntersectionObserver((entries) => {
-        entries.forEach(async entry => {
-          if (entry.isIntersecting) {
-            console.log('CCF module entered view - loading video');
-            
-            // Prime video for mobile
-            primeVideo(video);
-            
-            // Load video source
-            loadVideoSource(video);
-            
-            // Wait for metadata to load before playing
-            video.addEventListener('loadedmetadata', async () => {
-              console.log('Video metadata loaded');
-              
-              // Add loaded class for fade-in
-              video.classList.add('loaded');
-              
-              // Start playback
-              await startVideoPlayback(video);
-            }, { once: true });
-            
-            // Fallback for slow connections
-            setTimeout(() => {
-              if (video.readyState >= 2) { // HAVE_CURRENT_DATA
-                startVideoPlayback(video);
-              }
-            }, 1000);
-            
-            videoObserver.unobserve(heroSection);
-          }
-        });
-      }, observerOptions);
-      
-      videoObserver.observe(heroSection);
-    }
-    
-    // Hide hero content after delay (longer on mobile for better readability)
-    if (heroContent) {
-      const hideDelay = isMobile ? 25000 : 20000; // 25s on mobile, 20s on desktop
-      setTimeout(() => {
-        heroContent.classList.add('hide');
-      }, hideDelay);
-    }
-    
-    // Sound control optimized for mobile
-    if (soundControl && video) {
-      // Prevent ghost clicks on mobile
-      soundControl.addEventListener('touchend', (e) => {
-        e.preventDefault();
-      });
-      
-      const toggleSound = () => {
-        // Ensure video is playing first
-        if (video.paused) {
-          video.play().then(() => {
-            toggleMute();
-          }).catch(e => console.log('Play failed:', e));
-        } else {
-          toggleMute();
-        }
-      };
-      
-      const toggleMute = () => {
-        if (video.muted) {
-          // Unmute
-          video.muted = false;
-          soundIcon.textContent = '🔊';
-          
-          // Vibrate on mobile for feedback (if supported)
-          if (isMobile && navigator.vibrate) {
-            navigator.vibrate(50);
-          }
-        } else {
-          // Mute
+        if (scrollingDown && scrollTop > 200 && !video.muted) {
           video.muted = true;
-          soundIcon.textContent = '🔇';
+          if (soundIcon) soundIcon.textContent = '🔇';
+          console.log('CCF video auto-muted on scroll');
         }
-      };
-      
-      // Use appropriate event for device type
-      if (isTouchDevice) {
-        soundControl.addEventListener('click', toggleSound);
-      } else {
-        soundControl.addEventListener('click', toggleSound);
-      }
-    }
-    
-    // Auto-mute when scrolling away (with mobile optimization)
-    if (heroSection && video) {
-      let ticking = false;
-      
-      const checkVideoVisibility = () => {
-        if (!ticking) {
-          window.requestAnimationFrame(() => {
-            const rect = heroSection.getBoundingClientRect();
-            const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
-            
-            if (!isVisible && !video.muted) {
-              video.muted = true;
-              if (soundIcon) soundIcon.textContent = '🔇';
-            }
-            
-            // Pause video when completely out of view on mobile to save battery
-            if (isMobile) {
-              if (!isVisible && !video.paused) {
-                video.pause();
-              } else if (isVisible && video.paused && video.readyState >= 2) {
-                video.play().catch(() => {});
-              }
-            }
-            
-            ticking = false;
-          });
-          ticking = true;
-        }
-      };
-      
-      // Throttled scroll listener
-      window.addEventListener('scroll', checkVideoVisibility, { passive: true });
-    }
-    
-    // Handle orientation changes on mobile
-    if (isMobile) {
-      const handleOrientationChange = () => {
-        setTimeout(() => {
-          if (video && !video.paused) {
-            video.play().catch(() => {});
-          }
-        }, 500);
-      };
-      
-      window.addEventListener('orientationchange', handleOrientationChange);
-      window.addEventListener('resize', handleOrientationChange);
-    }
-    
-    // Visibility API to pause when tab is hidden (saves battery)
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden) {
-        if (video && !video.paused) {
-          video.pause();
-        }
-      } else {
-        if (video && video.paused && heroSection) {
-          const rect = heroSection.getBoundingClientRect();
-          const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
-          if (isVisible) {
-            video.play().catch(() => {});
-          }
-        }
-      }
-    });
-    
-    // iOS-specific fixes
-    if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
-      // Ensure video doesn't go fullscreen on iOS
-      video.addEventListener('webkitbeginfullscreen', (e) => {
-        e.preventDefault();
-        video.webkitExitFullscreen();
-      });
-    }
+        
+        lastScrollTop = scrollTop;
+      }, 100);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
   };
 
-  // Mobile-specific performance optimizations
-  const setupMobileOptimizations = () => {
-    if (!isMobile) return;
-    
-    // Reduce animation complexity on mobile
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    if (mediaQuery.matches) {
-      root.style.setProperty('--animation-duration', '0.001s');
-    }
-    
-    // Optimize touch scrolling
-    const scrollElements = root.querySelectorAll('.ccf-services-section, .ccf-features-section, .ccf-journey-section');
-    scrollElements.forEach(el => {
-      el.style.webkitOverflowScrolling = 'touch';
-    });
-    
-    // Prevent double-tap zoom on interactive elements
-    const interactiveElements = root.querySelectorAll('button, a, .ccf-service-card, .ccf-feature');
-    interactiveElements.forEach(el => {
-      el.style.touchAction = 'manipulation';
-    });
+  // Hide hero content after delay
+  const setupHeroContentHiding = () => {
+    const heroContent = root.querySelector('.ccf-hero-content');
+    if (!heroContent) return;
+
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+    const hideDelay = isMobile ? 10000 : 20000; // 10 seconds mobile, 20 seconds desktop
+
+    console.log(`CCF: Setting hide timer: ${hideDelay/1000} seconds`);
+
+    setTimeout(() => {
+      heroContent.classList.add('hide');
+      console.log('CCF hero content hidden');
+    }, hideDelay);
   };
 
-  // Initialize module
-  console.log(`Initializing CCF module (Mobile: ${isMobile}, Touch: ${isTouchDevice})`);
-  
+  // Initialize module in correct order
+  console.log('Initializing CCF module components...');
   updateNames();
   addConditionalContent();
-  setupVideoAndInteractions();
-  setupMobileOptimizations();
-  
-  // Lazy load images with mobile optimization
+  setupVideoLazyLoading();
+  setupUnmute();
+  setupAutoMute();
+  setupHeroContentHiding();
+
+  // Lazy load images
   if (typeof hydrateLazyAssets === 'function') {
-    // Use more aggressive loading on mobile to improve perceived performance
-    if (isMobile) {
-      setTimeout(() => {
-        hydrateLazyAssets(root);
-      }, 100);
-    } else {
-      hydrateLazyAssets(root);
-    }
+    hydrateLazyAssets(root);
   }
-  
-  console.log('CCF module initialized successfully');
+
+  console.log('CCF module initialization complete');
 };
 
 /* ====== Loader (fetch + mount on intersection) ====== */
