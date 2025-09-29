@@ -1770,6 +1770,8 @@ function initObserver(){
 /* ====== Boot ====== */
 document.addEventListener('DOMContentLoaded', initObserver);
 
+
+
 MODULES['third_form'] = (root, ctx) => {
   // Update names
   root.querySelectorAll('.child-name').forEach(el => {
@@ -4577,3 +4579,47 @@ MODULES['final_hero'] = (root, ctx) => {
   
   console.log('Final Hero module initialized for:', ctx.childName);
 };
+// ===== COLLAPSIBLE NAVIGATION FOR MOBILE - AT THE VERY END =====
+function setupCollapsibleNav(root) {
+  if (window.innerWidth > 768) return;
+  
+  const navSelectors = [
+    { nav: '.av-nav', title: '.av-nav-title' },
+    { nav: '.sm-nav', title: '.sm-nav-title' },
+    { nav: '.lc-subject-nav', title: '.lc-nav-title' },
+    { nav: '.section-nav', title: '.nav-title' },
+    { nav: '.subject-nav', title: '.nav-title' },
+    { nav: '.hum-nav', title: '.hum-nav-title' },
+    { nav: '.us-nav', title: '.us-nav-title' }
+  ];
+  
+  navSelectors.forEach(config => {
+    const navElement = root.querySelector(config.nav);
+    const titleElement = navElement?.querySelector(config.title);
+    
+    if (titleElement && navElement && !titleElement._collapsible) {
+      titleElement._collapsible = true;
+      
+      titleElement.addEventListener('click', function(e) {
+        e.preventDefault();
+        navElement.classList.toggle('expanded');
+      });
+    }
+  });
+}
+
+// Hook into existing mount function
+const _originalMount = mountPlaceholder;
+window.mountPlaceholder = async function(ph) {
+  await _originalMount(ph);
+  const key = ph.getAttribute('data-mod');
+  const module = document.querySelector(`.mod--${key}`);
+  if (module) setupCollapsibleNav(module);
+};
+
+// Setup on resize
+window.addEventListener('resize', () => {
+  if (window.innerWidth <= 768) {
+    document.querySelectorAll('.mod').forEach(setupCollapsibleNav);
+  }
+});
