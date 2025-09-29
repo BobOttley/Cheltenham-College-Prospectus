@@ -738,6 +738,8 @@ MODULES['student_gallery'] = (root, ctx) => {
 };
 
 /* ====== SPORTS MODULE WITH MP4 VIDEO SUPPORT ONLY - NO IFRAMES ====== */
+
+/* ====== SPORTS MODULE WITH MP4 VIDEO SUPPORT ONLY - NO IFRAMES ====== */
 MODULES['sports'] = (root, ctx) => {
   console.log('=== SPORTS MODULE INIT DEBUG ===');
   console.log('Full context received:', ctx);
@@ -895,41 +897,42 @@ MODULES['sports'] = (root, ctx) => {
 
     currentVideo = video;
   };
+  
   // --- Tile collapse helpers (phones) ---
-const phone = window.matchMedia('(max-width: 768px)');
-const tileSections = () => ([
-  root.querySelector('.top-sports-grid')?.closest('.student-sports-section'),
-  root.querySelector('.all-sports-content')?.closest('.all-sports-section'),
-  root.querySelector('.facilities-grid')
-].filter(Boolean));
+  const phone = window.matchMedia('(max-width: 768px)');
+  const tileSections = () => ([
+    root.querySelector('.top-sports-grid')?.closest('.student-sports-section'),
+    root.querySelector('.all-sports-content')?.closest('.all-sports-section'),
+    root.querySelector('.facilities-grid')
+  ].filter(Boolean));
 
-const collapseTiles = () => {
-  if (!phone.matches) return; // only on phones
-  tileSections().forEach(el => el.classList.add('is-collapsed'));
-};
+  const collapseTiles = () => {
+    if (!phone.matches) return; // only on phones
+    tileSections().forEach(el => el.classList.add('is-collapsed'));
+  };
 
-const expandTiles = () => {
-  tileSections().forEach(el => el.classList.remove('is-collapsed'));
-};
+  const expandTiles = () => {
+    tileSections().forEach(el => el.classList.remove('is-collapsed'));
+  };
 
-const ensureToggleButton = () => {
-  if (!phone.matches) return;
-  let toggle = root.querySelector('.tile-toggle');
-  if (!toggle) {
-    toggle = document.createElement('button');
-    toggle.className = 'tile-toggle';
-    toggle.type = 'button';
-    toggle.textContent = 'Show details';
-    // place after hero section
-    const anchor = root.querySelector('.personal-sports-message') || root.querySelector('.sport-hero');
-    anchor?.after(toggle);
-    toggle.addEventListener('click', () => {
-      const collapsed = tileSections().every(el => el.classList.contains('is-collapsed'));
-      if (collapsed) { expandTiles(); toggle.textContent = 'Hide details'; }
-      else { collapseTiles(); toggle.textContent = 'Show details'; }
-    });
-  }
-};
+  const ensureToggleButton = () => {
+    if (!phone.matches) return;
+    let toggle = root.querySelector('.tile-toggle');
+    if (!toggle) {
+      toggle = document.createElement('button');
+      toggle.className = 'tile-toggle';
+      toggle.type = 'button';
+      toggle.textContent = 'Show details';
+      // place after hero section
+      const anchor = root.querySelector('.personal-sports-message') || root.querySelector('.sport-hero');
+      anchor?.after(toggle);
+      toggle.addEventListener('click', () => {
+        const collapsed = tileSections().every(el => el.classList.contains('is-collapsed'));
+        if (collapsed) { expandTiles(); toggle.textContent = 'Hide details'; }
+        else { collapseTiles(); toggle.textContent = 'Show details'; }
+      });
+    }
+  };
 
   // Setup tab switching with proper video handling
   const setupTabs = () => {
@@ -980,63 +983,79 @@ const ensureToggleButton = () => {
     });
   };
 
-  // LAZY VIDEO LOADING - When sports module scrolls into view
   // LAZY VIDEO LOADING - Start active section video only when module scrolls into view
-const setupVideoLazyLoading = () => {
-  const activeSection = root.querySelector('.sport-section.active');
-  if (!activeSection) return;
+  const setupVideoLazyLoading = () => {
+    const activeSection = root.querySelector('.sport-section.active');
+    if (!activeSection) return;
 
-  const heroSection = activeSection.querySelector('.sport-hero');
-  if (!heroSection) return;
+    const heroSection = activeSection.querySelector('.sport-hero');
+    if (!heroSection) return;
 
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        console.log('Sports module hero entered viewport - starting active video');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          console.log('Sports module hero entered viewport - starting active video');
 
-        const video = activeSection.querySelector('video.hero-video') ||
-                      activeSection.querySelector('video.gender-video');
+          const video = activeSection.querySelector('video.hero-video') ||
+                        activeSection.querySelector('video.gender-video');
 
-        if (video) {
-          console.log('Found video to load:', video.className);
-          loadVideo(video);   // use your existing loadVideo() to play it
-        } else {
-          console.error('No video element found in active section!');
+          if (video) {
+            console.log('Found video to load:', video.className);
+            loadVideo(video);   // use your existing loadVideo() to play it
+          } else {
+            console.error('No video element found in active section!');
+          }
+
+          // Unobserve so it only fires once
+          observer.unobserve(heroSection);
         }
-
-        // Unobserve so it only fires once
-        observer.unobserve(heroSection);
-      }
+      });
+    }, {
+      threshold: 0.4,              // trigger when 40% of hero is visible
+      rootMargin: '0px 0px -10% 0px'
     });
-  }, {
-    threshold: 0.4,              // trigger when 40% of hero is visible
-    rootMargin: '0px 0px -10% 0px'
-  });
 
-  observer.observe(heroSection);
-};
+    observer.observe(heroSection);
+  };
 
-
-  // Setup unmute buttons for MP4 videos
+  // FIXED: Setup unmute buttons for MP4 videos - NOW WORKS PROPERLY
   const setupUnmute = () => {
     const unmuteButtons = root.querySelectorAll('.unmute-btn, .sports-unmute-btn');
 
     unmuteButtons.forEach(btn => {
       btn.addEventListener('click', () => {
         console.log('Unmute button clicked');
-        const videoSelector = btn.getAttribute('data-video-selector') || 'video';
-        const section = btn.closest('.sport-hero') || root;
-        const video = section.querySelector(videoSelector) || root.querySelector(videoSelector);
-        if (!video) return;
+        
+        // Find the video in the current active section
+        const activeSection = root.querySelector('.sport-section.active');
+        if (!activeSection) {
+          console.error('No active section found');
+          return;
+        }
+        
+        const video = activeSection.querySelector('video.hero-video') || 
+                      activeSection.querySelector('video.gender-video');
+        if (!video) {
+          console.error('No video found in active section');
+          return;
+        }
 
         primeVideo(video); // ensure autoplay-safe attributes
         ensureSrcFromData(video);
-        if (video.paused) { video.play().catch(()=>{}); }
+        
+        // Try to play if paused
+        if (video.paused) { 
+          video.play().catch((err) => {
+            console.error('Could not play video:', err);
+          });
+        }
 
+        // Toggle mute state
         if (video.muted) {
           video.muted = false;
+          video.volume = 1.0; // Ensure volume is up
           btn.innerHTML = '🔇 Click to Mute';
-          console.log('Video unmuted');
+          console.log('Video unmuted, volume:', video.volume);
         } else {
           video.muted = true;
           btn.innerHTML = '🔊 Click for Sound';
@@ -1275,34 +1294,66 @@ const setupVideoLazyLoading = () => {
     }
   };
 
-  // Hide hero content 20s after user clicks a tab and video starts
-const setupHeroContentHiding = () => {
-  const tabs = root.querySelectorAll('.sport-tab');
-
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
+  // FIXED: Auto-hide hero content - 10 seconds on mobile, 20 seconds on desktop
+  const setupHeroContentHiding = () => {
+    const startHideTimer = () => {
       const activeSection = root.querySelector('.sport-section.active');
       if (!activeSection) return;
 
       const heroContent = activeSection.querySelector('.hero-content');
       if (!heroContent) return;
 
-      // Reset any previous hide state
-      heroContent.classList.remove('hide');
-
-      // Clear any old timer
+      // Clear any existing timer
       if (heroContent._hideTimer) {
         clearTimeout(heroContent._hideTimer);
       }
 
-      // Start fresh 20s timer
+      // Check if mobile and set appropriate delay
+      const isMobile = window.innerWidth <= 768;
+      const hideDelay = isMobile ? 10000 : 20000; // 10 seconds mobile, 20 seconds desktop
+      
+      console.log(`Setting hide timer: ${hideDelay/1000} seconds (mobile: ${isMobile})`);
+
+      // Start timer
       heroContent._hideTimer = setTimeout(() => {
         heroContent.classList.add('hide');
-      }, 20000);
-    });
-  });
-};
+        console.log('Hero content hidden');
+      }, hideDelay);
+    };
 
+    // Start timer on initial load
+    startHideTimer();
+
+    // Restart timer when tabs are clicked
+    const tabs = root.querySelectorAll('.sport-tab');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        setTimeout(() => {
+          const activeSection = root.querySelector('.sport-section.active');
+          const heroContent = activeSection?.querySelector('.hero-content');
+          if (heroContent) {
+            // Reset hide state
+            heroContent.classList.remove('hide');
+            // Restart timer with appropriate delay
+            startHideTimer();
+          }
+        }, 100);
+      });
+    });
+
+    // Recalculate on resize
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        const activeSection = root.querySelector('.sport-section.active');
+        const heroContent = activeSection?.querySelector('.hero-content');
+        if (heroContent && !heroContent.classList.contains('hide')) {
+          startHideTimer(); // Restart with new timing based on screen size
+        }
+      }, 250);
+    });
+  };
 
   // Initialise in correct order
   console.log('Initializing sports module components...');
@@ -1313,7 +1364,7 @@ const setupHeroContentHiding = () => {
   setupAutoMute();
   filterSportsByGender();
   addSportsContent();
-  setupHeroContentHiding();
+  setupHeroContentHiding(); // Now includes mobile 10-second timer
 
   // Lazy load images
   if (typeof hydrateLazyAssets === 'function') {
@@ -1322,7 +1373,6 @@ const setupHeroContentHiding = () => {
 
   console.log('Sports module initialization complete');
 };
-
 
 /* CCF Module initializer - Add to MODULES object in app.js */
 MODULES['ccf'] = (root, ctx) => {

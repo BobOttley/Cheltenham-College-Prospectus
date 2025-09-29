@@ -259,26 +259,35 @@
   border: none !important;
 }
 
-/* Unmute button */
-.mod--sports .unmute-btn {
-  position: absolute;
-  bottom: 30px;
-  right: 30px;
-  z-index: 10;
-  background: rgba(201,169,97,.95);
-  color: #fff;
-  border: 0;
-  padding: 12px 20px;
-  border-radius: 25px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform .15s ease, background .2s ease;
+/* Unmute button - FIXED STYLING */
+.mod--sports .unmute-btn,
+.mod--sports .sports-unmute-btn {
+  position: absolute !important;
+  bottom: 30px !important;
+  right: 30px !important;
+  z-index: 100 !important; /* Higher z-index to ensure it's clickable */
+  background: rgba(201,169,97,.95) !important;
+  color: #fff !important;
+  border: none !important;
+  padding: 12px 20px !important;
+  border-radius: 25px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: transform .15s ease, background .2s ease !important;
+  pointer-events: auto !important; /* Ensure it's clickable */
+  display: block !important; /* Ensure it's visible */
 }
 
-.mod--sports .unmute-btn:hover {
-  background: #c9a961;
-  transform: scale(1.05);
+.mod--sports .unmute-btn:hover,
+.mod--sports .sports-unmute-btn:hover {
+  background: #c9a961 !important;
+  transform: scale(1.05) !important;
+}
+
+.mod--sports .unmute-btn:active,
+.mod--sports .sports-unmute-btn:active {
+  transform: scale(0.98) !important;
 }
 
 /* --- PERSONAL MESSAGE SECTION --- */
