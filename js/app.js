@@ -1453,17 +1453,15 @@ MODULES['ccf'] = (root, ctx) => {
   };
   applyNames();
 
-  // VIDEO SETUP - SAME AS SPORTS/HERO
-  let currentVideo = null;
-
+  // VIDEO SETUP
   const primeVideo = (video) => {
     if (!video) return;
     video.muted = true;
     video.playsInline = true;
     video.setAttribute('playsinline', '');
     if (!video.hasAttribute('loop')) video.setAttribute('loop', '');
-    if (!video.hasAttribute('autoplay')) video.setAttribute('autoplay', '');
     if (!video.hasAttribute('preload')) video.setAttribute('preload', 'metadata');
+    video.removeAttribute('autoplay'); // Remove autoplay
   };
 
   const loadVideo = (video) => {
@@ -1484,13 +1482,12 @@ MODULES['ccf'] = (root, ctx) => {
     }).catch(e => {
       console.log('CCF autoplay deferred:', e?.name || e);
     });
-
-    currentVideo = video;
   };
 
   // LAZY LOAD VIDEO ON SCROLL
   const video = $('.ccf-video');
   const heroSection = $('.ccf-hero');
+  const overlay = $('#ccfOverlay');
   
   if (video && heroSection) {
     const observer = new IntersectionObserver((entries) => {
@@ -1498,6 +1495,15 @@ MODULES['ccf'] = (root, ctx) => {
         if (entry.isIntersecting) {
           console.log('CCF hero entered viewport - starting video');
           loadVideo(video);
+          
+          // Fade out text after 15 seconds
+          setTimeout(() => {
+            if (overlay) {
+              overlay.style.transition = 'opacity 1s ease-out';
+              overlay.style.opacity = '0';
+            }
+          }, 15000);
+          
           observer.unobserve(heroSection);
         }
       });
@@ -1517,7 +1523,7 @@ MODULES['ccf'] = (root, ctx) => {
     audioBtn.addEventListener('click', () => {
       video.muted = !video.muted;
       if (audioIcon) {
-        audioIcon.textContent = video.muted ? 'Click to unmute' : 'Click to mute';
+        audioIcon.textContent = video.muted ? '🔊' : '🔇';
       }
       if (!video.muted && video.paused) {
         video.play().catch(() => {});
@@ -1525,14 +1531,21 @@ MODULES['ccf'] = (root, ctx) => {
     });
   }
 
-  // OVERLAY MOVEMENT
-  const overlay = $('#ccfOverlay');
+  // SCROLL INDICATOR
   const scrollHint = $('#ccfScrollIndicator');
   
-  setTimeout(() => {
-    if (overlay) overlay.classList.add('move-bottom');
-    if (scrollHint) setTimeout(() => scrollHint.classList.add('show'), 300);
-  }, 12000);
+  if (scrollHint) {
+    setTimeout(() => {
+      scrollHint.classList.add('show');
+    }, 2000);
+    
+    scrollHint.addEventListener('click', () => {
+      const servicesSection = root.querySelector('.ccf-services-section');
+      if (servicesSection) {
+        servicesSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  }
 };
 
 
