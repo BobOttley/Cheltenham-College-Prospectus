@@ -28,6 +28,7 @@ html, body {
 .prospectus {
   max-width: 1600px;
   margin: 0 auto;
+  overflow-x: hidden !important;
 }
 
 /* Placeholder for lazy-loaded modules */
@@ -38,6 +39,8 @@ html, body {
 /* Base module container */
 .mod {
   display: block;
+  overflow: visible !important;
+  max-width: 100% !important;
 }
 
 /* Utility Classes */
@@ -59,17 +62,8 @@ html, body {
     transition: none !important;
   }
 }
-/* FORCE Third Form header full width - Add to END of styles.css */
-.prospectus {
-  overflow-x: hidden !important;
-  max-width: 100% !important;
-}
 
-.mod {
-  overflow: visible !important;
-  max-width: 100% !important;
-}
-
+/* Third Form header full width */
 .mod--third_form {
   max-width: 100% !important;
   overflow: visible !important;
@@ -88,15 +82,15 @@ html, body {
   padding-right: 0 !important;
 }
 
-/* Ensure header content is centered but contained */
 .mod--third_form .header-content {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
 }
-/* ===== UNIVERSAL MOBILE NAVIGATION FIX - CORRECTED CLASS NAMES ===== */
+
+/* ===== MOBILE NAVIGATION - ALWAYS VISIBLE ===== */
 @media (max-width: 768px) {
-  /* Remove sticky behavior on mobile - make them static */
+  /* Navigation containers - static position */
   .mod--applied_vocational .av-nav,
   .mod--sciences_mathematics .sm-nav,
   .mod--languages_classics .lc-subject-nav,
@@ -114,7 +108,7 @@ html, body {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
   }
 
-  /* Reduce navigation title size */
+  /* Navigation titles */
   .mod--applied_vocational .av-nav-title,
   .mod--sciences_mathematics .sm-nav-title,
   .mod--languages_classics .lc-nav-title,
@@ -129,7 +123,7 @@ html, body {
     font-weight: 500 !important;
   }
 
-  /* Make button containers more compact */
+  /* Button containers - ALWAYS VISIBLE */
   .mod--applied_vocational .av-nav-buttons,
   .mod--sciences_mathematics .sm-nav-buttons,
   .mod--languages_classics .lc-nav-buttons,
@@ -139,6 +133,8 @@ html, body {
   .mod--third_form_humanities .hum-nav-buttons,
   .mod--third_form_creative_arts .nav-buttons,
   .mod--upper_school .us-nav-buttons {
+    display: flex !important;
+    flex-wrap: wrap !important;
     gap: 6px !important;
     padding: 0 !important;
     max-height: none !important;
@@ -149,7 +145,7 @@ html, body {
     padding-bottom: 4px !important;
   }
 
-  /* Make all navigation buttons smaller */
+  /* Navigation buttons */
   .mod--applied_vocational .av-nav-btn,
   .mod--sciences_mathematics .sm-nav-btn,
   .mod--languages_classics .lc-nav-btn,
@@ -168,7 +164,7 @@ html, body {
     border-radius: 15px !important;
   }
 
-  /* Adjust hover/active states for smaller buttons */
+  /* Hover states */
   .mod--applied_vocational .av-nav-btn:hover,
   .mod--sciences_mathematics .sm-nav-btn:hover,
   .mod--languages_classics .lc-nav-btn:hover,
@@ -181,31 +177,26 @@ html, body {
     transform: translateY(-1px) !important;
   }
 
-  /* Priority/active button adjustments */
-  .mod--applied_vocational .av-nav-btn.priority-high,
-  .mod--applied_vocational .av-nav-btn.active,
-  .mod--sciences_mathematics .sm-nav-btn.priority-high,
-  .mod--sciences_mathematics .sm-nav-btn.active,
-  .mod--languages_classics .lc-nav-btn.priority-high,
-  .mod--languages_classics .lc-nav-btn.active,
-  .mod--third_form .nav-btn.priority-high,
-  .mod--third_form .nav-btn.active,
-  .mod--third_form_sciences .nav-btn.priority-high,
-  .mod--third_form_sciences .nav-btn.active,
-  .mod--third_form_languages .nav-btn.priority-high,
-  .mod--third_form_languages .nav-btn.active,
-  .mod--third_form_humanities .hum-nav-btn.priority-high,
-  .mod--third_form_humanities .hum-nav-btn.active,
-  .mod--third_form_creative_arts .nav-btn.priority-high,
-  .mod--third_form_creative_arts .nav-btn.active,
-  .mod--upper_school .us-nav-btn.priority-high,
-  .mod--upper_school .us-nav-btn.active {
+  /* Active/priority buttons */
+  .av-nav-btn.priority-high,
+  .av-nav-btn.active,
+  .sm-nav-btn.priority-high,
+  .sm-nav-btn.active,
+  .lc-nav-btn.priority-high,
+  .lc-nav-btn.active,
+  .nav-btn.priority-high,
+  .nav-btn.active,
+  .hum-nav-btn.priority-high,
+  .hum-nav-btn.active,
+  .us-nav-btn.priority-high,
+  .us-nav-btn.active {
     box-shadow: 0 1px 4px rgba(201, 169, 97, 0.2) !important;
   }
 }
 
-/* Very small mobile devices (under 480px) */
+/* Very small mobile (under 480px) */
 @media (max-width: 480px) {
+  /* Smaller padding */
   .mod--applied_vocational .av-nav,
   .mod--sciences_mathematics .sm-nav,
   .mod--languages_classics .lc-subject-nav,
@@ -219,42 +210,36 @@ html, body {
     margin-bottom: 15px !important;
   }
 
-  .mod--applied_vocational .av-nav-title,
-  .mod--sciences_mathematics .sm-nav-title,
-  .mod--languages_classics .lc-nav-title,
-  .mod--third_form .nav-title,
-  .mod--third_form_sciences .nav-title,
-  .mod--third_form_languages .nav-title,
-  .mod--third_form_humanities .hum-nav-title,
-  .mod--third_form_creative_arts .nav-title,
-  .mod--upper_school .us-nav-title {
+  /* Smaller text */
+  .av-nav-title,
+  .sm-nav-title,
+  .lc-nav-title,
+  .nav-title,
+  .hum-nav-title,
+  .us-nav-title {
     font-size: 0.85rem !important;
     margin-bottom: 6px !important;
   }
 
-  .mod--applied_vocational .av-nav-btn,
-  .mod--sciences_mathematics .sm-nav-btn,
-  .mod--languages_classics .lc-nav-btn,
-  .mod--third_form .nav-btn,
-  .mod--third_form_sciences .nav-btn,
-  .mod--third_form_languages .nav-btn,
-  .mod--third_form_humanities .hum-nav-btn,
-  .mod--third_form_creative_arts .nav-btn,
-  .mod--upper_school .us-nav-btn {
+  /* Smaller buttons */
+  .av-nav-btn,
+  .sm-nav-btn,
+  .lc-nav-btn,
+  .nav-btn,
+  .hum-nav-btn,
+  .us-nav-btn {
     padding: 4px 8px !important;
     font-size: 0.7rem !important;
     min-height: 26px !important;
   }
 
-  .mod--applied_vocational .av-nav-buttons,
-  .mod--sciences_mathematics .sm-nav-buttons,
-  .mod--languages_classics .lc-nav-buttons,
-  .mod--third_form .nav-buttons,
-  .mod--third_form_sciences .nav-buttons,
-  .mod--third_form_languages .nav-buttons,
-  .mod--third_form_humanities .hum-nav-buttons,
-  .mod--third_form_creative_arts .nav-buttons,
-  .mod--upper_school .us-nav-buttons {
+  /* Tighter gaps */
+  .av-nav-buttons,
+  .sm-nav-buttons,
+  .lc-nav-buttons,
+  .nav-buttons,
+  .hum-nav-buttons,
+  .us-nav-buttons {
     gap: 4px !important;
   }
 }
