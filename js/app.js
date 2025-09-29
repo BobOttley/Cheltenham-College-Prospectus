@@ -1440,11 +1440,10 @@ MODULES['sports'] = (root, ctx) => {
 /* CCF Module – MP4 version, fully scoped and self-contained */
 /* ===== CCF Module (mirrors hero MP4 behaviour) ===== */
 MODULES['ccf'] = (root, ctx) => {
-  // Scoped helpers
-  const $  = (sel, p = root) => p.querySelector(sel);
+  const $ = (sel, p = root) => p.querySelector(sel);
   const $$ = (sel, p = root) => Array.from(p.querySelectorAll(sel));
 
-  // Personalisation: child name in overlay (scoped)
+  // Personalisation
   const applyNames = () => {
     const name = (ctx?.childName || '').trim();
     const fallback = 'Your child';
@@ -1454,51 +1453,82 @@ MODULES['ccf'] = (root, ctx) => {
   };
   applyNames();
 
-  // Video + mute UX
-  let isMuted = true;
-  const video = $('.ccf-video');
-  const audioBtn = $('#ccfAudioToggle');
-  const audioIcon = $('#ccfAudioIcon');
-  const overlay = $('#ccfOverlay');
-  const scrollHint = $('#ccfScrollIndicator');
+  // VIDEO SETUP - SAME AS SPORTS/HERO
+  let currentVideo = null;
 
-  if (!video) {
-    console.warn('CCF: video element not found');
-    return;
+  const primeVideo = (video) => {
+    if (!video) return;
+    video.muted = true;
+    video.playsInline = true;
+    video.setAttribute('playsinline', '');
+    if (!video.hasAttribute('loop')) video.setAttribute('loop', '');
+    if (!video.hasAttribute('autoplay')) video.setAttribute('autoplay', '');
+    if (!video.hasAttribute('preload')) video.setAttribute('preload', 'metadata');
+  };
+
+  const loadVideo = (video) => {
+    if (!video) return;
+    console.log('Loading CCF video');
+
+    primeVideo(video);
+
+    if (!video._dbgBound) {
+      video.addEventListener('loadedmetadata', () => console.log('CCF video metadata loaded'));
+      video.addEventListener('canplay', () => console.log('CCF video can play'));
+      video.addEventListener('error', (e) => console.error('CCF video error:', e));
+      video._dbgBound = true;
+    }
+
+    video.play().then(() => {
+      console.log('CCF video playing');
+    }).catch(e => {
+      console.log('CCF autoplay deferred:', e?.name || e);
+    });
+
+    currentVideo = video;
+  };
+
+  // LAZY LOAD VIDEO ON SCROLL
+  const video = $('.ccf-video');
+  const heroSection = $('.ccf-hero');
+  
+  if (video && heroSection) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          console.log('CCF hero entered viewport - starting video');
+          loadVideo(video);
+          observer.unobserve(heroSection);
+        }
+      });
+    }, {
+      threshold: 0.4,
+      rootMargin: '0px 0px -10% 0px'
+    });
+
+    observer.observe(heroSection);
   }
 
-  // Initialise video state
-  video.muted = isMuted;
-  video.play().catch(() => console.log('CCF video autoplay blocked'));
+  // AUDIO TOGGLE
+  const audioBtn = $('#ccfAudioToggle');
+  const audioIcon = $('#ccfAudioIcon');
+  
+  if (audioBtn && video) {
+    audioBtn.addEventListener('click', () => {
+      video.muted = !video.muted;
+      if (audioIcon) {
+        audioIcon.textContent = video.muted ? 'Click to unmute' : 'Click to mute';
+      }
+      if (!video.muted && video.paused) {
+        video.play().catch(() => {});
+      }
+    });
+  }
 
-  const updateMuteLabel = () => {
-    if (!audioIcon) return;
-    audioIcon.textContent = isMuted ? 'Click to unmute' : 'Click to mute';
-  };
-  updateMuteLabel();
-
-  const toggleAudio = () => {
-    isMuted = !isMuted;
-    video.muted = isMuted;
-    updateMuteLabel();
-    if (!isMuted && video.paused) {
-      video.play().catch(() => {});
-    }
-  };
-
-  if (audioBtn) audioBtn.addEventListener('click', toggleAudio, { passive: true });
-
-  // Auto-mute on scroll
-  const handleScroll = () => {
-    if (window.scrollY > 50 && !video.muted) {
-      isMuted = true;
-      video.muted = true;
-      updateMuteLabel();
-    }
-  };
-  window.addEventListener('scroll', handleScroll, { passive: true });
-
-  // Timed overlay move + show scroll hint
+  // OVERLAY MOVEMENT
+  const overlay = $('#ccfOverlay');
+  const scrollHint = $('#ccfScrollIndicator');
+  
   setTimeout(() => {
     if (overlay) overlay.classList.add('move-bottom');
     if (scrollHint) setTimeout(() => scrollHint.classList.add('show'), 300);
