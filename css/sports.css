@@ -465,8 +465,8 @@
   }
 }
 
-/* Mobile - Single column */
-@media (max-width: 768px) {
+/* Mobile PORTRAIT - Single column (vertical stacking) */
+@media (max-width: 768px) and (orientation: portrait) {
   .mod--sports .top-sports-grid {
     grid-template-columns: 1fr !important;
     gap: 1.5rem !important;
@@ -514,8 +514,52 @@
   }
 }
 
-/* Small mobile */
-@media (max-width: 480px) {
+/* Mobile LANDSCAPE - 2 columns (2x2 grid) */
+@media (max-width: 896px) and (orientation: landscape) {
+  .mod--sports .top-sports-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1.5rem !important;
+    padding: 0 1.5rem;
+    max-width: 100%;
+    margin: 0 auto 3rem;
+  }
+  
+  .mod--sports .top-sport-card {
+    padding: 1.25rem !important;
+    margin: 0;
+    width: 100%;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08) !important;
+  }
+  
+  .mod--sports .top-sport-badge {
+    top: -12px;
+    right: 15px;
+    padding: 0.3rem 0.8rem;
+    font-size: 0.7rem;
+  }
+  
+  .mod--sports .sport-name {
+    font-size: 1.3rem !important;
+    margin-bottom: 0.5rem;
+  }
+  
+  .mod--sports .sport-details {
+    font-size: 0.9rem !important;
+    line-height: 1.5;
+    margin-bottom: 0.8rem;
+  }
+  
+  .mod--sports .sport-highlight {
+    font-size: 0.75rem !important;
+  }
+  
+  .mod--sports .student-sports-section {
+    padding: 2.5rem 1.5rem !important;
+  }
+}
+
+/* Small mobile portrait */
+@media (max-width: 480px) and (orientation: portrait) {
   .mod--sports .top-sports-grid {
     gap: 1rem !important;
     padding: 0 0.75rem;

@@ -898,21 +898,25 @@ MODULES['sports'] = (root, ctx) => {
     currentVideo = video;
   };
   
-  // --- Tile collapse helpers (phones) ---
+  // --- Tile collapse helpers (phones) - FIXED TO NOT HIDE TOP SPORTS CARDS ---
   const phone = window.matchMedia('(max-width: 768px)');
   const tileSections = () => ([
-    root.querySelector('.top-sports-grid')?.closest('.student-sports-section'),
+    // REMOVED the top sports section from here so it won't be collapsed
     root.querySelector('.all-sports-content')?.closest('.all-sports-section'),
     root.querySelector('.facilities-grid')
   ].filter(Boolean));
 
   const collapseTiles = () => {
     if (!phone.matches) return; // only on phones
-    tileSections().forEach(el => el.classList.add('is-collapsed'));
+    tileSections().forEach(el => {
+      if (el) el.classList.add('is-collapsed');
+    });
   };
 
   const expandTiles = () => {
-    tileSections().forEach(el => el.classList.remove('is-collapsed'));
+    tileSections().forEach(el => {
+      if (el) el.classList.remove('is-collapsed');
+    });
   };
 
   const ensureToggleButton = () => {
@@ -922,14 +926,21 @@ MODULES['sports'] = (root, ctx) => {
       toggle = document.createElement('button');
       toggle.className = 'tile-toggle';
       toggle.type = 'button';
-      toggle.textContent = 'Show details';
-      // place after hero section
-      const anchor = root.querySelector('.personal-sports-message') || root.querySelector('.sport-hero');
+      toggle.textContent = 'Show more sports';
+      // place after the student sports section (which contains top sports cards)
+      const anchor = root.querySelector('.student-sports-section') || 
+                     root.querySelector('.personal-sports-message') || 
+                     root.querySelector('.sport-hero');
       anchor?.after(toggle);
       toggle.addEventListener('click', () => {
-        const collapsed = tileSections().every(el => el.classList.contains('is-collapsed'));
-        if (collapsed) { expandTiles(); toggle.textContent = 'Hide details'; }
-        else { collapseTiles(); toggle.textContent = 'Show details'; }
+        const collapsed = tileSections().every(el => el && el.classList.contains('is-collapsed'));
+        if (collapsed) { 
+          expandTiles(); 
+          toggle.textContent = 'Hide sports details'; 
+        } else { 
+          collapseTiles(); 
+          toggle.textContent = 'Show more sports'; 
+        }
       });
     }
   };
