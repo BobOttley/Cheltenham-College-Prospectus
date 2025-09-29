@@ -1328,7 +1328,7 @@ MODULES['sports'] = (root, ctx) => {
             const details = card.querySelector('.sport-details');
             const highlightEl = card.querySelector('.sport-highlight');
 
-            if (badge) badge.textContent = `TOP SPORT`;
+            if (badge) badge.innerHTML = `<span class="child-name">${childName.toUpperCase()}</span>'S CHOICE #${index + 1}`;
 
             if (sportDetails[sport]) {
               if (title) title.textContent = sportDetails[sport].title;
