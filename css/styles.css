@@ -94,7 +94,7 @@ html, body {
   margin: 0 auto;
   padding: 0 20px;
 }
-/* Target ALL navigation bars across academic modules */
+/* ===== UNIVERSAL MOBILE NAVIGATION FIX - CORRECTED CLASS NAMES ===== */
 @media (max-width: 768px) {
   /* Remove sticky behavior on mobile - make them static */
   .mod--applied_vocational .av-nav,
@@ -103,13 +103,15 @@ html, body {
   .mod--third_form .section-nav,
   .mod--third_form_sciences .subject-nav,
   .mod--third_form_languages .subject-nav,
-  .mod--third_form_humanities .subject-nav {
-    position: static !important; /* No longer sticky on mobile */
+  .mod--third_form_humanities .hum-nav,
+  .mod--third_form_creative_arts .subject-nav,
+  .mod--upper_school .us-nav {
+    position: static !important;
     top: auto !important;
-    padding: 12px 10px !important; /* Much smaller padding */
-    margin-bottom: 20px !important; /* Reduced margin */
-    border-radius: 8px !important; /* Smaller border radius */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important; /* Lighter shadow */
+    padding: 12px 10px !important;
+    margin-bottom: 20px !important;
+    border-radius: 8px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
   }
 
   /* Reduce navigation title size */
@@ -119,9 +121,11 @@ html, body {
   .mod--third_form .nav-title,
   .mod--third_form_sciences .nav-title,
   .mod--third_form_languages .nav-title,
-  .mod--third_form_humanities .hum-nav-title {
-    font-size: 0.95rem !important; /* Smaller title */
-    margin-bottom: 8px !important; /* Less space below */
+  .mod--third_form_humanities .hum-nav-title,
+  .mod--third_form_creative_arts .nav-title,
+  .mod--upper_school .us-nav-title {
+    font-size: 0.95rem !important;
+    margin-bottom: 8px !important;
     font-weight: 500 !important;
   }
 
@@ -132,15 +136,17 @@ html, body {
   .mod--third_form .nav-buttons,
   .mod--third_form_sciences .nav-buttons,
   .mod--third_form_languages .nav-buttons,
-  .mod--third_form_humanities .hum-nav-buttons {
-    gap: 6px !important; /* Smaller gap between buttons */
+  .mod--third_form_humanities .hum-nav-buttons,
+  .mod--third_form_creative_arts .nav-buttons,
+  .mod--upper_school .us-nav-buttons {
+    gap: 6px !important;
     padding: 0 !important;
     max-height: none !important;
     justify-content: flex-start !important;
-    overflow-x: auto !important; /* Allow horizontal scroll if needed */
+    overflow-x: auto !important;
     overflow-y: hidden !important;
-    -webkit-overflow-scrolling: touch; /* Smooth scroll on iOS */
-    padding-bottom: 4px !important; /* Small padding for scroll indicator */
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 4px !important;
   }
 
   /* Make all navigation buttons smaller */
@@ -150,14 +156,16 @@ html, body {
   .mod--third_form .nav-btn,
   .mod--third_form_sciences .nav-btn,
   .mod--third_form_languages .nav-btn,
-  .mod--third_form_humanities .hum-nav-btn {
-    padding: 5px 10px !important; /* Much smaller padding */
-    font-size: 0.75rem !important; /* Smaller text */
+  .mod--third_form_humanities .hum-nav-btn,
+  .mod--third_form_creative_arts .nav-btn,
+  .mod--upper_school .us-nav-btn {
+    padding: 5px 10px !important;
+    font-size: 0.75rem !important;
     font-weight: 500 !important;
-    min-height: 28px !important; /* Smaller minimum height */
-    flex-shrink: 0 !important; /* Prevent shrinking in flex container */
-    white-space: nowrap !important; /* Keep text on one line */
-    border-radius: 15px !important; /* Smaller radius */
+    min-height: 28px !important;
+    flex-shrink: 0 !important;
+    white-space: nowrap !important;
+    border-radius: 15px !important;
   }
 
   /* Adjust hover/active states for smaller buttons */
@@ -167,8 +175,10 @@ html, body {
   .mod--third_form .nav-btn:hover,
   .mod--third_form_sciences .nav-btn:hover,
   .mod--third_form_languages .nav-btn:hover,
-  .mod--third_form_humanities .hum-nav-btn:hover {
-    transform: translateY(-1px) !important; /* Smaller hover effect */
+  .mod--third_form_humanities .hum-nav-btn:hover,
+  .mod--third_form_creative_arts .nav-btn:hover,
+  .mod--upper_school .us-nav-btn:hover {
+    transform: translateY(-1px) !important;
   }
 
   /* Priority/active button adjustments */
@@ -185,12 +195,16 @@ html, body {
   .mod--third_form_languages .nav-btn.priority-high,
   .mod--third_form_languages .nav-btn.active,
   .mod--third_form_humanities .hum-nav-btn.priority-high,
-  .mod--third_form_humanities .hum-nav-btn.active {
-    box-shadow: 0 1px 4px rgba(201, 169, 97, 0.2) !important; /* Lighter shadow */
+  .mod--third_form_humanities .hum-nav-btn.active,
+  .mod--third_form_creative_arts .nav-btn.priority-high,
+  .mod--third_form_creative_arts .nav-btn.active,
+  .mod--upper_school .us-nav-btn.priority-high,
+  .mod--upper_school .us-nav-btn.active {
+    box-shadow: 0 1px 4px rgba(201, 169, 97, 0.2) !important;
   }
 }
 
-/* Very small mobile devices (under 480px) - even more compact */
+/* Very small mobile devices (under 480px) */
 @media (max-width: 480px) {
   .mod--applied_vocational .av-nav,
   .mod--sciences_mathematics .sm-nav,
@@ -198,8 +212,10 @@ html, body {
   .mod--third_form .section-nav,
   .mod--third_form_sciences .subject-nav,
   .mod--third_form_languages .subject-nav,
-  .mod--third_form_humanities .subject-nav {
-    padding: 10px 8px !important; /* Even smaller padding */
+  .mod--third_form_humanities .hum-nav,
+  .mod--third_form_creative_arts .subject-nav,
+  .mod--upper_school .us-nav {
+    padding: 10px 8px !important;
     margin-bottom: 15px !important;
   }
 
@@ -209,8 +225,10 @@ html, body {
   .mod--third_form .nav-title,
   .mod--third_form_sciences .nav-title,
   .mod--third_form_languages .nav-title,
-  .mod--third_form_humanities .hum-nav-title {
-    font-size: 0.85rem !important; /* Even smaller title */
+  .mod--third_form_humanities .hum-nav-title,
+  .mod--third_form_creative_arts .nav-title,
+  .mod--upper_school .us-nav-title {
+    font-size: 0.85rem !important;
     margin-bottom: 6px !important;
   }
 
@@ -220,9 +238,11 @@ html, body {
   .mod--third_form .nav-btn,
   .mod--third_form_sciences .nav-btn,
   .mod--third_form_languages .nav-btn,
-  .mod--third_form_humanities .hum-nav-btn {
-    padding: 4px 8px !important; /* Minimal padding */
-    font-size: 0.7rem !important; /* Smallest readable text */
+  .mod--third_form_humanities .hum-nav-btn,
+  .mod--third_form_creative_arts .nav-btn,
+  .mod--upper_school .us-nav-btn {
+    padding: 4px 8px !important;
+    font-size: 0.7rem !important;
     min-height: 26px !important;
   }
 
@@ -232,40 +252,9 @@ html, body {
   .mod--third_form .nav-buttons,
   .mod--third_form_sciences .nav-buttons,
   .mod--third_form_languages .nav-buttons,
-  .mod--third_form_humanities .hum-nav-buttons {
-    gap: 4px !important; /* Minimal gap */
-  }
-}
-
-/* Optional: Add a subtle scroll indicator for horizontal scrolling */
-@media (max-width: 768px) {
-  .mod--applied_vocational .av-nav-buttons::after,
-  .mod--sciences_mathematics .sm-nav-buttons::after,
-  .mod--languages_classics .lc-nav-buttons::after,
-  .mod--third_form .nav-buttons::after,
-  .mod--third_form_sciences .nav-buttons::after,
-  .mod--third_form_languages .nav-buttons::after,
-  .mod--third_form_humanities .hum-nav-buttons::after {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: 20px;
-    background: linear-gradient(to right, transparent, rgba(255,255,255,0.8));
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-
-  /* Show gradient when scrollable */
-  .mod--applied_vocational .av-nav-buttons:hover::after,
-  .mod--sciences_mathematics .sm-nav-buttons:hover::after,
-  .mod--languages_classics .lc-nav-buttons:hover::after,
-  .mod--third_form .nav-buttons:hover::after,
-  .mod--third_form_sciences .nav-buttons:hover::after,
-  .mod--third_form_languages .nav-buttons:hover::after,
-  .mod--third_form_humanities .hum-nav-buttons:hover::after {
-    opacity: 1;
+  .mod--third_form_humanities .hum-nav-buttons,
+  .mod--third_form_creative_arts .nav-buttons,
+  .mod--upper_school .us-nav-buttons {
+    gap: 4px !important;
   }
 }
