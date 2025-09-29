@@ -1,21 +1,6 @@
-DELETE ALL CCF CSS FROM ccf.css
+/* ===== CCF MODULE - COMPLETE CSS ===== */
 
-THEN ADD ONLY THIS:
-.mod--ccf .ccf-hero {
-  position: relative !important;
-  height: 100vh !important;
-  width: 100vw !important;
-  overflow: hidden !important;
-}
-
-.mod--ccf .ccf-video {
-  position: absolute !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: cover !important;
-}
+/* Video Hero - CRITICAL: Keep these !important */
 .mod--ccf {
   padding: 0;
   margin: 0;
@@ -25,89 +10,467 @@ THEN ADD ONLY THIS:
   right: 50%;
   margin-left: -50vw;
   margin-right: -50vw;
+  background: #ffffff;
 }
 
-.ccf-hero {
-  position: relative;
-  height: 100vh;
-  width: 100vw;
-  overflow: hidden;
+.mod--ccf .ccf-hero {
+  position: relative !important;
+  height: 100vh !important;
+  width: 100vw !important;
+  overflow: hidden !important;
+  background: #000;
 }
 
-.ccf-video {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.mod--ccf .ccf-video {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
   z-index: 1;
+  pointer-events: none;
 }
 
-.ccf-overlay {
+.mod--ccf .ccf-overlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   z-index: 2;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  color: white;
+  color: #fff;
   text-align: center;
   padding: 20px;
+  transition: all 0.8s ease-out;
   background: linear-gradient(to bottom, rgba(30,58,95,0.7) 0%, rgba(30,58,95,0.85) 50%, rgba(30,58,95,0.9) 100%);
 }
 
-#ccfAudioToggle {
+.mod--ccf .ccf-overlay.move-bottom {
+  justify-content: flex-end;
+  padding: 0 2rem 3rem;
+  background: linear-gradient(to bottom, rgba(30,58,95,0) 0%, rgba(30,58,95,0.1) 50%, rgba(30,58,95,0.8) 100%);
+}
+
+.mod--ccf .ccf-title {
+  font-size: 5rem;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight: 300;
+  letter-spacing: 0.05em;
+  margin-bottom: 2rem;
+}
+
+.mod--ccf .ccf-tagline {
+  text-transform: uppercase;
+  font-size: 1rem;
+  letter-spacing: 0.3em;
+  font-weight: 600;
+  color: #c9a961;
+  margin-bottom: 1rem;
+}
+
+.mod--ccf .ccf-intro {
+  font-size: 1.2rem;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  margin-top: 0.5rem;
+  max-width: 900px;
+  line-height: 1.5;
+  opacity: 0.95;
+}
+
+.mod--ccf #ccfAudioToggle {
   position: absolute;
   top: 2rem;
   right: 2rem;
   z-index: 4;
   background: rgba(201,169,97,0.9);
-  color: white;
-  border: none;
+  color: #fff;
+  border: 0;
   padding: 16px 24px;
   border-radius: 6px;
   font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 140px;
+  min-height: 48px;
 }
 
-.ccf-scroll-indicator {
+.mod--ccf #ccfAudioToggle:hover {
+  background: rgba(201,169,97,1);
+  transform: scale(1.05);
+}
+
+.mod--ccf .ccf-scroll-indicator {
   position: absolute;
   bottom: 2rem;
   left: 50%;
   transform: translateX(-50%);
   z-index: 3;
+  color: #fff;
+  font-size: 0.9rem;
+  letter-spacing: 0.1em;
   opacity: 0;
+  transition: opacity 0.5s;
+  cursor: pointer;
 }
 
-.ccf-scroll-indicator.show {
+.mod--ccf .ccf-scroll-indicator.show {
   opacity: 1;
 }
 
-.ccf-scroll-arrow {
+.mod--ccf .ccf-scroll-arrow {
   width: 30px;
   height: 30px;
-  border-right: 2px solid white;
-  border-bottom: 2px solid white;
+  margin: 10px auto 0;
+  border-right: 2px solid #fff;
+  border-bottom: 2px solid #fff;
   transform: rotate(45deg);
 }
 
-.ccf-title {
-  font-size: 4rem;
-  margin-bottom: 1rem;
+/* Content Sections */
+.mod--ccf .ccf-services-section,
+.mod--ccf .ccf-features-section,
+.mod--ccf .ccf-journey-section {
+  padding: 5rem 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
-.ccf-tagline {
-  font-size: 1rem;
+.mod--ccf .ccf-section-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.mod--ccf .ccf-section-title {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-family: Georgia, 'Times New Roman', serif;
+  color: #1e3a5f;
+  margin-bottom: 1rem;
+  font-weight: 300;
+}
+
+.mod--ccf .ccf-section-title .highlight {
   color: #c9a961;
-  margin-bottom: 1rem;
+  font-style: italic;
 }
 
-.ccf-intro {
+.mod--ccf .ccf-section-subtitle {
   font-size: 1.2rem;
+  color: #4a6fa5;
   max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Interest Note */
+.mod--ccf .ccf-interest-note {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e8ecf1 100%);
+  border-left: 4px solid #c9a961;
+  padding: 20px 30px;
+  margin: 30px auto;
+  border-radius: 8px;
+  max-width: 800px;
+  font-style: italic;
+  color: #2a4d70;
+}
+
+.mod--ccf .ccf-interest-note:empty {
+  display: none;
+}
+
+/* Services Grid */
+.mod--ccf .ccf-services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2.5rem;
+  margin-top: 3rem;
+}
+
+.mod--ccf .ccf-service-card {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.mod--ccf .ccf-service-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+}
+
+.mod--ccf .ccf-service-header {
+  padding: 2.5rem 2rem;
+  background: linear-gradient(135deg, #1e3a5f 0%, #2a4d70 100%);
+  color: white;
+  text-align: center;
+}
+
+.mod--ccf .ccf-service-name {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.mod--ccf .ccf-service-tagline {
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+.mod--ccf .ccf-service-content {
+  padding: 2rem;
+}
+
+.mod--ccf .ccf-service-activities {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.mod--ccf .ccf-service-activities li {
+  padding: 12px 0;
+  padding-left: 25px;
+  border-bottom: 1px solid #e8ecf1;
+  position: relative;
+}
+
+.mod--ccf .ccf-service-activities li:last-child {
+  border-bottom: none;
+}
+
+.mod--ccf .ccf-service-activities li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  background: #c9a961;
+  border-radius: 50%;
+}
+
+/* Features Section */
+.mod--ccf .ccf-features-section {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e8ecf1 100%);
+}
+
+.mod--ccf .ccf-features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2.5rem;
+  max-width: 1200px;
+  margin: 3rem auto 0;
+}
+
+.mod--ccf .ccf-feature-item {
+  text-align: center;
+  padding: 2.5rem 1.5rem;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+  transition: transform 0.3s ease;
+}
+
+.mod--ccf .ccf-feature-item:hover {
+  transform: translateY(-5px);
+}
+
+.mod--ccf .ccf-feature-title {
+  font-size: 1.4rem;
+  color: #1e3a5f;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.mod--ccf .ccf-feature-description {
+  color: #4a6fa5;
+  line-height: 1.6;
+}
+
+/* Leadership Journey Timeline */
+.mod--ccf .ccf-journey-section {
+  background: white;
+}
+
+.mod--ccf .ccf-journey-timeline {
+  max-width: 900px;
+  margin: 3rem auto 0;
+  position: relative;
+}
+
+.mod--ccf .ccf-timeline-line {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #c9a961;
+  transform: translateX(-50%);
+}
+
+.mod--ccf .ccf-timeline-item {
+  display: flex;
+  margin-bottom: 3rem;
+  align-items: center;
+  position: relative;
+}
+
+.mod--ccf .ccf-timeline-item:nth-child(even) {
+  flex-direction: row-reverse;
+}
+
+.mod--ccf .ccf-timeline-content {
+  flex: 1;
+  padding: 2rem;
+  background: #f8f9fa;
+  border-radius: 15px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+}
+
+.mod--ccf .ccf-timeline-marker {
+  width: 30px;
+  height: 30px;
+  background: #c9a961;
+  border-radius: 50%;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid white;
+  box-shadow: 0 0 0 3px #c9a961;
+}
+
+.mod--ccf .ccf-timeline-year {
+  font-size: 1.2rem;
+  color: #c9a961;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.mod--ccf .ccf-timeline-title {
+  font-size: 1.4rem;
+  color: #1e3a5f;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.mod--ccf .ccf-timeline-description {
+  color: #4a6fa5;
+  line-height: 1.6;
+}
+
+/* Call to Action */
+.mod--ccf .ccf-cta-section {
+  background: linear-gradient(135deg, #1e3a5f 0%, #2a4a6b 100%);
+  padding: 5rem 2rem;
+  text-align: center;
+  color: white;
+}
+
+.mod--ccf .ccf-cta-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.mod--ccf .ccf-cta-title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 300;
+  margin-bottom: 1.5rem;
+  color: white;
+}
+
+.mod--ccf .ccf-cta-title .highlight {
+  color: #c9a961;
+  font-style: italic;
+}
+
+.mod--ccf .ccf-cta-subtitle {
+  font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+  margin-bottom: 3rem;
+  opacity: 0.9;
+  line-height: 1.6;
+}
+
+.mod--ccf .ccf-cta-button {
+  display: inline-block;
+  background: #c9a961;
+  color: white;
+  padding: 1rem 2.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  box-shadow: 0 4px 15px rgba(201, 169, 97, 0.3);
+}
+
+.mod--ccf .ccf-cta-button:hover {
+  background: #b8986e;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(201, 169, 97, 0.4);
+}
+
+/* Responsive Design */
+@media (max-width: 900px) {
+  .mod--ccf .ccf-title {
+    font-size: 3rem;
+  }
+  
+  .mod--ccf #ccfAudioToggle {
+    padding: 12px 18px;
+    font-size: 14px;
+    top: 1rem;
+    right: 1rem;
+    min-width: 120px;
+  }
+}
+
+@media (max-width: 768px) {
+  .mod--ccf .ccf-title {
+    font-size: 2.5rem;
+  }
+  
+  .mod--ccf .ccf-services-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .mod--ccf .ccf-timeline-line {
+    left: 30px;
+  }
+
+  .mod--ccf .ccf-timeline-item,
+  .mod--ccf .ccf-timeline-item:nth-child(even) {
+    flex-direction: row;
+    padding-left: 60px;
+  }
+
+  .mod--ccf .ccf-timeline-marker {
+    left: 30px;
+  }
+
+  .mod--ccf .ccf-timeline-content {
+    margin-left: 20px;
+  }
+
+  .mod--ccf .ccf-features-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .mod--ccf .ccf-title {
+    font-size: 2rem;
+  }
+  
+  .mod--ccf #ccfAudioToggle {
+    font-size: 13px;
+    padding: 10px 15px;
+  }
 }
