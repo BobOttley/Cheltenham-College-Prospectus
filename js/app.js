@@ -1437,8 +1437,10 @@ MODULES['sports'] = (root, ctx) => {
 };
 
 /* CCF Module initializer - Add to MODULES object in app.js */
-/* CCF Module initializer - Replace existing MODULES['ccf'] in app.js */
+/* CCF Module initializer - Simplified like hero module */
 MODULES['ccf'] = (root, ctx) => {
+  console.log('=== CCF MODULE INIT ===');
+  
   // Update name placeholders
   const updateNames = () => {
     root.querySelectorAll('.child-name').forEach(el => {
@@ -1448,130 +1450,147 @@ MODULES['ccf'] = (root, ctx) => {
     });
   };
 
-  // Add conditional content based on context
+  // Add conditional content based on priorities
   const addConditionalContent = () => {
-    const childName = ctx.childName || 'your child';
+    const childName = ctx.childName || 'Your child';
     
-    // Leadership interest note
-    const leadershipNote = root.querySelector('.leadership-note');
-    if (leadershipNote && ctx.activities?.includes('leadership')) {
-      leadershipNote.textContent = `${childName} will find CCF's progressive leadership structure particularly rewarding, developing real command experience.`;
-    }
-    
-    // Interest note for activities
+    // Interest note based on activities
     const interestNote = root.querySelector('.ccf-interest-note');
     if (interestNote) {
-      if (ctx.activities?.includes('outdoor-education')) {
-        interestNote.textContent = `With ${childName}'s love of the outdoors, CCF will provide extraordinary opportunities for adventure training and expeditions.`;
-      } else if (ctx.activities?.includes('leadership')) {
-        interestNote.textContent = `CCF's structured leadership development aligns perfectly with ${childName}'s interest in developing leadership skills.`;
+      if (ctx.activities?.includes('leadership')) {
+        interestNote.textContent = `With ${childName}'s interest in leadership, the CCF provides the perfect environment to develop command skills and earn NCO ranks.`;
+      } else if (ctx.activities?.includes('outdoor-education')) {
+        interestNote.textContent = `${childName}'s enthusiasm for outdoor education will be perfectly matched by CCF's adventurous training expeditions.`;
       }
     }
     
-    // Service-specific connections
-    const armyConnection = root.querySelector('.army-connection');
-    if (armyConnection && ctx.activities?.includes('outdoor-education')) {
-      armyConnection.textContent = `The Army section's fieldcraft and expeditions would be perfect for ${childName}.`;
+    // Commitment note
+    const commitmentNote = root.querySelector('.ccf-commitment-note');
+    if (commitmentNote && ctx.priorities?.activities === 3) {
+      commitmentNote.textContent = `We're delighted that ${childName} values co-curricular activities so highly - the CCF will be central to their College experience.`;
     }
     
-    const rafConnection = root.querySelector('.raf-connection');
-    if (rafConnection && (ctx.academicInterests?.includes('sciences') || ctx.academicInterests?.includes('physics'))) {
-      rafConnection.textContent = `${childName}'s interest in science would be enriched by RAF section's aviation and aerospace studies.`;
+    // Personal note in hero
+    const personalNote = root.querySelector('.ccf-personal-note');
+    if (personalNote) {
+      if (ctx.universityAspirations === 'Oxford or Cambridge' || ctx.universityAspirations === 'Oxbridge') {
+        personalNote.textContent = `Universities, especially Oxbridge, highly value the leadership and service demonstrated through CCF participation.`;
+      } else if (ctx.activities?.includes('leadership')) {
+        personalNote.textContent = `${childName}'s leadership potential will flourish through progressive ranks and command opportunities.`;
+      }
     }
     
-    const navyConnection = root.querySelector('.navy-connection');
-    if (navyConnection && ctx.activities?.includes('water-sports')) {
-      navyConnection.textContent = `With ${childName}'s interest in water activities, the Royal Navy section's sailing program would be ideal.`;
-    }
-    
-    // Age-specific year labels
-    const ageSpecificYear = root.querySelector('.age-specific-year');
-    if (ageSpecificYear && ctx.stage === 'Lower') {
-      ageSpecificYear.textContent = 'Third Form';
-    }
-    
-    // Foundation description for younger students
-    const foundationDesc = root.querySelector('.foundation-description');
-    if (foundationDesc && ctx.stage === 'Lower') {
-      foundationDesc.textContent = 'Begin your CCF journey, learning basic military skills, drill, and experiencing all three service sections.';
-    }
-    
-    // Sixth form description with leadership emphasis
-    const sixthFormDesc = root.querySelector('.sixth-form-description');
-    if (sixthFormDesc && ctx.activities?.includes('leadership')) {
-      sixthFormDesc.textContent = `${childName} will excel in senior leadership roles, commanding sections, leading training, and representing the CCF.`;
-    }
-    
-    // Leadership feature
+    // Update feature descriptions
     const leadershipFeature = root.querySelector('.leadership-feature');
     if (leadershipFeature && ctx.activities?.includes('leadership')) {
-      leadershipFeature.textContent = `${childName} will thrive in CCF's progressive leadership structure, from junior roles to senior command positions.`;
+      leadershipFeature.textContent = `${childName} will have opportunities to earn NCO ranks and lead sections from Fifth Form onwards.`;
     }
     
-    // Adventure feature
     const adventureFeature = root.querySelector('.adventure-feature');
     if (adventureFeature && ctx.activities?.includes('outdoor-education')) {
       adventureFeature.textContent = `${childName} will thrive on CCF's challenging expeditions, from mountain training to survival courses.`;
     }
   };
 
-  // Video and interaction management
-  const setupVideoAndInteractions = () => {
-    const video = root.querySelector('.ccf-video');
-    const soundControl = root.querySelector('.ccf-sound-control');
-    const soundIcon = root.querySelector('.ccf-sound-icon');
-    const heroContent = root.querySelector('.ccf-hero-content');
-    
-    // Video should autoplay with the autoplay attribute, but ensure it's muted
+  // Simple video setup - just ensure it's muted on load
+  const setupVideo = () => {
+    const video = root.querySelector('.ccf-hero-video');
     if (video) {
+      // Ensure video is muted for autoplay
       video.muted = true;
-    }
-    
-    // Hide hero content after 20 seconds
-    if (heroContent) {
-      setTimeout(() => {
-        heroContent.classList.add('hide');
-      }, 20000);
-    }
-    
-    // Sound control for video element
-    if (soundControl && video) {
-      soundControl.addEventListener('click', () => {
-        if (video.muted) {
-          video.muted = false;
-          soundIcon.textContent = '🔊';
-        } else {
-          video.muted = true;
-          soundIcon.textContent = '🔇';
-        }
-      });
-    }
-    
-    // Auto-mute when scrolling away from video
-    if (video) {
-      const checkVideoVisibility = () => {
-        const rect = video.getBoundingClientRect();
-        const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
-        
-        if (!isVisible && !video.muted) {
-          video.muted = true;
-          soundIcon.textContent = '🔇';
-        }
-      };
+      video.playsInline = true;
       
-      window.addEventListener('scroll', checkVideoVisibility, { passive: true });
+      // Log when video plays
+      video.addEventListener('playing', () => {
+        console.log('CCF video is playing');
+      });
+      
+      // Log any errors
+      video.addEventListener('error', (e) => {
+        console.error('CCF video error:', e);
+      });
     }
   };
 
+  // Setup unmute button
+  const setupUnmute = () => {
+    const unmuteBtn = root.querySelector('.unmute-btn, .ccf-unmute-btn');
+    const video = root.querySelector('.ccf-hero-video');
+
+    if (!unmuteBtn || !video) return;
+
+    unmuteBtn.addEventListener('click', () => {
+      console.log('CCF unmute button clicked');
+      
+      if (video.muted) {
+        // Unmute
+        video.muted = false;
+        video.volume = 1.0;
+        unmuteBtn.innerHTML = '🔇 Click to Mute';
+        console.log('CCF video unmuted');
+      } else {
+        // Mute
+        video.muted = true;
+        unmuteBtn.innerHTML = '🔊 Click for Sound';
+        console.log('CCF video muted');
+      }
+    });
+  };
+
+  // Auto-mute when scrolling away
+  const setupAutoMute = () => {
+    const video = root.querySelector('.ccf-hero-video');
+    const unmuteBtn = root.querySelector('.unmute-btn, .ccf-unmute-btn');
+    
+    if (!video) return;
+
+    const checkVideoVisibility = () => {
+      const heroSection = root.querySelector('.ccf-hero-wrapper');
+      if (!heroSection) return;
+      
+      const rect = heroSection.getBoundingClientRect();
+      const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+      
+      if (!isVisible && !video.muted) {
+        video.muted = true;
+        if (unmuteBtn) unmuteBtn.innerHTML = '🔊 Click for Sound';
+        console.log('CCF video auto-muted - scrolled out of view');
+      }
+    };
+
+    let scrollTimer = null;
+    window.addEventListener('scroll', () => {
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(checkVideoVisibility, 100);
+    }, { passive: true });
+  };
+
+  // Hide hero content after 20 seconds
+  const setupHeroContentHiding = () => {
+    const heroContent = root.querySelector('.ccf-hero-content');
+    if (!heroContent) return;
+
+    setTimeout(() => {
+      heroContent.classList.add('hide');
+      console.log('CCF hero content hidden');
+    }, 20000);
+  };
+
   // Initialize module
+  console.log('Initializing CCF module...');
   updateNames();
   addConditionalContent();
-  setupVideoAndInteractions();
-  
-  // Lazy load any images
+  setupVideo();
+  setupUnmute();
+  setupAutoMute();
+  setupHeroContentHiding();
+
+  // Lazy load images
   if (typeof hydrateLazyAssets === 'function') {
     hydrateLazyAssets(root);
   }
+
+  console.log('CCF module initialization complete');
 };
 
 /* ====== Loader (fetch + mount on intersection) ====== */
