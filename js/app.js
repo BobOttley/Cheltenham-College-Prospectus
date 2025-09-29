@@ -1438,82 +1438,73 @@ MODULES['sports'] = (root, ctx) => {
 
 /* CCF Module initializer - Add to MODULES object in app.js */
 /* CCF Module – MP4 version, fully scoped and self-contained */
+/* ===== CCF Module (mirrors hero MP4 behaviour) ===== */
 MODULES['ccf'] = (root, ctx) => {
-  // ---------- Scoped helpers ----------
+  // Scoped helpers
   const $  = (sel, p = root) => p.querySelector(sel);
   const $$ = (sel, p = root) => Array.from(p.querySelectorAll(sel));
 
-  // If you use your global lazy hydrator, call it safely:
-  if (typeof hydrateLazyAssets === 'function') {
-    try { hydrateLazyAssets(root); } catch (e) { console.warn('CCF hydrate skipped:', e); }
-  }
-
-  // ---------- Update names (SCOPED) ----------
-  const updateNames = () => {
-    $$('.child-name').forEach(el => {
-      const fallback = el.getAttribute('data-fallback') || 'your child';
-      const name = (ctx?.childName || '').trim();
+  // Personalisation: child name in overlay (scoped)
+  const applyNames = () => {
+    const name = (ctx?.childName || '').trim();
+    const fallback = 'Your child';
+    $$('.child-name', root).forEach(el => {
       el.textContent = (name && !name.startsWith('[')) ? name : fallback;
     });
   };
-  updateNames();
+  applyNames();
 
-  // ---------- Media wiring (MP4) ----------
-  const video   = $('.ccf-video');
-  const muteBtn = $('.ccf-mute-toggle');
+  // Video + mute UX (same pattern as hero)
+  let isMuted = true;
+  const video         = $('.ccf-video');
+  const audioBtn      = $('#ccfAudioToggle');
+  const audioIcon     = $('#ccfAudioIcon');
+  const overlay       = $('#ccfOverlay');
+  const scrollHint    = $('#ccfScrollIndicator');
 
   if (!video) {
-    console.warn('CCF: .ccf-video not found in this module root');
+    console.warn('CCF: video element not found');
     return;
   }
 
-  // Required for iOS inline behaviour & muted autoplay policies
-  video.muted = true;
-  video.playsInline = true;
+  // Initialise video state
+  try {
+    video.muted = isMuted;
+    // Some mobile browsers need a play attempt after user gesture; we rely on muted autoplay like hero
+    // No controls attribute in HTML => no native play button visible
+  } catch (e) {}
 
-  // Play/pause based on visibility of THIS video only (prevents hero interference)
-  const observer = new IntersectionObserver((entries) => {
-    for (const entry of entries) {
-      if (entry.target !== video) continue;
-      if (entry.isIntersecting) {
-        // Try to play when in view; ignore if user hasn’t interacted yet
-        video.play().catch(() => { /* autoplay may be blocked; fine when muted */ });
-      } else {
-        video.pause();
-      }
+  const updateMuteLabel = () => {
+    if (!audioIcon) return;
+    audioIcon.textContent = isMuted ? 'Click to unmute' : 'Click to mute';
+  };
+  updateMuteLabel();
+
+  const toggleAudio = () => {
+    isMuted = !isMuted;
+    video.muted = isMuted;
+    updateMuteLabel();
+  };
+
+  if (audioBtn) audioBtn.addEventListener('click', toggleAudio, { passive: true });
+
+  // Auto-mute on scroll (same safety as hero)
+  const handleScroll = () => {
+    if (window.scrollY > 50 && !video.muted) {
+      isMuted = true;
+      video.muted = true;
+      updateMuteLabel();
     }
-  }, { threshold: 0.35 });
-  observer.observe(video);
-
-  // Mute toggle (scoped)
-  const syncMuteUi = () => {
-    if (!muteBtn) return;
-    const unmuted = !video.muted;
-    muteBtn.setAttribute('aria-pressed', String(unmuted));
-    muteBtn.textContent = video.muted ? 'Unmute' : 'Mute';
   };
-  syncMuteUi();
+  window.addEventListener('scroll', handleScroll, { passive: true });
 
-  if (muteBtn) {
-    muteBtn.addEventListener('click', () => {
-      video.muted = !video.muted;
-      syncMuteUi();
-      if (!video.muted && video.paused) {
-        // If user unmutes and autoplay was blocked, try playing now
-        video.play().catch(() => {});
-      }
-    });
-  }
-
-  // ---------- Defensive cleanup when this module is torn down ----------
-  const teardown = () => {
-    try { observer.disconnect(); } catch (e) {}
-    if (muteBtn) muteBtn.replaceWith(muteBtn.cloneNode(true)); // cheap remove all listeners
-  };
-
-  // If your framework dispatches a teardown event per module, listen for it:
-  root.addEventListener('module:teardown', teardown);
+  // Optional: mirror hero’s timed overlay move + show scroll hint
+  setTimeout(() => {
+    if (overlay) overlay.classList.add('move-bottom');
+    if (scrollHint) setTimeout(() => scrollHint.classList.add('show'), 300);
+  }, 12000);
 };
+
 
 
 /* ====== Loader (fetch + mount on intersection) ====== */
