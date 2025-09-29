@@ -1443,7 +1443,20 @@ MODULES['ccf'] = (root, ctx) => {
   // Scoped helpers
   const $  = (sel, p = root) => p.querySelector(sel);
   const $$ = (sel, p = root) => Array.from(p.querySelectorAll(sel));
+  const video = $('.ccf-video');
+  const audioBtn = $('#ccfAudioToggle');
+  const audioIcon = $('#ccfAudioIcon');
 
+  if (video) {
+    video.play().catch(() => {});
+    
+    if (audioBtn) {
+      audioBtn.addEventListener('click', () => {
+        video.muted = !video.muted;
+        audioIcon.textContent = video.muted ? 'Click to unmute' : 'Click to mute';
+      });
+    }
+  }
   // Personalisation: child name in overlay (scoped)
   const applyNames = () => {
     const name = (ctx?.childName || '').trim();
