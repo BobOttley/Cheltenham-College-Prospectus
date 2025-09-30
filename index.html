@@ -128,5 +128,19 @@
   </main>
 
   <script defer src="/js/app.js"></script>
+  <!-- Emily Chatbot Integration -->
+<script>
+  // Configure Emily to use her Render instance
+  window.PENAI_CHATBOT_ORIGIN = 'https://emily-cheltenham.onrender.com';
+  window.PENAI_VOICE_LANG = (navigator.language || 'en').slice(0, 2);
+  
+  // Pass prospectus context to Emily for personalisation
+  if (window.PROSPECTUS_CTX) {
+    window.EMILY_CONTEXT = window.PROSPECTUS_CTX;
+  }
+</script>
+
+<!-- Load Emily's chatbot -->
+<script src="https://emily-cheltenham.onrender.com/static/chatbot.js" defer></script>
 </body>
 </html>
