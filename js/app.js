@@ -242,6 +242,17 @@ MODULES['house_system'] = (root, ctx) => {
 
   // ===== NEW VIDEO MANAGEMENT FOR MP4 FILES =====
   
+  // Utility: Prime video for mobile autoplay (critical for iOS/Safari)
+  const primeVideo = (video) => {
+    if (!video) return;
+    video.muted = true;
+    video.playsInline = true;            // JS property
+    video.setAttribute('playsinline', ''); // iOS attribute
+    video.setAttribute('autoplay', '');
+    video.setAttribute('loop', '');
+    if (!video.hasAttribute('preload')) video.setAttribute('preload', 'metadata');
+  };
+
   // Utility: Ensure video has src from data-src
   const ensureSrcFromData = (video) => {
     if (!video) return;
@@ -259,8 +270,9 @@ MODULES['house_system'] = (root, ctx) => {
   const playVideo = (video) => {
     if (!video) return;
     
-    ensureSrcFromData(video);
-    video.muted = true; // Always start muted
+    primeVideo(video);           // Prime for mobile
+    ensureSrcFromData(video);    // Load source
+    
     video.play().catch(err => {
       console.log('House video autoplay blocked:', err);
     });
@@ -419,7 +431,6 @@ MODULES['house_system'] = (root, ctx) => {
 
   setupAutoMute();
 };
-
 /* Pastoral Care module initializer - Add to MODULES object in app.js */
 MODULES['pastoral_care'] = (root, ctx) => {
   // Update all name placeholders
