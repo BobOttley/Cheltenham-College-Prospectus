@@ -174,6 +174,9 @@ MODULES['key_statistics'] = (sectionEl, ctx) => {
   }
 };
 
+/* ===== HOUSE SYSTEM MODULE - UPDATED FOR MP4 VIDEOS ===== */
+/* REPLACE the existing MODULES['house_system'] function in app.js with this code */
+
 MODULES['house_system'] = (root, ctx) => {
   // Name personalization
   root.querySelectorAll('.child-name').forEach(el => {
@@ -237,30 +240,41 @@ MODULES['house_system'] = (root, ctx) => {
     hydrateLazyAssets(root);
   }
 
-  // Video management utilities
-  const stopVideo = (iframe) => {
-    if (!iframe) return;
-    const src = iframe.getAttribute('src') || '';
-    iframe.setAttribute('src', 'about:blank');
-    setTimeout(() => {
-      const cleanSrc = src.replace(/autoplay=1/g, 'autoplay=0').replace(/mute=0/g, 'mute=1');
-      iframe.setAttribute('src', cleanSrc);
-    }, 100);
-  };
-
-  const loadVideo = (iframe) => {
-    if (!iframe) return;
-    const dataSrc = iframe.getAttribute('data-src');
-    if (dataSrc && !iframe.getAttribute('src')) {
-      const srcWithAutoplay = dataSrc.includes('?') 
-        ? `${dataSrc}&autoplay=1&mute=1`
-        : `${dataSrc}?autoplay=1&mute=1`;
-      iframe.setAttribute('src', srcWithAutoplay);
+  // ===== NEW VIDEO MANAGEMENT FOR MP4 FILES =====
+  
+  // Utility: Ensure video has src from data-src
+  const ensureSrcFromData = (video) => {
+    if (!video) return;
+    const dataSrc = video.getAttribute('data-src');
+    if (dataSrc && !video.getAttribute('src')) {
+      const source = video.querySelector('source');
+      if (source) {
+        source.setAttribute('src', dataSrc);
+        video.load();
+      }
     }
   };
 
-  // Expand/collapse functionality
-  // FIXED: Use event delegation instead of individual listeners
+  // Play video when card expands
+  const playVideo = (video) => {
+    if (!video) return;
+    
+    ensureSrcFromData(video);
+    video.muted = true; // Always start muted
+    video.play().catch(err => {
+      console.log('House video autoplay blocked:', err);
+    });
+  };
+
+  // Stop video when card collapses
+  const stopVideo = (video) => {
+    if (!video) return;
+    video.pause();
+    video.currentTime = 0;
+    video.muted = true;
+  };
+
+  // Expand/collapse functionality with EVENT DELEGATION
   root.addEventListener('click', (e) => {
     // Handle expand buttons
     if (e.target.classList.contains('expand-button')) {
@@ -280,53 +294,70 @@ MODULES['house_system'] = (root, ctx) => {
         if (otherCard !== card) {
           otherCard.classList.remove('expanded');
           const otherDetails = otherCard.querySelector('.house-details');
-          const otherIframe = otherCard.querySelector('.video-container iframe');
+          const otherVideo = otherCard.querySelector('.house-video');
           if (otherDetails) {
             otherDetails.style.display = 'none';
             otherDetails.setAttribute('hidden', '');
           }
-          if (otherIframe) stopVideo(otherIframe);
+          if (otherVideo) stopVideo(otherVideo);
         }
       });
 
       if (!isExpanded) {
+        // Expand this card
         card.classList.add('expanded');
         details.style.display = 'block';
         details.removeAttribute('hidden');
         
-        const iframe = card.querySelector('.video-container iframe');
-        if (iframe) loadVideo(iframe);
+        const video = card.querySelector('.house-video');
+        if (video) playVideo(video);
         
         setTimeout(() => {
           card.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }, 300);
       } else {
+        // Collapse this card
         card.classList.remove('expanded');
         details.style.display = 'none';
         details.setAttribute('hidden', '');
         
-        const iframe = card.querySelector('.video-container iframe');
-        if (iframe) stopVideo(iframe);
+        const video = card.querySelector('.house-video');
+        if (video) stopVideo(video);
       }
       return;
     }
 
-    // Handle mute buttons
+    // Handle mute buttons - TOGGLE audio on/off
     if (e.target.classList.contains('mute-button')) {
       e.preventDefault();
       e.stopPropagation();
       
-      const videoContainer = e.target.closest('.video-container');
-      const iframe = videoContainer?.querySelector('iframe');
-      if (!iframe) return;
+      const card = e.target.closest('.house-card');
+      const video = card?.querySelector('.house-video');
+      if (!video) return;
       
-      const src = iframe.getAttribute('src') || '';
-      if (src.includes('mute=1')) {
-        iframe.setAttribute('src', src.replace('mute=1', 'mute=0'));
-        e.target.innerHTML = '🔊 Mute';
-      } else if (src.includes('mute=0')) {
-        iframe.setAttribute('src', src.replace('mute=0', 'mute=1'));
-        e.target.innerHTML = '🔇 Unmute';
+      // Ensure video has source
+      ensureSrcFromData(video);
+      
+      // Toggle mute state
+      if (video.muted) {
+        // Unmute
+        video.muted = false;
+        video.volume = 1.0;
+        e.target.innerHTML = '🔇 Click to Mute';
+        console.log('House video unmuted');
+        
+        // If paused, play it
+        if (video.paused) {
+          video.play().catch(err => {
+            console.error('Could not play video:', err);
+          });
+        }
+      } else {
+        // Mute
+        video.muted = true;
+        e.target.innerHTML = '🔊 Click for Sound';
+        console.log('House video muted');
       }
       return;
     }
@@ -344,12 +375,49 @@ MODULES['house_system'] = (root, ctx) => {
       if (details) {
         details.style.display = 'none';
         details.setAttribute('hidden', '');
-        const iframe = card.querySelector('.video-container iframe');
-        if (iframe) stopVideo(iframe);
+        const video = card.querySelector('.house-video');
+        if (video) stopVideo(video);
       }
       return;
     }
   });
+
+  // Auto-mute videos when scrolling away
+  const setupAutoMute = () => {
+    const checkVideoVisibility = () => {
+      const expandedCards = root.querySelectorAll('.house-card.expanded');
+      
+      expandedCards.forEach(card => {
+        const video = card.querySelector('.house-video');
+        if (!video || !video.src) return;
+        
+        const rect = video.getBoundingClientRect();
+        const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+        
+        // If video is out of view and not muted, mute it
+        if (!isVisible && !video.muted) {
+          video.muted = true;
+          const btn = card.querySelector('.mute-button');
+          if (btn) btn.innerHTML = '🔊 Click for Sound';
+          console.log('House video auto-muted - scrolled out of view');
+        }
+      });
+    };
+
+    // Throttled scroll handler
+    let scrollTimeout;
+    const handleScroll = () => {
+      if (scrollTimeout) return;
+      scrollTimeout = setTimeout(() => {
+        checkVideoVisibility();
+        scrollTimeout = null;
+      }, 200);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+  };
+
+  setupAutoMute();
 };
 
 /* Pastoral Care module initializer - Add to MODULES object in app.js */
