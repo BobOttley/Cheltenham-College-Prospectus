@@ -240,29 +240,37 @@ MODULES['house_system'] = (root, ctx) => {
     hydrateLazyAssets(root);
   }
 
-  // ===== NEW VIDEO MANAGEMENT FOR MP4 FILES =====
+  // ===== NEW VIDEO MANAGEMENT FOR MP4 FILES - OPTIMIZED FOR MOBILE =====
   
   // Utility: Prime video for mobile autoplay (critical for iOS/Safari)
   const primeVideo = (video) => {
     if (!video) return;
     video.muted = true;
     video.playsInline = true;            // JS property
-    video.setAttribute('playsinline', ''); // iOS attribute
+    video.setAttribute('playsinline', ''); // iOS attribute  
     video.setAttribute('autoplay', '');
     video.setAttribute('loop', '');
-    if (!video.hasAttribute('preload')) video.setAttribute('preload', 'metadata');
+    video.setAttribute('preload', 'metadata'); // Only load metadata until play
   };
 
-  // Utility: Ensure video has src from data-src
-  const ensureSrcFromData = (video) => {
+  // LAZY LOAD: Set video source from data-src (only called on expand)
+  const loadVideoSource = (video) => {
     if (!video) return;
+    
     const dataSrc = video.getAttribute('data-src');
-    if (dataSrc && !video.getAttribute('src')) {
-      const source = video.querySelector('source');
-      if (source) {
-        source.setAttribute('src', dataSrc);
-        video.load();
-      }
+    if (!dataSrc) return;
+    
+    // Check if already loaded
+    const source = video.querySelector('source');
+    if (source && source.getAttribute('src')) {
+      return; // Already loaded
+    }
+    
+    // Set the source and load
+    if (source) {
+      source.setAttribute('src', dataSrc);
+      video.load();
+      console.log('Lazy loaded video:', dataSrc);
     }
   };
 
@@ -270,12 +278,15 @@ MODULES['house_system'] = (root, ctx) => {
   const playVideo = (video) => {
     if (!video) return;
     
-    primeVideo(video);           // Prime for mobile
-    ensureSrcFromData(video);    // Load source
+    primeVideo(video);        // Prime for mobile
+    loadVideoSource(video);   // Lazy load source
     
-    video.play().catch(err => {
-      console.log('House video autoplay blocked:', err);
-    });
+    // Small delay to ensure source is loaded
+    setTimeout(() => {
+      video.play().catch(err => {
+        console.log('House video autoplay blocked:', err);
+      });
+    }, 100);
   };
 
   // Stop video when card collapses
@@ -348,8 +359,8 @@ MODULES['house_system'] = (root, ctx) => {
       const video = card?.querySelector('.house-video');
       if (!video) return;
       
-      // Ensure video has source
-      ensureSrcFromData(video);
+      // Ensure video source is loaded
+      loadVideoSource(video);
       
       // Toggle mute state
       if (video.muted) {
