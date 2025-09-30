@@ -126,6 +126,12 @@
       rgba(30, 58, 95, 0.85) 50%, 
       rgba(30, 58, 95, 0.9) 100%);
     z-index: 2;
+    animation: fadeOutOverlay 1s ease 15s forwards;
+  }
+  
+  @keyframes fadeOutOverlay {
+    from { opacity: 1; }
+    to { opacity: 0; }
   }
   
   /* ========================================
