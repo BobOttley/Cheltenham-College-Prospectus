@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 3000;
 
 // PostgreSQL connection
 const pool = new Pool({
-    connectionString: process.env.DATABASE_URL || 'postgresql://personalised_prospectus_db_tapg_user:3uNIuUoZ40YHTcGvVQb8UdtHDJEFHEI6@dpg-d2hhm0odl3ps738bve7g-a.frankfurt-postgres.render.com/personalised_prospectus_db_tapg',
+    connectionString: process.env.DATABASE_URL,
     ssl: {
         rejectUnauthorized: false
     }
