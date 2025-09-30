@@ -258,20 +258,11 @@ MODULES['house_system'] = (root, ctx) => {
     if (!video) return;
     
     const dataSrc = video.getAttribute('data-src');
-    if (!dataSrc) return;
+    if (!dataSrc || video.src) return;
     
-    // Check if already loaded
-    const source = video.querySelector('source');
-    if (source && source.getAttribute('src')) {
-      return; // Already loaded
-    }
-    
-    // Set the source and load
-    if (source) {
-      source.setAttribute('src', dataSrc);
-      video.load();
-      console.log('Lazy loaded video:', dataSrc);
-    }
+    video.src = dataSrc;
+    video.load();
+    console.log('Lazy loaded video:', dataSrc);
   };
 
   // Play video when card expands
