@@ -205,8 +205,8 @@ MODULES['house_system'] = (root, ctx) => {
 
   const getBoarding = () => {
     const raw = (ctx.boardingPreference || '').toString().toLowerCase().trim();
-    if (raw.includes('day')) return 'day';
     if (raw.includes('boarding')) return 'boarding';
+    if (raw.includes('day')) return 'day';
     return '';
   };
 
@@ -232,7 +232,7 @@ MODULES['house_system'] = (root, ctx) => {
       show = false;
     }
     
-    card.style.display = show ? 'block' : 'none';
+    card.style.display = show ? '' : 'none';
   });
 
   // Lazy load images
