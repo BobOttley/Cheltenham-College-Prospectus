@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const { Pool } = require('pg');
@@ -227,6 +228,8 @@ app.get('/prospectus', (req, res) => {
 });
 
 // ENHANCED ADMIN DASHBOARD - Shows prospectus links
+
+// ENHANCED ADMIN DASHBOARD with Open Days Management
 app.get('/admin', (req, res) => {
     res.send(`
 <!DOCTYPE html>
@@ -235,161 +238,396 @@ app.get('/admin', (req, res) => {
     <title>Cheltenham College - Admin Dashboard</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; padding: 20px; }
-        .header { background: #1a1a4e; color: white; padding: 30px; border-radius: 8px; margin-bottom: 30px; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; }
+        
+        /* Header */
+        .header { background: #1a1a4e; color: white; padding: 30px; }
         .header h1 { font-size: 28px; margin-bottom: 8px; }
         .header p { opacity: 0.8; }
+        
+        /* Tabs */
+        .tabs { background: white; border-bottom: 2px solid #e9ecef; }
+        .tabs-container { max-width: 1400px; margin: 0 auto; display: flex; }
+        .tab { padding: 15px 30px; cursor: pointer; border-bottom: 3px solid transparent; font-weight: 500; }
+        .tab:hover { background: #f8f9fa; }
+        .tab.active { border-bottom-color: #c9a961; color: #c9a961; }
+        
+        /* Content */
+        .content { max-width: 1400px; margin: 0 auto; padding: 30px 20px; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        /* Stats */
         .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
         .stat-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .stat-value { font-size: 32px; font-weight: bold; color: #c9a961; margin-bottom: 5px; }
         .stat-label { color: #666; font-size: 14px; }
+        
+        /* Table */
         .table-container { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         table { width: 100%; border-collapse: collapse; }
-        th { background: #f8f9fa; padding: 12px; text-align: left; font-weight: 600; color: #1a1a4e; border-bottom: 2px solid #e9ecef; position: sticky; top: 0; }
+        th { background: #f8f9fa; padding: 12px; text-align: left; font-weight: 600; color: #1a1a4e; border-bottom: 2px solid #e9ecef; }
         td { padding: 12px; border-bottom: 1px solid #e9ecef; }
         tr:hover { background: #f8f9fa; }
+        
+        /* Buttons */
+        .btn { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; }
+        .btn-primary { background: #c9a961; color: white; }
+        .btn-primary:hover { background: #b8975a; }
+        .btn-secondary { background: #6c757d; color: white; }
+        .btn-danger { background: #dc3545; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .btn-sm { padding: 6px 12px; font-size: 14px; }
+        
+        /* Badge */
         .badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 500; }
         .badge-new { background: #d4edda; color: #155724; }
+        .badge-active { background: #d4edda; color: #155724; }
+        .badge-inactive { background: #f8d7da; color: #721c24; }
         .badge-boarding { background: #cfe2ff; color: #084298; }
         .badge-day { background: #fff3cd; color: #664d03; }
-        .refresh-btn { background: #c9a961; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; margin-bottom: 20px; }
-        .refresh-btn:hover { background: #b8975a; }
+        
+        /* Links */
         .prospectus-link { 
-            display: inline-block;
-            background: #1a1a4e; 
-            color: white; 
-            padding: 6px 12px; 
-            border-radius: 4px; 
-            text-decoration: none; 
-            font-size: 12px;
-            font-weight: 500;
+            display: inline-block; background: #1a1a4e; color: white; padding: 6px 12px; 
+            border-radius: 4px; text-decoration: none; font-size: 12px; font-weight: 500;
         }
         .prospectus-link:hover { background: #2a2a5e; }
-        .id-cell { font-family: monospace; font-size: 11px; color: #666; }
+        
+        /* Modal */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; }
+        .modal.active { display: flex; align-items: center; justify-content: center; }
+        .modal-content { background: white; border-radius: 8px; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; }
+        .modal-header { padding: 20px; border-bottom: 1px solid #e9ecef; }
+        .modal-body { padding: 20px; }
+        .modal-footer { padding: 20px; border-top: 1px solid #e9ecef; display: flex; justify-content: flex-end; gap: 10px; }
+        
+        /* Form */
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 500; }
+        .form-control { width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; }
+        textarea.form-control { min-height: 100px; resize: vertical; }
+        
+        /* Open Days Grid */
+        .open-days-grid { display: grid; gap: 20px; }
+        .open-day-card { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-left: 4px solid #c9a961; }
+        .open-day-card.inactive { opacity: 0.6; border-left-color: #6c757d; }
+        .open-day-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
+        .open-day-title { font-size: 18px; font-weight: bold; color: #1a1a4e; }
+        .open-day-date { font-size: 16px; color: #c9a961; margin-bottom: 5px; }
+        .open-day-actions { display: flex; gap: 8px; margin-top: 15px; }
+        
+        /* Filters */
+        .filters { display: flex; gap: 10px; margin-bottom: 20px; align-items: center; }
+        .checkbox-label { display: flex; align-items: center; gap: 5px; }
+        
+        /* Empty state */
+        .empty-state { text-align: center; padding: 60px 20px; color: #6c757d; }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>🎓 Cheltenham College Enquiries</h1>
-        <p>Admin Dashboard - Click "View Prospectus" to see each family's personalised prospectus</p>
+        <h1>Cheltenham College Admin</h1>
+        <p>Manage enquiries and open days</p>
     </div>
 
-    <div class="stats">
-        <div class="stat-card">
-            <div class="stat-value" id="totalCount">-</div>
-            <div class="stat-label">Total Enquiries</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-value" id="todayCount">-</div>
-            <div class="stat-label">Today</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-value" id="weekCount">-</div>
-            <div class="stat-label">This Week</div>
+    <div class="tabs">
+        <div class="tabs-container">
+            <div class="tab active" onclick="switchTab('enquiries')">Enquiries</div>
+            <div class="tab" onclick="switchTab('opendays')">Open Days</div>
         </div>
     </div>
 
-    <div class="table-container">
-        <button class="refresh-btn" onclick="load()">🔄 Refresh</button>
-        <div id="content">Loading enquiries...</div>
+    <div class="content">
+        <!-- ENQUIRIES TAB -->
+        <div id="enquiries-tab" class="tab-content active">
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalCount">-</div>
+                    <div class="stat-label">Total Enquiries</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="todayCount">-</div>
+                    <div class="stat-label">Today</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="weekCount">-</div>
+                    <div class="stat-label">This Week</div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <button class="btn btn-primary" style="margin-bottom:20px;" onclick="loadEnquiries()">Refresh</button>
+                <div id="enquiries-content">Loading...</div>
+            </div>
+        </div>
+
+        <!-- OPEN DAYS TAB -->
+        <div id="opendays-tab" class="tab-content">
+            <div class="filters">
+                <button class="btn btn-primary" onclick="openAddModal()">Add New Open Day</button>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="showPastEvents" onchange="loadOpenDays()">
+                    <span>Show past events</span>
+                </label>
+                <button class="btn btn-secondary" onclick="loadOpenDays()">Refresh</button>
+            </div>
+
+            <div id="opendays-content">Loading...</div>
+        </div>
+    </div>
+
+    <!-- OPEN DAY MODAL -->
+    <div id="openDayModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add Open Day</h2>
+            </div>
+            <form id="openDayForm" onsubmit="saveOpenDay(event)">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Event Name *</label>
+                        <input type="text" id="eventName" class="form-control" required placeholder="e.g., Open Morning">
+                    </div>
+                    <div class="form-group">
+                        <label>Event Date *</label>
+                        <input type="date" id="eventDate" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Event Time</label>
+                        <input type="text" id="eventTime" class="form-control" placeholder="e.g., 09:00-12:00">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="eventDescription" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Booking URL</label>
+                        <input type="url" id="bookingUrl" class="form-control" placeholder="https://...">
+                    </div>
+                    <input type="hidden" id="eventId">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <script>
-        async function load() {
-            document.getElementById('content').innerHTML = '<p style="padding:20px;text-align:center;color:#666;">Loading...</p>';
+        let currentOpenDays = [];
+
+        // Tab switching
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tab + '-tab').classList.add('active');
+            
+            if (tab === 'enquiries') loadEnquiries();
+            if (tab === 'opendays') loadOpenDays();
+        }
+
+        // ENQUIRIES
+        async function loadEnquiries() {
+            document.getElementById('enquiries-content').innerHTML = '<p style="padding:20px;">Loading...</p>';
             
             try {
-                const response = await fetch('/api/admin/enquiries');
-                const data = await response.json();
+                const res = await fetch('/api/admin/enquiries');
+                const data = await res.json();
                 
-                if (!data.success) {
-                    throw new Error(data.error || 'Failed to load');
-                }
+                if (!data.success) throw new Error(data.error);
 
                 const enquiries = data.enquiries;
                 const now = new Date();
                 const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
                 const weekAgo = new Date(now - 7 * 24 * 60 * 60 * 1000);
 
-                // Stats
-                const todayCount = enquiries.filter(e => new Date(e.created_at) >= today).length;
-                const weekCount = enquiries.filter(e => new Date(e.created_at) >= weekAgo).length;
-
                 document.getElementById('totalCount').textContent = enquiries.length;
-                document.getElementById('todayCount').textContent = todayCount;
-                document.getElementById('weekCount').textContent = weekCount;
+                document.getElementById('todayCount').textContent = enquiries.filter(e => new Date(e.created_at) >= today).length;
+                document.getElementById('weekCount').textContent = enquiries.filter(e => new Date(e.created_at) >= weekAgo).length;
 
-                // Table
-                let html = \`
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Child Name</th>
-                                <th>Family</th>
-                                <th>Email</th>
-                                <th>Age</th>
-                                <th>Boarding</th>
-                                <th>Interests</th>
-                                <th>Prospectus</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                \`;
+                let html = '<table><thead><tr><th>Date</th><th>Child</th><th>Family</th><th>Email</th><th>Age</th><th>Boarding</th><th>Interests</th><th>Prospectus</th></tr></thead><tbody>';
 
                 enquiries.forEach(e => {
-                    const date = new Date(e.created_at).toLocaleDateString('en-GB', {
-                        day: '2-digit',
-                        month: 'short',
-                        year: 'numeric'
-                    });
-                    const time = new Date(e.created_at).toLocaleTimeString('en-GB', {
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    });
-                    
+                    const date = new Date(e.created_at).toLocaleDateString('en-GB');
                     const interests = e.interests ? e.interests.slice(0,3).join(', ') : '-';
                     const boardingClass = e.boarding?.includes('Boarding') ? 'boarding' : 'day';
                     
-                    // Build prospectus URL
-                    const prospectusUrl = \`/prospectus?id=\${e.id}\`;
-                    
                     html += \`
                         <tr>
-                            <td>
-                                <strong>\${date}</strong><br>
-                                <span style="font-size:11px;color:#666;">\${time}</span>
-                            </td>
+                            <td>\${date}</td>
                             <td><strong>\${e.first_name}</strong></td>
                             <td>\${e.family_surname}</td>
                             <td>\${e.parent_email}</td>
                             <td>\${e.age_group}</td>
                             <td><span class="badge badge-\${boardingClass}">\${e.boarding || '-'}</span></td>
                             <td style="font-size:12px;">\${interests}</td>
-                            <td>
-                                <a href="\${prospectusUrl}" target="_blank" class="prospectus-link">
-                                    📄 View Prospectus
-                                </a>
-                                <div class="id-cell" style="margin-top:4px;">\${e.id}</div>
-                            </td>
+                            <td><a href="/prospectus?id=\${e.id}" target="_blank" class="prospectus-link">View</a></td>
                         </tr>
                     \`;
                 });
 
                 html += '</tbody></table>';
-                document.getElementById('content').innerHTML = html;
+                document.getElementById('enquiries-content').innerHTML = html;
 
             } catch (error) {
-                document.getElementById('content').innerHTML = 
-                    '<p style="padding:20px;text-align:center;color:#dc2626;">❌ Error: ' + error.message + '</p>';
+                document.getElementById('enquiries-content').innerHTML = '<p style="padding:20px;color:red;">Error: ' + error.message + '</p>';
             }
         }
 
-        // Load on page load
-        load();
+        // OPEN DAYS
+        async function loadOpenDays() {
+            document.getElementById('opendays-content').innerHTML = '<p style="padding:20px;">Loading...</p>';
+            const includePast = document.getElementById('showPastEvents').checked;
+            
+            try {
+                const res = await fetch('/api/admin/open-days?include_past=' + includePast);
+                const data = await res.json();
+                
+                if (!data.success) throw new Error(data.error);
 
-        // Auto-refresh every 30 seconds
-        setInterval(load, 30000);
+                currentOpenDays = data.openDays;
+                
+                if (currentOpenDays.length === 0) {
+                    document.getElementById('opendays-content').innerHTML = '<div class="empty-state"><h3>No open days found</h3><p>Click "Add New Open Day" to create one</p></div>';
+                    return;
+                }
+
+                const today = new Date().toISOString().split('T')[0];
+                
+                let html = '<div class="open-days-grid">';
+                currentOpenDays.forEach(event => {
+                    const isPast = event.event_date < today;
+                    const isActive = event.is_active;
+                    const status = isPast ? 'past' : (isActive ? 'active' : 'inactive');
+                    
+                    html += \`
+                        <div class="open-day-card \${!isActive ? 'inactive' : ''}">
+                            <div class="open-day-header">
+                                <div>
+                                    <div class="open-day-title">\${event.event_name}</div>
+                                    <div class="open-day-date">\${new Date(event.event_date).toLocaleDateString('en-GB', {weekday:'long', day:'numeric', month:'long', year:'numeric'})}</div>
+                                    \${event.event_time ? '<div>🕒 ' + event.event_time + '</div>' : ''}
+                                </div>
+                                <span class="badge badge-\${status}">\${status}</span>
+                            </div>
+                            \${event.description ? '<p style="margin:10px 0;color:#666;">' + event.description + '</p>' : ''}
+                            \${event.booking_url ? '<a href="' + event.booking_url + '" target="_blank" style="color:#c9a961;">🔗 Booking link</a>' : ''}
+                            <div class="open-day-actions">
+                                <button class="btn btn-secondary btn-sm" onclick="editOpenDay(\${event.id})">Edit</button>
+                                \${isActive ? 
+                                    '<button class="btn btn-danger btn-sm" onclick="deleteOpenDay(' + event.id + ')">Delete</button>' : 
+                                    '<button class="btn btn-success btn-sm" onclick="reactivateOpenDay(' + event.id + ')">Reactivate</button>'
+                                }
+                            </div>
+                        </div>
+                    \`;
+                });
+                html += '</div>';
+                
+                document.getElementById('opendays-content').innerHTML = html;
+
+            } catch (error) {
+                document.getElementById('opendays-content').innerHTML = '<p style="padding:20px;color:red;">Error: ' + error.message + '</p>';
+            }
+        }
+
+        function openAddModal() {
+            document.getElementById('modalTitle').textContent = 'Add Open Day';
+            document.getElementById('openDayForm').reset();
+            document.getElementById('eventId').value = '';
+            document.getElementById('openDayModal').classList.add('active');
+        }
+
+        function editOpenDay(id) {
+            const event = currentOpenDays.find(e => e.id === id);
+            if (!event) return;
+
+            document.getElementById('modalTitle').textContent = 'Edit Open Day';
+            document.getElementById('eventId').value = event.id;
+            document.getElementById('eventName').value = event.event_name;
+            document.getElementById('eventDate').value = event.event_date;
+            document.getElementById('eventTime').value = event.event_time || '';
+            document.getElementById('eventDescription').value = event.description || '';
+            document.getElementById('bookingUrl').value = event.booking_url || '';
+            document.getElementById('openDayModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('openDayModal').classList.remove('active');
+        }
+
+        async function saveOpenDay(e) {
+            e.preventDefault();
+
+            const id = document.getElementById('eventId').value;
+            const data = {
+                event_name: document.getElementById('eventName').value,
+                event_date: document.getElementById('eventDate').value,
+                event_time: document.getElementById('eventTime').value,
+                description: document.getElementById('eventDescription').value,
+                booking_url: document.getElementById('bookingUrl').value
+            };
+
+            try {
+                const url = id ? '/api/admin/open-days/' + id : '/api/admin/open-days';
+                const method = id ? 'PUT' : 'POST';
+
+                const res = await fetch(url, {
+                    method: method,
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(data)
+                });
+
+                const result = await res.json();
+                if (!result.success) throw new Error(result.error);
+
+                closeModal();
+                loadOpenDays();
+                alert('Open day saved successfully!');
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+
+        async function deleteOpenDay(id) {
+            if (!confirm('Delete this open day?')) return;
+
+            try {
+                const res = await fetch('/api/admin/open-days/' + id, {method: 'DELETE'});
+                const data = await res.json();
+                if (!data.success) throw new Error(data.error);
+                loadOpenDays();
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+
+        async function reactivateOpenDay(id) {
+            try {
+                const res = await fetch('/api/admin/open-days/' + id, {
+                    method: 'PUT',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({is_active: true})
+                });
+                const data = await res.json();
+                if (!data.success) throw new Error(data.error);
+                loadOpenDays();
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+
+        // Close modal on outside click
+        document.getElementById('openDayModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // Initial load
+        loadEnquiries();
     </script>
 </body>
 </html>
@@ -416,6 +654,122 @@ app.get('/api/admin/enquiries', async (req, res) => {
     } catch (error) {
         console.error('Error:', error);
         res.status(500).json({ success: false, error: 'Failed to fetch enquiries' });
+    }
+});
+
+// ===== OPEN DAYS API ROUTES =====
+
+// Get all open days
+app.get('/api/admin/open-days', async (req, res) => {
+    try {
+        const includePast = req.query.include_past === 'true';
+        let query = `
+            SELECT * FROM open_days 
+            WHERE school = 'cheltenham'
+        `;
+        if (!includePast) {
+            query += ` AND event_date >= CURRENT_DATE`;
+        }
+        query += ` ORDER BY event_date ASC`;
+        
+        const result = await pool.query(query);
+        res.json({ success: true, openDays: result.rows });
+    } catch (error) {
+        console.error('Error fetching open days:', error);
+        res.status(500).json({ success: false, error: 'Failed to fetch open days' });
+    }
+});
+
+// Create open day
+app.post('/api/admin/open-days', async (req, res) => {
+    try {
+        const { event_name, event_date, event_time, description, booking_url } = req.body;
+        
+        const query = `
+            INSERT INTO open_days (event_name, event_date, event_time, description, booking_url, school)
+            VALUES ($1, $2, $3, $4, $5, 'cheltenham')
+            RETURNING *
+        `;
+        
+        const result = await pool.query(query, [event_name, event_date, event_time, description, booking_url]);
+        res.json({ success: true, openDay: result.rows[0] });
+    } catch (error) {
+        console.error('Error creating open day:', error);
+        res.status(500).json({ success: false, error: 'Failed to create open day' });
+    }
+});
+
+// Update open day
+app.put('/api/admin/open-days/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { event_name, event_date, event_time, description, booking_url, is_active } = req.body;
+        
+        const query = `
+            UPDATE open_days 
+            SET event_name = COALESCE($1, event_name),
+                event_date = COALESCE($2, event_date),
+                event_time = COALESCE($3, event_time),
+                description = COALESCE($4, description),
+                booking_url = COALESCE($5, booking_url),
+                is_active = COALESCE($6, is_active),
+                updated_at = CURRENT_TIMESTAMP
+            WHERE id = $7
+            RETURNING *
+        `;
+        
+        const result = await pool.query(query, [event_name, event_date, event_time, description, booking_url, is_active, id]);
+        res.json({ success: true, openDay: result.rows[0] });
+    } catch (error) {
+        console.error('Error updating open day:', error);
+        res.status(500).json({ success: false, error: 'Failed to update open day' });
+    }
+});
+
+// Delete open day
+app.delete('/api/admin/open-days/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        await pool.query('UPDATE open_days SET is_active = false WHERE id = $1', [id]);
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error deleting open day:', error);
+        res.status(500).json({ success: false, error: 'Failed to delete open day' });
+    }
+});
+
+// Public endpoint for Emily to get upcoming open days
+app.get('/api/open-days', async (req, res) => {
+    try {
+        const query = `
+            SELECT event_name, event_date, event_time, description, booking_url
+            FROM open_days
+            WHERE is_active = TRUE 
+            AND event_date >= CURRENT_DATE
+            AND school = 'cheltenham'
+            ORDER BY event_date ASC
+            LIMIT 10
+        `;
+        
+        const result = await pool.query(query);
+        const events = result.rows.map(row => ({
+            event_name: row.event_name,
+            date_iso: row.event_date,
+            date_human: new Date(row.event_date).toLocaleDateString('en-GB', { 
+                weekday: 'long', 
+                day: 'numeric', 
+                month: 'long', 
+                year: 'numeric' 
+            }),
+            time: row.event_time,
+            description: row.description,
+            booking_link: row.booking_url
+        }));
+        
+        res.json({ success: true, events });
+    } catch (error) {
+        console.error('Error fetching open days:', error);
+        res.status(500).json({ success: false, error: 'Failed to fetch open days' });
     }
 });
 
